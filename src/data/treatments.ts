@@ -12,6 +12,8 @@ export interface Treatment {
   slug: string;
   category: TreatmentCategoryId;
   priceLabel: string;
+  priceAmount: number;
+  priceFrom?: boolean;
   shortDescription: string;
   duration?: string;
   fullDescription?: string;
@@ -60,6 +62,7 @@ export const treatments: readonly Treatment[] = [
     slug: "taglio-essenziale",
     category: "hair",
     priceLabel: "€45",
+    priceAmount: 45,
     shortDescription: "Un taglio costruito su proporzioni, abitudini e texture.",
   }),
   defineTreatment({
@@ -67,6 +70,8 @@ export const treatments: readonly Treatment[] = [
     slug: "colore-su-misura",
     category: "hair",
     priceLabel: "da €80",
+    priceAmount: 80,
+    priceFrom: true,
     shortDescription: "Un percorso colore definito dopo un confronto su tono e mantenimento.",
   }),
   defineTreatment({
@@ -74,6 +79,8 @@ export const treatments: readonly Treatment[] = [
     slug: "trattamento-texture",
     category: "hair",
     priceLabel: "da €65",
+    priceAmount: 65,
+    priceFrom: true,
     shortDescription: "Un rituale dedicato alla gestione e alla presenza naturale della texture.",
   }),
   defineTreatment({
@@ -81,6 +88,8 @@ export const treatments: readonly Treatment[] = [
     slug: "piega-e-styling",
     category: "hair",
     priceLabel: "da €35",
+    priceAmount: 35,
+    priceFrom: true,
     shortDescription: "Forma e styling concordati in base al risultato desiderato.",
   }),
   defineTreatment({
@@ -88,6 +97,7 @@ export const treatments: readonly Treatment[] = [
     slug: "rituale-viso",
     category: "skin",
     priceLabel: "€70",
+    priceAmount: 70,
     shortDescription:
       "Un trattamento personalizzato che combina detersione, manualità e prodotti selezionati in base alle esigenze della pelle.",
     duration: "60 min",
@@ -106,6 +116,7 @@ export const treatments: readonly Treatment[] = [
     slug: "brow-design",
     category: "skin",
     priceLabel: "€25",
+    priceAmount: 25,
     shortDescription: "Definizione delle sopracciglia concordata a partire da forma ed equilibrio.",
   }),
   defineTreatment({
@@ -113,6 +124,7 @@ export const treatments: readonly Treatment[] = [
     slug: "lash-lift",
     category: "skin",
     priceLabel: "€55",
+    priceAmount: 55,
     shortDescription:
       "Un servizio dedicato alla curvatura delle ciglia, preceduto da una verifica dell'esigenza.",
   }),
@@ -121,6 +133,7 @@ export const treatments: readonly Treatment[] = [
     slug: "trattamento-illuminante",
     category: "skin",
     priceLabel: "€80",
+    priceAmount: 80,
     shortDescription: "Un rituale viso orientato a una sensazione di freschezza e cura.",
   }),
   defineTreatment({
@@ -128,6 +141,7 @@ export const treatments: readonly Treatment[] = [
     slug: "manicure-essenziale",
     category: "hands",
     priceLabel: "€30",
+    priceAmount: 30,
     shortDescription: "Cura ordinata di mani e unghie con finitura essenziale.",
   }),
   defineTreatment({
@@ -135,6 +149,7 @@ export const treatments: readonly Treatment[] = [
     slug: "semipermanente",
     category: "hands",
     priceLabel: "€40",
+    priceAmount: 40,
     shortDescription: "Applicazione concordata per una finitura uniforme e controllata.",
   }),
   defineTreatment({
@@ -142,6 +157,7 @@ export const treatments: readonly Treatment[] = [
     slug: "nail-care",
     category: "hands",
     priceLabel: "€35",
+    priceAmount: 35,
     shortDescription:
       "Un servizio di cura essenziale costruito sulle condizioni osservabili delle unghie.",
   }),
@@ -150,6 +166,7 @@ export const treatments: readonly Treatment[] = [
     slug: "rituale-mani",
     category: "hands",
     priceLabel: "€45",
+    priceAmount: 45,
     shortDescription:
       "Un tempo dedicato alla cura delle mani, con passaggi chiariti prima di iniziare.",
   }),
@@ -158,6 +175,7 @@ export const treatments: readonly Treatment[] = [
     slug: "massaggio-distensivo",
     category: "wellness",
     priceLabel: "€70",
+    priceAmount: 70,
     shortDescription: "Un rituale di benessere non medicale dal ritmo lento e concordato.",
   }),
   defineTreatment({
@@ -165,6 +183,7 @@ export const treatments: readonly Treatment[] = [
     slug: "rituale-schiena",
     category: "wellness",
     priceLabel: "€55",
+    priceAmount: 55,
     shortDescription: "Un percorso dedicato alla zona della schiena, senza finalità terapeutiche.",
   }),
   defineTreatment({
@@ -172,6 +191,7 @@ export const treatments: readonly Treatment[] = [
     slug: "trattamento-relax",
     category: "wellness",
     priceLabel: "€85",
+    priceAmount: 85,
     shortDescription:
       "Un tempo di cura non medicale, costruito per rallentare il ritmo dell'appuntamento.",
   }),
@@ -180,12 +200,20 @@ export const treatments: readonly Treatment[] = [
     slug: "percorso-corpo",
     category: "wellness",
     priceLabel: "da €95",
+    priceAmount: 95,
+    priceFrom: true,
     shortDescription: "Un percorso corpo definito in consulenza, senza promesse cliniche.",
   }),
 ] as const;
 
 export const servicesNote =
   "I prezzi indicati si intendono a partire da dove specificato. Eventuali variazioni vengono concordate durante la consulenza.";
+
+export function formatTreatmentSelectionTotal(items: readonly Treatment[]) {
+  const amount = items.reduce((total, treatment) => total + treatment.priceAmount, 0);
+  const hasStartingPrice = items.some((treatment) => treatment.priceFrom);
+  return `${hasStartingPrice ? "da " : ""}€${amount.toLocaleString("it-IT")}`;
+}
 
 export function getTreatment(slug: string) {
   return treatments.find((treatment) => treatment.slug === slug);

@@ -322,3 +322,103 @@ Non aggiungere `aggregateRating` senza recensioni reali e verificabili.
 - La route nuova appare dall'alto senza smooth scroll.
 - La navigazione non provoca flash di contenuto nascosto.
 - Nessun link placeholder porta a un dominio reale non approvato.
+
+## 11. BUSINESS PLUS — route definitive
+
+BUSINESS PLUS preserva tutte le route BUSINESS e aggiunge:
+
+```text
+/consulenza
+/admin
+/admin/login
+```
+
+Solo nel profilo portfolio/demo:
+
+```text
+/_demo/tools
+```
+
+### `/consulenza`
+
+Massimo quattro step:
+
+```text
+1. servizio
+2. 2–4 domande rapide
+3. percorso sintetico: principale + max 2 complementari suggeriti + eventuali aggiunte manuali, max 6 servizi selezionati totali
+4. contatto + review + submit
+```
+
+Da un trattamento può essere aperta con:
+
+```text
+/consulenza?servizio=<slug>
+```
+
+È ammesso nell'URL solo lo slug non personale del servizio. Le risposte personali non
+vengono serializzate nella URL.
+
+Uno slug invalido recupera alla selezione servizio senza rompere la route.
+
+### `/admin/login`
+
+Non compare nella navigazione pubblica. Nel profilo live è la pagina branded RITO che
+autentica l'admin con la native `AdminAuth`. Nel profilo demo espone soltanto la credenziale
+demo `admin@gmail.com` e apre i dati locali senza simulare una password server-side.
+
+### `/admin`
+
+Non compare nella navigazione pubblica.
+
+È esclusivamente la Consultation Inbox:
+
+```text
+lista richieste
+dettaglio
+stato
+nota
+filtri base
+edit operativo limitato
+delete con conferma
+```
+
+Il profilo live richiede accesso admin minimo e request store condiviso. L'edit operativo può modificare contatto, giorno/fascia preferita e i servizi aggiunti fino a 6 servizi selezionati totali; servizio principale e risposte originali restano immutabili. La cancellazione è definitiva e richiede conferma esplicita.
+
+Nel profilo `client-live`, il sito usa inoltre boundary HTTP interni/non navigazionali:
+
+```text
+POST /api/consultations
+/_serverFn/*
+/__tretnix/consultation-realtime
+```
+
+`/api/consultations` è il submit pubblico same-origin. `/_serverFn/*` contiene le
+operazioni admin correnti; ogni operazione valida la sessione native RITO server-side e le
+mutation richiedono anche il token CSRF legato alla sessione. Il path
+realtime accetta solo WebSocket admin autenticati. Questi endpoint non ampliano la route
+pubblica/editoriale del prodotto.
+
+### `/_demo/tools`
+
+Solo profilo portfolio/demo:
+
+```text
+snapshot
+restore
+reset seed
+export
+import
+```
+
+Opera esclusivamente sulla memoria locale demo.
+
+### Nessuna `/percorsi`
+
+La baseline non aggiunge `/percorsi`. Il percorso consigliato è parte del risultato di
+`/consulenza`.
+
+### CUSTOM-only routes/features
+
+Una vera area cliente, CMS, agenda, pagamenti, CRM o admin estesa richiedono un nuovo
+scope CUSTOM.

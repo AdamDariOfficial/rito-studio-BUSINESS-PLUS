@@ -1,6 +1,6 @@
 # RITO Studio BUSINESS — Authorization and Baseline Record
 
-**Updated:** 8 August 2026
+**Updated:** 17 August 2026
 **Status:** `BUSINESS_APPLICATION_BASELINE_MERGED`
 **Repository:** `AdamDariOfficial/rito-studio-BUSINESS`
 **Default branch:** `main`
@@ -340,3 +340,252 @@ manual UX approval for this pass: CONFIRMED
 post-merge production verification: NOT RECORDED
 BUSINESS freeze: NOT DECLARED BY THIS PASS
 ```
+
+## BUSINESS PLUS definitive authorization — 9 August 2026
+
+The user explicitly approved the simplified reusable BUSINESS PLUS scope.
+
+Verified source:
+
+```text
+START frozen:    34c13cd78255b7ac009533790329cada74ae9d8a
+BUSINESS frozen: b95a63c6127d2bc1dd396d74b2dd25f87b952226
+PLUS main:       eba1a2a91fd3a531b4a4667d038b631758d0a664
+PLUS local clone: clean
+BUSINESS -> PLUS: 0 behind / 2 ahead
+net remix paths: bun.lock, package.json
+```
+
+Approved product:
+
+```text
+BUSINESS inherited
++ /consulenza
++ recommendation rules
++ main service + max 2 complementary suggestions
++ /admin Consultation Inbox only
++ demo-local resettable profile
++ minimal shared request store only for a real live inbox
+```
+
+Explicitly not approved as PLUS baseline:
+
+```text
+/percorsi standalone
+CMS/gallery/content editing
+CRM
+live agenda
+payments
+client history
+packages/fidelity/gift-card ledgers
+multi-role/staff/resources
+inventory/multi-location
+operational dashboards/reporting
+bespoke integrations
+```
+
+The definitive documentation and complete reusable application baseline are authorized
+to be applied together on `feat/rito-business-plus-complete` from the verified remix
+base.
+
+Apply success alone is not release approval. Automated validation, browser QA, manual
+diff review and later publication gates remain required.
+
+Stage, commit, push, PR, merge, deploy and production backend enablement remain separate
+explicit gates.
+
+## BUSINESS PLUS post-QA refinement authorization — 10 August 2026
+
+The user confirmed the prior BUSINESS PLUS browser QA and explicitly authorized the following refinement scope before commit/push/publication:
+
+```text
+/admin responsive master-detail redesign
+remove prominent demo banner; keep subtle bottom tools link
+limited operational request edit + destructive delete confirmation
+global native select arrow spacing
+clickable/copyable phone and email
+retain real server-side admin protection for client-live; no fake demo auth
+directional consultation step motion with reduced-motion fallback
+mobile Back/Next same row with primary dominance
+service prices + indicative total in consultation
+privacy link in consent copy
+remove demo disclosure from public confirmation
+```
+
+This authorization extends `BW-DEC-051` only through `BW-DEC-053`/`BW-DEC-054`. It does not authorize CRM, agenda, payments, content management, deployment, migrations or live-store enablement.
+
+
+## BUSINESS PLUS second post-QA refinement authorization — 10 August 2026
+
+After confirming the first post-QA refinement, the user explicitly authorized this additional local refinement:
+
+```text
+confirmation repeats submitted personal/contact/time preferences
+restrained professional success animation; no confetti
+confirmation scroll/focus returns to top
+Hair pace question rewritten for clarity
+privacy link opens in a new tab
+admin note editor moved to a compact dialog workflow
+copy actions visually icon-only
+manual catalogue additions after max-2 recommendations, bounded to max 6 selected services total
+```
+
+The recommendation engine itself remains capped at two suggestions. The extra-service picker does not authorize a cart, live agenda, payments or CRM behavior. Apply, automated validation and affected-area browser QA remain required. Stage, commit, push, PR, merge, deploy, migrations and live-store enablement remain separate gates.
+
+## BUSINESS PLUS third post-QA refinement authorization — 10 August 2026
+
+After validation of `POST_QA_REFINEMENT_CCP_v1.0.1`, the user explicitly authorized this additional local refinement:
+
+```text
+make Personalizza il percorso internally scrollable
+align success check with Richiesta ricevuta and animate the label subtly
+return viewport to the top of the consultation flow on every step change
+remove Chiama per prenotare from the footer Info list
+animate admin consultation open/close with reduced-motion fallback
+stack original answers and note action on mobile for better readability
+use a two-column Demo tools layout on desktop
+```
+
+No new route, dependency, backend capability, schema or product-family expansion is authorized. Apply, automated validation and affected-area browser QA remain mandatory before any publication gate.
+
+## BUSINESS PLUS live architecture authorization — 11 August 2026
+
+After the user confirmed the third post-QA UX refinement as functional, the user
+explicitly chose to replace the local-only live concept with a real shared backend and
+approved the following architecture direction:
+
+```text
+TanStack Start + Cloudflare Workers
+D1 as canonical persistence
+Durable Objects + Hibernation WebSockets for always-connected admin realtime
+Cloudflare Access as the default staging/production admin identity perimeter
+server-side authorization on every admin operation
+Workers Rate Limiting
+Wrangler migrations
+single-tenant deployment isolation per client
+provider adapters around Cloudflare-specific infrastructure
+```
+
+The user explicitly rejected periodic `fetch` polling for the Consultation Inbox and
+required a continuously connected realtime channel. Reconnect + one-shot catch-up is
+allowed for network recovery; interval polling is not.
+
+This authorization is for architecture formalization only. It does not authorize this
+package to create Cloudflare resources, create/apply D1 migrations, change the build
+adapter, stage, commit, push, deploy or accept real production personal data.
+
+Before implementation, the current Lovable/Nitro Cloudflare build path must pass the
+adapter compatibility spike defined in `docs/BUSINESS_PLUS_LIVE_ARCHITECTURE.md`.
+
+## BUSINESS PLUS live adapter compatibility spike authorization — 11 August 2026
+
+After `LIVE_ARCHITECTURE_SPEC_CCP_v1.0.0` applied and validated successfully, the user
+authorized proceeding to the next planned technical gate.
+
+Authorized scope is limited to a local compatibility spike proving the current
+Lovable/Nitro Cloudflare build path with local D1, Durable Object and Hibernation
+WebSocket primitives plus SSR regression checks.
+
+No real Cloudflare resource, migration, Access policy, live data path, staging, production,
+deploy or build-adapter migration is authorized by this gate.
+
+## BUSINESS PLUS live backend staging implementation authorization — 11 August 2026
+
+After the local runtime diagnostic isolated a bare-Worker PASS but component-specific
+D1/DO local failures, the user explicitly chose to stop treating local Wrangler emulation
+as the decisive compatibility gate and authorized proceeding with a **real Cloudflare
+staging implementation candidate**.
+
+Authorized in-repository scope:
+
+```text
+D1 schema/migration source
+direct D1 ConsultationRepository
+public same-origin consultation submit endpoint
+idempotent submission key
+optimistic admin concurrency/versioning
+Cloudflare Access AdminAuth with cryptographic JWT validation
+Workers Rate Limiting adapter
+Durable Object Hibernation WebSocket realtime
+admin reconnect + one-shot catch-up; no polling
+staging-config preparation tooling
+documentation/runbook
+```
+
+Not authorized by this implementation CCP:
+
+```text
+wrangler login
+remote D1 creation
+Access application creation/change
+remote D1 migration
+staging deploy
+production resource creation
+deploy to production
+real customer PII in staging
+stage/commit/push/PR/merge
+build-adapter migration
+```
+
+Remote staging provisioning and deploy require a separate explicit gate after this
+candidate passes Apply/Validate and manual diff review.
+
+## BUSINESS PLUS native AdminAuth + live E2E consolidation authorization — 11 August 2026
+
+The user explicitly replaced Cloudflare Access as the visible/client admin login and
+application identity boundary with a native RITO authentication flow.
+
+Authorized consolidated scope:
+
+```text
+formalize BW-DEC-065
+/admin/login branded RITO
+D1 admin_users + admin_sessions
+robust salted/peppered password hashing
+opaque server-side sessions with hashed D1 token
+HttpOnly Secure SameSite __Host- cookie
+logout + D1 revocation
+login rate limiting + non-enumerating errors
+server authorization on every admin operation
+session-bound CSRF + existing TanStack same-origin CSRF
+same-origin + native-session WebSocket handshake authorization
+preserve D1 + Durable Object realtime/no polling
+fix false submit/admin failure when D1 committed but realtime publish fails
+prepare isolated staging migration/config/deploy gate
+real phone -> D1 -> PC/tablet realtime/reconnect/security acceptance
+update documentation and regression/security checks
+```
+
+`admin@gmail.com` remains an application/demo credential and must not be conflated with
+Cloudflare/Tretnix infrastructure identity. Cloudflare Access may remain only on a separate
+technical Tretnix surface invisible to the client/admin login UX.
+
+This authorization permits preparation of the Controlled Change Package and, after its
+manual review/validation, the explicitly requested **staging-only** remote gate. It does not
+authorize production, automatic migration/deploy from Apply/Validate, stage, commit, push,
+PR or merge.
+
+## BUSINESS PLUS final staging freeze-readiness record — 17 August 2026
+
+The final CSRF negative runtime matrix passed with a fresh native session: missing CSRF,
+plausible invalid CSRF, wrong Origin and revoked-session reuse were all rejected, and no negative
+case changed the controlled D1 request. The reversible control mutation was accepted and restored.
+
+The previously residual runtime cookie, already-open revoked WebSocket, post-logout login,
+390/768 responsive, reduced-motion, physical multi-device and public submit-limiter checks are
+recorded as `CONFIRMED PASS` in `docs/TESTING.md` and the staging runbook. A non-sensitive D1
+baseline confirms the active scrypt v2 admin record, work factor 655360 and session counts without
+recording credential material.
+
+```text
+mandatory staging acceptance items: CLOSED
+candidate verdict:                  READY FOR HUMAN FINAL REVIEW / FREEZE
+human final review/freeze:          NOT YET GRANTED BY THIS RECORD
+production readiness:               NOT CERTIFIED
+production authorization:           NOT GRANTED
+Git publication actions:            NOT AUTHORIZED
+```
+
+This record closes evidence collection only. It does not itself approve the human freeze or
+authorize staging/production mutation, deployment, real production data, stage, commit, push,
+pull request or merge.

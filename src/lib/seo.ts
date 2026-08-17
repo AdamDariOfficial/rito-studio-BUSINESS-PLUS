@@ -62,6 +62,26 @@ export const routeSeo = {
     "Contatti — RITO Studio",
     "Informazioni pratiche, orari, accessibilità e indicazioni per gli appuntamenti.",
   ),
+  consultation: defineSeo(
+    "/consulenza",
+    "Consulenza — RITO Studio",
+    "Una consulenza breve e guidata per partire da un trattamento e valutare servizi complementari.",
+  ),
+  admin: defineSeo(
+    "/admin",
+    "Consultation Inbox — RITO Studio",
+    "Area riservata alla gestione delle richieste di consulenza.",
+  ),
+  adminLogin: defineSeo(
+    "/admin/login",
+    "Accesso admin — RITO Studio",
+    "Accesso riservato alla Consultation Inbox RITO Studio.",
+  ),
+  demoTools: defineSeo(
+    "/_demo/tools",
+    "Demo tools — RITO Studio",
+    "Strumenti locali per ripristinare e controllare lo stato dimostrativo BUSINESS PLUS.",
+  ),
   privacy: defineSeo(
     "/privacy",
     "Privacy — RITO Studio",

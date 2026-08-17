@@ -18,8 +18,13 @@ import { useHorizontalScrollEdges } from "@/hooks/use-horizontal-scroll-edges";
 
 const validCategories = new Set(treatmentCategories.map((category) => category.id));
 
+type TreatmentsSearch = {
+  categoria?: string;
+  trattamento?: string;
+};
+
 export const Route = createFileRoute("/trattamenti/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): TreatmentsSearch => ({
     categoria: typeof search.categoria === "string" ? search.categoria : undefined,
     trattamento: typeof search.trattamento === "string" ? search.trattamento : undefined,
   }),

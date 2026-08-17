@@ -15,8 +15,12 @@ import { Route as GalleriaRouteImport } from './routes/galleria'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as CookieRouteImport } from './routes/cookie'
 import { Route as ContattiRouteImport } from './routes/contatti'
+import { Route as ConsulenzaRouteImport } from './routes/consulenza'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrattamentiIndexRouteImport } from './routes/trattamenti/index'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
+import { Route as DemoToolsRouteImport } from './routes/[_]demo.tools'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
@@ -48,6 +52,16 @@ const ContattiRoute = ContattiRouteImport.update({
   path: '/contatti',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConsulenzaRoute = ConsulenzaRouteImport.update({
+  id: '/consulenza',
+  path: '/consulenza',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -58,79 +72,117 @@ const TrattamentiIndexRoute = TrattamentiIndexRouteImport.update({
   path: '/trattamenti/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoToolsRoute = DemoToolsRouteImport.update({
+  id: '/_demo/tools',
+  path: '/_demo/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/consulenza': typeof ConsulenzaRoute
   '/contatti': typeof ContattiRoute
   '/cookie': typeof CookieRoute
   '/faq': typeof FaqRoute
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
+  '/_demo/tools': typeof DemoToolsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/trattamenti/': typeof TrattamentiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/consulenza': typeof ConsulenzaRoute
   '/contatti': typeof ContattiRoute
   '/cookie': typeof CookieRoute
   '/faq': typeof FaqRoute
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
+  '/_demo/tools': typeof DemoToolsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/trattamenti': typeof TrattamentiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/consulenza': typeof ConsulenzaRoute
   '/contatti': typeof ContattiRoute
   '/cookie': typeof CookieRoute
   '/faq': typeof FaqRoute
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
+  '/_demo/tools': typeof DemoToolsRoute
+  '/admin_/login': typeof AdminLoginRoute
   '/trattamenti/': typeof TrattamentiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/consulenza'
     | '/contatti'
     | '/cookie'
     | '/faq'
     | '/galleria'
     | '/privacy'
     | '/studio'
+    | '/_demo/tools'
+    | '/admin/login'
     | '/trattamenti/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
+    | '/consulenza'
     | '/contatti'
     | '/cookie'
     | '/faq'
     | '/galleria'
     | '/privacy'
     | '/studio'
+    | '/_demo/tools'
+    | '/admin/login'
     | '/trattamenti'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/consulenza'
     | '/contatti'
     | '/cookie'
     | '/faq'
     | '/galleria'
     | '/privacy'
     | '/studio'
+    | '/_demo/tools'
+    | '/admin_/login'
     | '/trattamenti/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  ConsulenzaRoute: typeof ConsulenzaRoute
   ContattiRoute: typeof ContattiRoute
   CookieRoute: typeof CookieRoute
   FaqRoute: typeof FaqRoute
   GalleriaRoute: typeof GalleriaRoute
   PrivacyRoute: typeof PrivacyRoute
   StudioRoute: typeof StudioRoute
+  DemoToolsRoute: typeof DemoToolsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   TrattamentiIndexRoute: typeof TrattamentiIndexRoute
 }
 
@@ -178,6 +230,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContattiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/consulenza': {
+      id: '/consulenza'
+      path: '/consulenza'
+      fullPath: '/consulenza'
+      preLoaderRoute: typeof ConsulenzaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,17 +258,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrattamentiIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_demo/tools': {
+      id: '/_demo/tools'
+      path: '/_demo/tools'
+      fullPath: '/_demo/tools'
+      preLoaderRoute: typeof DemoToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  ConsulenzaRoute: ConsulenzaRoute,
   ContattiRoute: ContattiRoute,
   CookieRoute: CookieRoute,
   FaqRoute: FaqRoute,
   GalleriaRoute: GalleriaRoute,
   PrivacyRoute: PrivacyRoute,
   StudioRoute: StudioRoute,
+  DemoToolsRoute: DemoToolsRoute,
+  AdminLoginRoute: AdminLoginRoute,
   TrattamentiIndexRoute: TrattamentiIndexRoute,
 }
 export const routeTree = rootRouteImport

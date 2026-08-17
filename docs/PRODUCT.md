@@ -111,7 +111,6 @@ Il concept evita:
 - promesse irrealistiche;
 - wellness spirituale vago.
 
-
 ### Regola di modularità del concept
 
 RITO Studio mostra più aree di servizio per dimostrare la capacità della famiglia. Non implica che ogni cliente debba offrire Hair, Skin, Nails e Wellness insieme. L'adattamento reale seleziona soltanto moduli, route e contenuti pertinenti al verticale e all'attività.
@@ -307,3 +306,62 @@ Le metriche vanno raccolte soltanto con configurazione privacy e consenso approp
 - Le route dirette, refresh, back e forward funzionano.
 - Il progetto resta utilizzabile anche senza animazioni.
 - Le funzionalità non dipendono da un backend inesistente.
+
+## 11. BUSINESS PLUS — definizione definitiva
+
+### Promessa
+
+Portare il visitatore dalla scoperta dei trattamenti a una richiesta qualificata con una
+consulenza breve e intuitiva, senza trasformare il prodotto in un gestionale.
+
+### Include
+
+- tutte le funzionalità BUSINESS congelate;
+- `/consulenza`;
+- massimo quattro step di consulenza;
+- domande rapide configurabili per servizio;
+- recommendation rules configurabili;
+- risultato: servizio principale + massimo due complementari suggeriti, con possibilità di aggiungere manualmente altri servizi fino a 6 servizi selezionati totali;
+- handoff configurabile `inbox`, `tel`, `whatsapp`, `external`;
+- `/admin` limitata alla Consultation Inbox, con edit operativo circoscritto e cancellazione confermata;
+- profilo portfolio/demo con memoria locale resettable;
+- `/_demo/tools` solo per demo/sviluppo;
+- profilo live con D1 condiviso per il singolo deployment cliente quando la inbox è attiva;
+- sincronizzazione `/admin` realtime tramite Durable Objects + Hibernation WebSockets, senza polling periodico;
+- autenticazione admin nativa RITO con utenti/sessioni D1, cookie server-side sicuro, CSRF e autorizzazione server-side per ogni operazione;
+- submit live pubblico `POST /api/consultations` con D1 diretto, idempotenza, validation server e rate limiting;
+- source Wrangler non provisioned + staging config generato solo dopo provisioning esplicito;
+- prezzi dei servizi e totale indicativo nel percorso di consulenza;
+- QA comparativa BUSINESS → BUSINESS PLUS.
+
+### Non include
+
+- route `/percorsi` separata;
+- CMS o editor gallery/contenuti;
+- CRM o profilo cliente completo;
+- agenda nativa/live;
+- pagamenti/depositi;
+- storico cliente/appuntamenti;
+- pacchetti/fidelity/gift-card con saldo;
+- multi-role/staff/resources;
+- inventario, contabilità, multi-sede;
+- dashboard/reportistica gestionale;
+- integrazioni bespoke.
+
+Queste estensioni appartengono a CUSTOM.
+
+### Regola di riuso
+
+Un adattamento normale deve richiedere soprattutto:
+
+```text
+site config
+treatment catalogue
+consultation questions
+recommendation rules
+handoff config
+copy/assets
+```
+
+Se servono nuovo schema o nuova logica business sostanziale, classificare il lavoro come
+CUSTOM invece di ampliare la baseline PLUS.

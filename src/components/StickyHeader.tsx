@@ -223,13 +223,13 @@ export function StickyHeader() {
         </nav>
 
         <div inert={open} className="hidden lg:block">
-          <a
-            href={site.contact.phoneHref}
-            aria-label={`${ctaLabels.callToBook}: ${site.contact.phone}`}
+          <Link
+            to="/consulenza"
+            aria-label={ctaLabels.startConsultation}
             className="action-primary inline-flex min-h-11 items-center border border-ink bg-ink px-5 text-sm font-medium text-white hover:border-accent-strong hover:bg-accent-strong"
           >
-            {ctaLabels.navBook}
-          </a>
+            {ctaLabels.navConsultation}
+          </Link>
         </div>
 
         <button
@@ -287,11 +287,11 @@ export function StickyHeader() {
                     </ul>
                   </nav>
                   <a
-                    href={site.contact.phoneHref}
-                    aria-label={`${ctaLabels.callToBook}: ${site.contact.phone}`}
+                    href="/consulenza"
+                    aria-label={ctaLabels.startConsultation}
                     className="mt-5 inline-flex min-h-12 w-full items-center justify-center border border-ink bg-ink px-6 text-sm font-medium text-white"
                   >
-                    {ctaLabels.navBook}
+                    {ctaLabels.navConsultation}
                   </a>
                   <p className="mt-4 text-xs text-muted">{site.contact.locationLabel}</p>
                 </div>
@@ -342,14 +342,14 @@ export function StickyHeader() {
                   ))}
                 </ul>
               </nav>
-              <a
-                href={site.contact.phoneHref}
+              <Link
+                to="/consulenza"
                 onClick={() => closeDrawer(false)}
-                aria-label={`${ctaLabels.callToBook}: ${site.contact.phone}`}
+                aria-label={ctaLabels.startConsultation}
                 className="action-primary mt-5 inline-flex min-h-12 w-full items-center justify-center border border-ink bg-ink px-6 text-sm font-medium text-white hover:border-accent-strong hover:bg-accent-strong"
               >
-                {ctaLabels.navBook}
-              </a>
+                {ctaLabels.navConsultation}
+              </Link>
               <p className="mt-4 text-xs text-muted">{site.contact.locationLabel}</p>
             </div>
           </div>

@@ -7,7 +7,8 @@ import {
   type RefObject,
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ChevronLeft, ChevronRight, Phone, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight, Phone, Sparkles, X } from "lucide-react";
 import { getCategory, type Treatment } from "@/data/treatments";
 import { ctaLabels, site } from "@/lib/site-config";
 
@@ -357,19 +358,31 @@ export function TreatmentDetailDialog({
                   aria-labelledby="detail-booking"
                 >
                   <h3 id="detail-booking" className="font-display text-2xl text-ink">
-                    Vuoi prenotare?
+                    Vuoi costruire il tuo percorso?
                   </h3>
                   <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-on-surface">
-                    Chiama lo studio per confermare il trattamento e concordare l’appuntamento.
+                    Parti da questo trattamento e rispondi a poche domande. Potrai valutare al
+                    massimo due servizi complementari prima di inviare la richiesta.
                   </p>
-                  <a
-                    href={site.contact.phoneHref}
-                    aria-label={`${ctaLabels.callStudio}: ${site.contact.phone}`}
-                    className="action-primary mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 border border-ink bg-ink px-6 text-sm font-medium text-white hover:border-accent-strong hover:bg-accent-strong sm:w-auto"
-                  >
-                    <Phone aria-hidden size={16} strokeWidth={1.7} />
-                    {ctaLabels.callStudio}
-                  </a>
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <Link
+                      to="/consulenza"
+                      search={{ servizio: treatment.slug }}
+                      aria-label={`${ctaLabels.startConsultation}: ${treatment.name}`}
+                      className="action-primary inline-flex min-h-12 w-full items-center justify-center gap-2 border border-ink bg-ink px-6 text-sm font-medium text-white hover:border-accent-strong hover:bg-accent-strong sm:w-auto"
+                    >
+                      <Sparkles aria-hidden size={16} strokeWidth={1.7} />
+                      {ctaLabels.startConsultation}
+                    </Link>
+                    <a
+                      href={site.contact.phoneHref}
+                      aria-label={`${ctaLabels.callStudio}: ${site.contact.phone}`}
+                      className="editorial-link inline-flex min-h-12 items-center gap-2 px-1 text-sm font-medium"
+                    >
+                      <Phone aria-hidden size={16} strokeWidth={1.7} />
+                      {ctaLabels.callStudio}
+                    </a>
+                  </div>
                 </section>
               </div>
             </div>

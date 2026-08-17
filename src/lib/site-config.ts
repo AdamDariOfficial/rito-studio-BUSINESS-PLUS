@@ -52,6 +52,10 @@ export const site = {
     sitemapEnabled: false,
     structuredDataMode: "disabled" as const,
   },
+  consultation: {
+    whatsappHref: import.meta.env.VITE_CONSULTATION_WHATSAPP_URL || null,
+    externalUrl: import.meta.env.VITE_CONSULTATION_EXTERNAL_URL || null,
+  },
   tracking: {
     enabled: false,
     consentRequired: true,
@@ -70,6 +74,8 @@ export const nav = [
 
 export const ctaLabels = {
   navBook: "Prenota",
+  navConsultation: "Consulenza",
+  startConsultation: "Inizia la consulenza",
   callToBook: "Chiama per prenotare",
   callStudio: "Chiama lo studio",
   discoverTreatments: "Scopri i trattamenti",
