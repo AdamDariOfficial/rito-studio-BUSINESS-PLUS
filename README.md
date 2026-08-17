@@ -1,134 +1,187 @@
-# RITO Studio BUSINESS
+# RITO Studio BUSINESS PLUS
 
-RITO Studio BUSINESS is the multipage evolution of the approved Tretnix Beauty &
-Wellness START concept.
+RITO Studio BUSINESS PLUS is the guided-conversion evolution of the frozen RITO Studio
+BUSINESS product.
 
 ## Canonical derivation
 
 ```text
-source repository: AdamDariOfficial/rito-studio-START
-source commit: 439efff0f14315310b9149cde0283633696a0eb0
-source status: approved and frozen by explicit user authorization
-annotated tag: deliberately waived by the user
-BUSINESS repository: AdamDariOfficial/rito-studio-BUSINESS
-Lovable remix baseline: 222c331db44b1775aa2f877634f3a0f3dfdfbe69
+frozen START:
+34c13cd78255b7ac009533790329cada74ae9d8a
+
+frozen BUSINESS:
+b95a63c6127d2bc1dd396d74b2dd25f87b952226
+
+BUSINESS PLUS repository:
+AdamDariOfficial/rito-studio-BUSINESS-PLUS
+
+verified remix/bootstrap base:
+eba1a2a91fd3a531b4a4667d038b631758d0a664
 ```
 
-The full START commit SHA is the authoritative family baseline. The Lovable remix
-preserves that history and adds two tool-managed commits whose net delta is limited to
-`package.json` and `bun.lock`, updating the Lovable TanStack configuration to `2.8.5`.
+The PLUS remix is 0 behind / 2 ahead of frozen BUSINESS and its net remix delta is
+limited to `package.json` and `bun.lock` for the Lovable tooling update. Application
+source is inherited from frozen BUSINESS at the bootstrap base.
 
-## Product role
+## Product promise
 
-BUSINESS adds a coherent multipage treatment-discovery journey with direct telephone
-booking while preserving START's identity, responsive behavior, accessibility, motion
-and demo integrity.
+BUSINESS PLUS does not become a generic salon management system.
 
-Planned public routes:
+It adds a reusable, premium conversion layer:
 
 ```text
-/
-/trattamenti
-/studio
-/galleria
-/faq
-/contatti
-/privacy
-/cookie
-/*
+treatment discovery
+→ short guided consultation
+→ concise complementary recommendations
+→ qualified request
+→ minimal consultation inbox
 ```
 
-BUSINESS v1 excludes `/journal`, `/journal/:slug`, `/gift-card`, `/account`, `/admin`,
-live availability, payments, client accounts, CRM, fidelity, database,
-authentication and BUSINESS PLUS.
-
-Team and a dedicated booking route are not part of the base BUSINESS product. Every
-booking CTA opens the centralized telephone number with a `tel:` link.
-
-Treatment details open as an accessible route-aware dialog or mobile sheet inside the
-catalogue. Category and detail state use query parameters, for example:
+## New baseline route
 
 ```text
-/trattamenti?categoria=hair&trattamento=taglio-essenziale
+/consulenza
 ```
 
-The former `/trattamenti/:slug` route is not active in base BUSINESS.
-
-The dialog preserves the catalogue scroll position and supports bounded previous/next,
-keyboard and swipe navigation without adding a history entry for every treatment. Mobile
-category filters remain a single native horizontal row, while the home gallery rail keeps
-native scrolling and offers a deliberate final gesture toward the full gallery.
-
-## Client adaptation
-
-Base adaptation:
+There is no standalone `/percorsi` baseline route. The “percorso” is generated inside
+the consultation as:
 
 ```text
-edit site config + treatment catalogue
+1 selected/main service
++ at most 2 curated complementary suggestions
++ optional manual additions, bounded to 6 selected services total
 ```
 
-Only `name`, `slug`, `category`, `priceLabel` and `shortDescription` are required for a
-treatment. The centralized model drives catalogue rows, query-driven details and
-catalogue metadata without requiring a separate page for each treatment.
+## Consultation Inbox
 
-Optional enrichment:
+A minimal `/admin` may be delivered with BUSINESS PLUS, but only for consultation
+requests:
 
 ```text
-add detailed content only for selected treatments
+list
+detail
+new / contacted / booked / archived
+short internal notes
+basic filters
 ```
 
-Duration, extended description, suitability, included steps, appointment guidance and
-notes remain optional. Catalogue metadata stays route-level rather than adding unused
-per-treatment SEO or relationship fields.
+It is not a CMS, CRM, agenda or generic admin panel.
 
-## Canonical documentation
+## Demo vs real client
 
-Read `AGENTS.md` first, then:
+Portfolio/demo mode uses local browser state so the demo can be reset safely and sends
+no personal data.
 
+A real client admin cannot receive requests from visitor devices using local storage
+alone. A live Consultation Inbox therefore requires the standardized minimal shared
+request store and admin access. That backend remains narrowly scoped and reusable.
+
+## Conversion handoff
+
+Approved baseline handoffs:
+
+```text
+inbox
+tel
+whatsapp
+external
+```
+
+## CUSTOM boundary
+
+Anything beyond guided conversion + Consultation Inbox is CUSTOM when it introduces
+substantial operational logic: CMS, CRM, live agenda, payments, packages/fidelity
+ledger, multi-role admin, staff/resources, inventory, multi-location, bespoke
+integrations or reporting.
+
+## Current implementation state
+
+The approved scope and the complete reusable application baseline are delivered together
+by the controlled branch:
+
+```text
+feat/rito-business-plus-complete
+```
+
+The current candidate state is:
+
+```text
+BUSINESS_PLUS_AUTHORIZED
+REMIX_VERIFIED
+LOCAL_CLONE_VERIFIED
+DEFINITIVE_SCOPE_APPROVED
+COMPLETE_IMPLEMENTATION_CANDIDATE_APPLIED
+STAGING_IMPLEMENTATION_COMPLETE
+STAGING_DEPLOYMENT_COMPLETE
+STAGING_E2E_COMPLETE
+REQUIRED_STAGING_SECURITY_GATES_COMPLETE
+READY FOR HUMAN FINAL REVIEW / FREEZE
+HUMAN_FINAL_REVIEW_FREEZE_NOT_YET_GRANTED
+PRODUCTION_NOT_CERTIFIED
+PRODUCTION_NOT_AUTHORIZED
+```
+
+The application and staging validation are complete. The candidate is not a frozen baseline
+until a separate read-only Final Human Freeze Audit grants that gate. Staging evidence does not
+certify production readiness or authorize production.
+
+See:
+
+- `docs/BUSINESS_PLUS_CONTRACT.md`
+- `docs/BUSINESS_PLUS_IMPLEMENTATION_SPEC.md`
+- `docs/BUSINESS_PLUS_LIVE_STORE.md`
 - `docs/PRODUCT.md`
-- `docs/DESIGN.md`
-- `docs/CONTENT.md`
 - `docs/ROUTES.md`
-- `docs/ANIMATIONS.md`
-- `docs/TESTING.md`
 - `docs/DECISIONS.md`
-- `docs/ASSET_PLAN.md`
-- `docs/STATUS.md`
-- `docs/APPROVAL.md`
-- `docs/START_BUSINESS_CONTRACT.md`
+- `AGENTS.md`
 
-The optional versioned BUSINESS Project Knowledge source for a future Lovable pass is:
+## Current post-QA interaction refinements
+
+The controlled BUSINESS PLUS candidate additionally uses a viewport-bounded scrollable service picker, top-of-flow step reset, compact inline success status, reduced-motion-safe admin drill-in, mobile-stacked original answers/note actions, a two-column desktop demo-tools workspace and no redundant `Chiama per prenotare` footer entry.
+
+These refinements do not change the four-step consultation, max-two curated recommendations, max-six selected-service bound, live admin authorization contract or CUSTOM boundary.
+
+## Approved live architecture — 11 August 2026
+
+The real-client Consultation Inbox is now implemented as a staging candidate behind the
+approved architecture:
 
 ```text
-compiled/LOVABLE_BUSINESS_PROJECT_KNOWLEDGE.md
+TanStack Start / Cloudflare Worker
+  ├── D1 direct binding → canonical Consultation Inbox
+  └── Durable Object + Hibernation WebSocket → realtime admin synchronization
+
+Native RITO AdminAuth → /admin/login + D1 users/sessions + authorized server functions/WebSocket
 ```
 
-The optional versioned BUSINESS implementation prompt for a future Lovable pass is:
+D1 is source of truth and `/admin` has no periodic polling. Every admin operation validates
+a native server-side RITO session; state-changing operations also require a session-bound
+CSRF token. Public consultation submission uses `POST /api/consultations` with server
+validation, idempotency and Workers Rate Limiting. Realtime publish is a post-commit
+best-effort notification, so a D1 success is never reported as failed solely because the
+Durable Object notification path is temporarily unavailable.
 
-```text
-prompts/LOVABLE_BUSINESS_PROMPT.md
-```
+Reuse remains single-tenant per client deployment by default. Cloudflare-specific APIs remain
+behind repository/auth/realtime/rate-limit adapters.
 
-## Current implementation decision
+The current Lovable/Nitro build adapter is preserved. Its generated Wrangler/DO export merge
+has passed validation; local Windows D1/DO emulation remained inconclusive outside RITO as
+well. The completed isolated Cloudflare staging gate subsequently validated the adapter and live
+runtime path, so no speculative build-tool migration is authorized.
 
-The user authorized Cursor + Codex as the sole local writer for the complete BUSINESS
-multipage pass on `feat/rito-business-multipage`, based on
-`9b7ff807f945f679216671577963fd713badb507`.
+See:
 
-Lovable remains passive for repository synchronization or optional preview only.
-Project Knowledge is not required or updated, the Lovable Agent and prompt are not
-authorized, and intentional Lovable credit use is prohibited for this pass. Concurrent
-writers are forbidden. Stage, commit, push, pull request, merge, publication, deployment,
-domains and infrastructure remain separate explicit gates.
+- `docs/BUSINESS_PLUS_LIVE_ARCHITECTURE.md` v1.5
+- `docs/BUSINESS_PLUS_LIVE_STORE.md` v2.3
+- `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.0
 
-## SEO and measurement boundary
+## Current gate — final human freeze audit
 
-BUSINESS includes a centralized route SEO inventory, social-image configuration,
-appropriate structured-data capability and consent-aware tracking configuration. The
-portfolio demo remains `noindex, follow`, keeps sitemap generation and analytics
-disabled by default and performs no tracking request or cookie write before consent.
+The isolated Cloudflare staging implementation, native AdminAuth scrypt v2 reprovision/deploy
+and required functional, security, responsive and multi-device acceptance are complete. D1 is
+the canonical store; Durable Object/WebSocket realtime remains a best-effort notification layer
+with reconnect and one-shot D1 catch-up.
 
-## Public authorship
-
-The public-facing product is designed and developed by Tretnix. Internal production
-tools are not presented as authors.
+The next step is a fresh **read-only Final Human Freeze Audit**. The source `wrangler.jsonc`
+remains unprovisioned and must not be deployed directly. No secret value belongs in the
+repository. Production remains not certified and not authorized.

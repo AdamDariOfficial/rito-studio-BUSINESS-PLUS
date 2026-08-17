@@ -1,8 +1,8 @@
 # RITO Studio — Decision Log
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 1.7
-**Stato:** decisioni approvate e aggiornate all'8 agosto 2026
+**Versione:** 2.2
+**Stato:** decisioni approvate e aggiornate al 16 agosto 2026
 
 ## BW-DEC-001 — Concept portfolio
 
@@ -587,3 +587,521 @@ gallery, catalogo trattamenti e architettura one-page START non vengono modifica
 
 **Limite:** questa decisione non prova un nuovo deploy di produzione e non sposta
 automaticamente alcun freeze precedentemente dichiarato.
+
+## BW-DEC-047 — Freeze finale START e BUSINESS
+
+**Data:** 9 agosto 2026
+
+**Decisione:** considerare congelati i prodotti RITO inferiori sulle baseline:
+
+```text
+START main:    34c13cd78255b7ac009533790329cada74ae9d8a
+BUSINESS main: b95a63c6127d2bc1dd396d74b2dd25f87b952226
+```
+
+Lo sviluppo PLUS avviene esclusivamente nel repository BUSINESS PLUS.
+
+## BW-DEC-048 — BUSINESS PLUS autorizzato dalla baseline BUSINESS congelata
+
+**Data:** 9 agosto 2026
+
+**Decisione:** autorizzare `RITO Studio BUSINESS PLUS` come derivazione separata di
+BUSINESS `b95a63c6127d2bc1dd396d74b2dd25f87b952226`.
+
+Repository/bootstrap verificato:
+
+```text
+AdamDariOfficial/rito-studio-BUSINESS-PLUS
+eba1a2a91fd3a531b4a4667d038b631758d0a664
+```
+
+Il net remix delta rispetto al BUSINESS è limitato a `package.json` e `bun.lock`.
+
+## BW-DEC-049 — PLUS come conversion layer riutilizzabile, non gestionale
+
+**Data:** 9 agosto 2026
+
+**Decisione:** BUSINESS PLUS aggiunge al BUSINESS congelato una consulenza guidata
+semplice e una mini inbox delle richieste. Non include un CMS, CRM, agenda o gestionale.
+
+La route pubblica nuova della baseline è `/consulenza`. Non esiste una route baseline
+`/percorsi`: il percorso nasce come risultato sintetico della consulenza.
+
+## BW-DEC-050 — Consulenza breve e recommendation rules configurabili
+
+**Data:** 9 agosto 2026
+
+**Decisione:** `/consulenza` usa massimo quattro step:
+
+```text
+servizio
+2–4 domande rapide
+servizio principale + massimo 2 complementari
+contatto/review/submit
+```
+
+Le recommendation rules sono deterministiche, configurabili e basate su slug/opzioni
+stabili. Nessuna dipendenza AI e nessun claim medicale.
+
+## BW-DEC-051 — Mini admin limitata alle consulenze
+
+**Data:** 9 agosto 2026
+
+**Decisione:** BUSINESS PLUS può consegnare `/admin` esclusivamente come Consultation
+Inbox con:
+
+```text
+lista
+dettaglio
+new / contacted / booked / archived
+nota interna breve
+filtri data/stato
+```
+
+Sono esclusi editor contenuti/immagini, CRM, calendario, pagamenti, dashboard generale,
+staff e configurazioni profonde. Queste estensioni appartengono a CUSTOM.
+
+## BW-DEC-052 — Demo locale distinta dalla inbox reale multi-device
+
+**Data:** 9 agosto 2026
+
+**Decisione:** il portfolio può usare memoria locale resettable e `/_demo/tools` per
+snapshot/reset/export/import.
+
+La memoria locale non può essere presentata come inbox reale del cliente, perché le
+richieste inviate da altri dispositivi non sarebbero condivise. Una Consultation Inbox
+live richiede un request store condiviso standardizzato e accesso admin minimo.
+
+Il backend live resta strettamente limitato alle richieste di consulenza; ogni espansione
+operativa sostanziale ricade in CUSTOM.
+
+## BW-DEC-053 — Consultation Inbox operativa ma ancora limitata
+
+**Data:** 10 agosto 2026
+
+**Decisione:** estendere `BW-DEC-051` senza trasformare BUSINESS PLUS in CRM o agenda. `/admin` può ora:
+
+```text
+modificare contatto, canale, giorno/fascia preferita
+modificare massimo due servizi complementari
+eliminare definitivamente una richiesta con conferma esplicita
+```
+
+Il servizio principale e le risposte originali della consulenza restano immutabili e leggibili come evidenza della richiesta iniziale. Lo stato `archived` resta l'alternativa non distruttiva alla cancellazione.
+
+In `client-live`, edit e delete sono autorizzati lato server dalla stessa sessione admin minima già definita; la demo locale non deve simulare sicurezza con password client-side.
+
+## BW-DEC-054 — Refinement UX post-QA di admin e consulenza
+
+**Data:** 10 agosto 2026
+
+**Decisione:** adottare:
+
+- admin master-detail con scroll indipendenti desktop e drill-in mobile;
+- rimozione dei banner demo prominenti da `/admin` e dalla conferma `/consulenza`, mantenendo disclosure nelle route legali e `noindex, follow` secondo `BW-DEC-026`;
+- piccolo link `Strumenti` in fondo all'admin solo nel profilo demo;
+- telefono/email cliccabili e copiabili;
+- select nativi con freccia e inset coerenti su tutto il sito;
+- transizione direzionale tra gli step della consulenza, disattivata con reduced motion;
+- azioni Indietro/Avanti sulla stessa riga mobile, con priorità visiva all'azione primaria;
+- prezzi dei singoli servizi e totale indicativo durante percorso, review e conferma;
+- link diretto a `/privacy` nel consenso.
+
+
+## BW-DEC-055 — Percorso esteso ma ancora guidato
+
+**Data:** 10 agosto 2026
+
+**Decisione:** mantenere il recommendation layer deterministico a massimo due suggerimenti complementari, ma consentire al visitatore di aggiungere altri servizi esistenti dal catalogo dopo i suggerimenti. La richiesta resta limitata a massimo 6 servizi selezionati totali, incluso il servizio principale.
+
+Il servizio principale resta immutabile dopo la consulenza; `/admin` può aggiornare i servizi aggiunti entro lo stesso limite. Il picker non è un carrello, non compone automaticamente un appuntamento, non introduce disponibilità live e non autorizza agenda/pagamenti/CRM.
+
+Questa decisione aggiorna il limite di selezione di `BW-DEC-050` e `BW-DEC-053` senza modificare il limite di massimo due **raccomandazioni**.
+
+## BW-DEC-056 — Conferma consulenza e micro-UX admin
+
+**Data:** 10 agosto 2026
+
+**Decisione:** il secondo refinement post-QA adotta:
+
+- conferma richiesta con riepilogo dei dati effettivamente salvati: nome, telefono, email se presente, canale, giorno e fascia preferiti;
+- ritorno immediato della viewport in cima e focus programmatico sul titolo di successo;
+- microanimazione di successo editoriale con check + singolo ring discreto, senza coriandoli, particelle o gamification e con reduced-motion completo;
+- copy privacy aperta in nuova scheda per non interrompere la consulenza in corso;
+- domanda Hair `pace` riscritta come preferenza di completezza del percorso;
+- nota interna admin ridotta a preview compatta con editor in dialog;
+- copy telefono/email visivamente icon-only, pur mantenendo un elemento `button` semantico e accessibile.
+
+Il refinement non modifica autenticazione, storage profile, route inventory o confini CUSTOM.
+
+## BW-DEC-057 — Third post-QA interaction refinement
+
+**Data:** 10 agosto 2026
+
+**Decisione:** applicare un refinement UX mirato senza ampliare il perimetro BUSINESS PLUS:
+
+- `Personalizza il percorso` mantiene header e footer del dialog fissi e rende scrollabile solo l'elenco servizi interno, con altezza vincolata alla viewport;
+- nella conferma il check e `Richiesta ricevuta` formano un unico status orizzontale; anche la label può entrare con una microanimazione breve e non celebrativa;
+- ogni cambio step della consulenza riporta la viewport all'inizio del flow e poi trasferisce il focus al pannello attivo senza smooth route scrolling;
+- il footer pubblico rimuove la voce ridondante `Chiama per prenotare`; telefono ed email restano nei Contatti;
+- `/admin` usa una breve transizione di ingresso/uscita nel drill-in mobile e una dissolvenza breve quando cambia il dettaglio desktop; `prefers-reduced-motion` rende il passaggio immediato;
+- su mobile `Risposte originali` impila domanda e risposta; la CTA nota interna passa sotto il testo invece di comprimere la riga;
+- `/_demo/tools` usa due colonne su desktop per Stato corrente e Import/Export JSON, mantenendo una colonna su mobile.
+
+**Vincoli:** nessuna nuova dipendenza, route, backend, schema dati o funzione CRM. Le modifiche restano responsive, keyboard-safe e reduced-motion-safe. Stage, commit, push, PR, merge, deploy e live-store enablement restano gate separati.
+
+## BW-DEC-058 — Live architecture BUSINESS PLUS riutilizzabile
+
+**Data:** 11 agosto 2026
+
+**Decisione:** il profilo reale BUSINESS PLUS usa come baseline tecnica:
+
+```text
+TanStack Start
+Cloudflare Workers
+Cloudflare D1
+Durable Objects + Hibernation WebSockets
+Cloudflare Access dietro un AdminAuth adapter
+Zod
+Workers Rate Limiting
+Wrangler migrations
+```
+
+Il modello di riuso Tretnix predefinito è single-tenant per cliente: deployment, D1 e
+coordinazione realtime isolati per cliente ma alimentati dallo stesso codice prodotto e
+dalla stessa configurazione tipizzata. D1 è source of truth; il Durable Object coordina
+soltanto realtime e connessioni.
+
+Le API Cloudflare devono restare dietro repository/port/adapters, così un futuro passaggio
+a PostgreSQL o altro provider non obbliga a riscrivere il dominio BUSINESS PLUS.
+
+Nessun ORM è autorizzato nella v1 senza un motivo concreto.
+
+## BW-DEC-059 — Consultation Inbox realtime senza polling
+
+**Data:** 11 agosto 2026
+
+**Decisione:** `/admin` non usa polling periodico. Mantiene una connessione WebSocket
+autenticata e hibernatable verso un Durable Object per client/workspace.
+
+Il protocollo client è:
+
+```text
+connect socket
+→ ready
+→ snapshot D1
+→ replay eventi accodati durante lo snapshot
+→ realtime
+```
+
+Dopo una disconnessione usa backoff + jitter, riconnessione e **un solo** catch-up
+snapshot. Non esiste fallback a fetch ogni N secondi.
+
+Gli eventi realtime non contengono PII; trasportano soltanto tipo evento, request id,
+versione e timestamp. Le mutation persistono prima in D1 e solo dopo pubblicano la
+notifica. La durabilità appartiene a D1, non al WebSocket.
+
+## BW-DEC-060 — Gate infrastrutturale prima dell'implementazione live
+
+**Data:** 11 agosto 2026
+
+**Decisione:** il repository corrente usa `@lovable.dev/vite-tanstack-config` + Nitro
+`cloudflare-module`, mentre la documentazione TanStack corrente indica
+`@cloudflare/vite-plugin` + Wrangler per il percorso Cloudflare ufficiale.
+
+Prima di modificare tooling o dominio è obbligatorio uno spike controllato che provi D1,
+Durable Objects, WebSocket Hibernation e sviluppo locale con l'adapter attuale. Se
+l'adapter corrente è sufficiente, va preservato. Se non lo è, l'eventuale migrazione al
+plugin Cloudflare ufficiale è una modifica infrastrutturale separata, motivata e
+validata; non è autorizzata per preferenza stilistica.
+
+Creazione risorse, migrations, staging e production restano gate espliciti separati.
+
+## BW-DEC-061 — Local adapter compatibility spike protocol
+
+**Data:** 11 agosto 2026
+
+**Decisione:** dopo la validazione della Live Architecture v1.0, il primo gate tecnico è
+un compatibility spike locale sul build path esistente
+`@lovable.dev/vite-tanstack-config 2.9.1` + Nitro `cloudflare-module`.
+
+Lo spike deve provare insieme D1 read/write, Durable Object reachability, Hibernation
+WebSocket e regressione SSR usando il Worker Nitro realmente buildato. Nitro deve inoltre
+mergiare una configurazione Wrangler sorgente e includere l'export Durable Object tramite
+`exports.cloudflare.ts`.
+
+Il test usa soltanto risorse locali simulate, binding con prefisso `SPIKE_`, una D1 id
+placeholder e Wrangler pinned; non può eseguire deploy, login Cloudflare, provisioning
+remoto o migration reale.
+
+Se lo spike passa, l'adapter corrente va preservato per il successivo gate di
+implementazione live. Se fallisce per causa confermata dell'adapter, la migrazione al
+Cloudflare Vite plugin diventa eleggibile ma richiede comunque una decisione e un CCP
+infrastrutturale separati.
+
+## BW-DEC-062 — Remote staging supersedes inconclusive local component runtime
+
+**Data:** 11 agosto 2026
+
+**Decisione:** il compatibility spike ha confermato build/merge/export del target
+Lovable/Nitro, mentre il diagnostic Windows ha mostrato `Bare Worker PASS` ma failure
+locali anche per D1 e Durable Objects minimali indipendenti da RITO/Nitro.
+
+Questo risultato non dimostra un difetto dell'adapter e non autorizza una migrazione di
+build tooling. Il gate di compatibilità determinante diventa un deployment **staging**
+isolato su Cloudflare reale. Il local Wrangler component runtime resta utile ma non
+bloccante finché il failure non è dimostrato specifico dell'applicazione.
+
+## BW-DEC-063 — Live backend direct-D1 + Access-authenticated admin boundary
+
+> **Superseded in auth scope by BW-DEC-065.** D1/direct persistence and public-submit portions remain historical architecture evidence.
+
+
+**Data:** 11 agosto 2026
+
+**Decisione:** il live backend BUSINESS PLUS sostituisce definitivamente il precedente
+placeholder REST-store/password-session con:
+
+```text
+Worker → D1 binding diretto
+Worker → Durable Object realtime
+Cloudflare Access → AdminAuth server adapter
+```
+
+Il submit pubblico usa `POST /api/consultations`, fuori dalla protezione Access, con JSON
+only, Origin/Fetch-Metadata checks, Zod/semantic validation, idempotency D1 e Workers Rate
+Limiting. Tutte le server functions correnti sono admin-only e il loro transport
+`/_serverFn/*`, `/admin*` e il WebSocket `/__tretnix/consultation-realtime` devono essere
+protetti dalla stessa Access application/AUD.
+
+Il Worker verifica comunque firma RS256, issuer, audience e validità temporale del JWT
+Access. Non è autorizzata una password admin custom per staging/production.
+
+## BW-DEC-064 — Staging-isolated live backend and remote gate discipline
+
+> **Superseded in Access-specific staging scope by BW-DEC-065.** Isolation and manual remote-gate discipline remain active.
+
+
+**Data:** 11 agosto 2026
+
+**Decisione:** il candidate live può includere migration SQL, repository D1, realtime DO,
+JWT verifier, rate limiter e tool di preparazione config, ma il source `wrangler.jsonc`
+resta volutamente non provisioned e non deployabile come ambiente reale.
+
+Lo staging richiede:
+
+```text
+custom hostname dedicato
+workers.dev = false
+preview_urls = false
+D1 staging separato creato con jurisdiction=eu
+Access application staging separata
+audience Access staging
+rate-limit namespace dedicato
+config generato .output/server/wrangler.staging.json
+```
+
+Create remoto, migration `--remote`, deploy e qualsiasi produzione restano azioni manuali
+separate. Staging usa soltanto dati test finché retention/purge/privacy/security non sono
+approvati e provati.
+
+## BW-DEC-065 — Native RITO AdminAuth e successo determinato da D1
+
+**Data:** 11 agosto 2026
+
+**Decisione:** sostituire il ruolo di Cloudflare Access come autenticazione visibile e
+identità applicativa dell'admin BUSINESS PLUS con una `AdminAuth` nativa RITO, mantenendo
+D1 + Durable Objects come architettura dati/realtime approvata.
+
+Questa decisione **sostituisce le sole parti auth/perimeter** di `BW-DEC-058`,
+`BW-DEC-063` e `BW-DEC-064`; le decisioni restano storiche per D1, Durable Objects,
+single-tenant isolation, no polling, staging discipline e adapter boundary.
+
+Il boundary live diventa:
+
+```text
+/admin/login branded RITO
+-> admin_users in D1
+-> PBKDF2-HMAC-SHA-256, salt univoco, pepper Worker secret
+-> session token CSPRNG opaco
+-> soltanto hash del token in admin_sessions D1
+-> __Host- HttpOnly Secure SameSite cookie
+-> server-side authorization su ogni read/mutation admin
+-> session-bound CSRF su mutation
+-> same-origin + session authorization sul WebSocket handshake
+```
+
+`admin@gmail.com` resta la credenziale demo/applicativa RITO e non identifica Cloudflare,
+Tretnix o altra infrastruttura. La password live/staging non è hardcoded né committata.
+
+Il login applica rate limiting prima del password work, dummy work per utenti assenti e
+messaggi credenziali non enumerabili. Logout revoca la sessione server-side. Le socket mantengono una scadenza effettiva derivata
+da absolute + idle session validity; prima di consegnare ogni evento il Durable Object
+ricontrolla inoltre in D1 session id, revoca e stato dell'utente. Una socket già aperta non
+può quindi ricevere un evento successivo dopo logout/revoca/disabilitazione.
+
+Cloudflare Access può essere mantenuto soltanto su una superficie tecnica Tretnix separata
+che non intercetta l'esperienza RITO `/admin/login` e non fornisce l'identità applicativa.
+
+Nello stesso gate viene formalizzata la semantica di durabilità già implicita in
+`BW-DEC-058`/`BW-DEC-059`: **D1 determina il successo dell'operazione**. Una failure del
+publish realtime dopo un commit D1 riuscito è registrata senza PII e recuperata tramite
+reconnect/catch-up; non può trasformare submit o mutation già persistiti in un falso errore
+per visitatore/admin.
+
+Il gate consolidato comprende native auth, migration D1 auth, login/logout/session/CSRF,
+WebSocket authorization, correzione della failure semantics del submit, staging deploy e
+E2E reale. Apply/Validate non possono eseguire migration/deploy o Git write actions; tali
+passaggi restano manuali ed espliciti. Produzione resta non autorizzata.
+
+
+## BW-DEC-066 — Cloudflare bindings native nel boundary TanStack serverFn
+
+**Data:** 12 agosto 2026
+
+**Decisione:** le server functions e i repository live BUSINESS PLUS leggono binding D1,
+Rate Limit, Durable Object e secret tramite `env` da `cloudflare:workers`, che e il pattern
+Cloudflare documentato per TanStack Start. Il custom bridge basato su `AsyncLocalStorage` non
+e piu una dipendenza applicativa.
+
+**Evidenza che ha aperto la correzione:** sullo staging nativo, dopo migration, provisioning
+admin e deploy, sia password corretta sia password errata producevano il fallback
+`Accesso temporaneamente non disponibile`. Il tail mostrava la POST serverFn con Worker
+`outcome=ok`, HTTP 200, circa 1 ms CPU, nessuna exception/log; D1 conservava
+`last_login_at = NULL` e zero `admin_sessions`. Questo colloca il failure prima della creazione
+sessione e prima del normale `AdminLoginRejectedError`.
+
+**Classificazione:** il sintomo e il punto di arresto sono confermati. L'assenza dello stack
+originale impedisce di attribuire matematicamente l'eccezione al solo `AsyncLocalStorage`; la
+correzione elimina comunque un bridge non canonico esattamente dal primo boundary che richiede
+i binding (`ADMIN_LOGIN_RATE_LIMITER`) e aggiunge logging sicuro per ogni failure inatteso.
+
+**Vincoli:** nessun bypass del rate limit, nessun indebolimento di sessione/CSRF, nessun cambio
+D1/DO, nessuna produzione e nessun secret nel sorgente o nei log.
+
+**Integrazione build:** il gate Windows del CCP v1.0.2 ha confermato che il target
+Lovable/Nitro corrente non risolve autonomamente il virtual runtime module
+`cloudflare:workers` durante il build Vite 8/Rolldown. Finche non viene autorizzata una
+migrazione al Cloudflare Vite plugin, `vite.config.ts` deve quindi mantenere
+`cloudflare:workers` come external tramite `vite.build.rolldownOptions.external`. Questo e
+un adattamento di bundling mirato, non una nuova dipendenza, non cambia il runtime API e
+non autorizza una migrazione di tooling.
+
+## BW-DEC-067 — Verifica password strutturata e diagnostica staging sicura
+
+**Data:** 13 agosto 2026
+
+**Decisione:** il boundary Native AdminAuth distingue internamente `match`, `mismatch`,
+`invalid_record` e `crypto_error` tramite un'unica implementazione WebCrypto. Scheme, work
+factor v1, base64url canonico, salt decodificato da 16 byte e tag HMAC decodificato da 32 byte
+sono validati prima della comparazione.
+
+Tutti gli esiti non-match restano non enumerabili verso il browser e conservano il lavoro dummy
+per account assenti o record non supportati/malformati. Soltanto staging/development emette
+`rito.admin_auth.verification` con metadata di forma/tipo, outcome e classe crypto generica.
+
+Per confrontare il materiale di provisioning con il secret runtime è ammesso soltanto il
+fingerprint operativo `SHA-256(secret)` troncato ai primi 16 caratteri hex lowercase. Il
+fingerprint non viene persistito, non è una credenziale e non autorizza rotazioni automatiche.
+La password resta una stringa opaca esatta in UI, schema, server function, login, verifica e
+generator. Questa decisione non autorizza deploy, D1 write, migration, secret rotation o
+produzione.
+
+## BW-DEC-068 — Compatibilità WebCrypto Native AdminAuth
+
+**Data:** 14 agosto 2026
+
+**Evidenza:** il Worker staging `f4ec4a05-e579-4704-a817-4dea622fa578`, con la credenziale
+staging valida, ha restituito `crypto_error / NotSupportedError` dopo aver confermato lookup D1,
+utente attivo, scheme, tipo/valore delle iterazioni e forma base64url di salt/hash. Il deploy non
+ha phase-instrumentato la singola primitive WebCrypto, quindi l'evidenza delimita il boundary
+crypto senza attribuire oltre i dati disponibili.
+
+**Decisione:** mantenere invariato `pbkdf2-sha256-hmac-pepper-v1` e rendere espliciti tutti gli
+`AlgorithmIdentifier` PBKDF2/HMAC interessati. La verifica password calcola il candidate tag con
+HMAC `sign`, importa la pepper key solo con usage `sign`, valida entrambi i tag a 32 byte e usa
+`crypto.subtle.timingSafeEqual`; non usa più `crypto.subtle.verify`. La verifica CSRF adotta lo
+stesso sign-and-compare e conserva il risultato booleano esterno.
+
+**Invarianti:** PBKDF2-HMAC-SHA-256, 600000 iterazioni, salt 16 byte, derived value 32 byte e
+post-hash HMAC-SHA-256 pepper tag restano identici. Restano invariati D1, record credenziali,
+password e whitespace semantics, pepper, session token/cookie, contesto/protocollo CSRF, rate
+limit, non-enumeration, WebSocket auth, Durable Object, public submit e provider architecture.
+Gli outcome restano `match`, `mismatch`, `invalid_record`, `crypto_error` con diagnostica
+strutturata non esposta al client.
+
+**Gate:** il focused harness deve mantenere l'oracolo Node indipendente e provare entrambe le
+comparazioni timing-safe e l'assenza di `subtle.verify` nei due boundary. La remediation è locale:
+un solo nuovo staging deploy resta pendente. Nessuna rotazione, D1 write, migration, operazione
+Git remota o produzione è autorizzata.
+
+## BW-DEC-069 — PBKDF2 Native AdminAuth tramite node:crypto
+
+**Data:** 16 agosto 2026
+
+**Evidenza:** il successivo Worker staging `3e52fb80-895b-43a3-8ff5-1b226961eab2` ha ancora
+restituito `crypto_error / NotSupportedError` con la credenziale valida dopo il PASS di lookup D1,
+stato utente, scheme, tipo/valore delle iterazioni e forma encoded 22/43 di salt/hash. La causa
+confermata è il limite workerd WebCrypto PBKDF2 a 100000 iterazioni, inferiore alle 600000 previste
+dal record RITO.
+
+**Decisione:** spostare esclusivamente la derivazione PBKDF2 del Native AdminAuth da WebCrypto a
+`node:crypto` `pbkdf2Sync`, abilitato tramite `nodejs_compat` nel source Wrangler config e
+preservato dal generatore staging. L'adapter Lovable/Nitro corrente resta invariato; non viene
+introdotta alcuna dipendenza. Questa decisione sostituisce esclusivamente il path PBKDF2
+WebCrypto di `BW-DEC-068`; le decisioni HMAC sign/timing-safe della stessa restano attive.
+
+**Invarianti:** restano identici `pbkdf2-sha256-hmac-pepper-v1`, password bytes opachi,
+PBKDF2-HMAC-SHA-256, 600000 iterazioni, salt 16 byte, derived value 32 byte e post-hash
+HMAC-SHA-256 con la pepper esistente. Restano sign-only HMAC keys, tag a 32 byte e
+`crypto.subtle.timingSafeEqual` per password e CSRF. Gli outcome restano `match`, `mismatch`,
+`invalid_record`, `crypto_error`; nessun dettaglio diagnostico aggiuntivo è esposto al client.
+
+**Gate:** source, focused harness e Worker generato non devono contenere il precedente WebCrypto
+PBKDF2 `deriveBits`; il KAT deve restare byte-compatible a 600000. Build demo/live, config staging
+con `nodejs_compat`, probe locale workerd e Wrangler 4.114.0 dry-run devono passare. La chiusura
+runtime richiede ancora un solo staging redeploy e un login reale. Non sono autorizzati D1 write,
+migration, password/pepper/secret rotation, credential reprovision, deploy automatico, Git write
+remoto o produzione.
+
+## BW-DEC-070 — Native AdminAuth scrypt v2 compatibile con workerd
+
+**Data:** 16 agosto 2026
+
+**Evidenza definitiva:** il Worker staging `cef1e128-2564-4372-b212-58a4e64600be`, dopo la
+sostituzione di WebCrypto PBKDF2 con `node:crypto` `pbkdf2Sync(..., 600000, 32, "sha256")`, ha
+restituito ancora `crypto_error / NotSupportedError` con utente trovato/attivo, scheme e work
+factor supportati e campi encoded 22/43. Il source corrente workerd conferma che anche
+`CryptoImpl::getPbkdf()` del path Node chiama `checkPbkdfLimits()`; il default
+`DEFAULT_MAX_PBKDF2_ITERATIONS` resta 100000. PBKDF2-HMAC-SHA-256 a 600000 non è quindi
+implementabile nativamente nel runtime target e non viene indebolito a 100000.
+
+**Decisione:** `BW-DEC-070` sostituisce il KDF e lo scheme password di `BW-DEC-065` e
+`BW-DEC-067`–`BW-DEC-069` prima del freeze. Il nuovo scheme esclusivo di creazione/verifica è
+`scrypt-n16384-r8-p5-hmac-sha256-pepper-v2`, con N=16384, r=8, p=5, `maxmem` 32 MiB, salt
+CSPRNG 16 byte e derived key 32 byte. Il derived value riceve il post-hash HMAC-SHA-256 con
+`ADMIN_AUTH_PEPPER`; il tag persistito resta base64url canonico da 32 byte. Il costo totale
+N*r*p è 655360, sotto il limite workerd 2^20, e usa la variante da circa 16 MiB coerente con il
+limite isolate di 128 MiB.
+
+**Compatibilità D1:** nessuna migration puramente nominale. Il campo SQL legacy
+`password_iterations INTEGER NOT NULL CHECK(password_iterations >= 100000)` conserva 655360
+come work factor significativo; scheme e valore devono corrispondere esattamente. N/r/p/maxmem
+sono fissati e versionati dallo scheme, non controllati liberamente dal database. Nel dominio il
+concetto è `passwordWorkFactor`; il nome `password_iterations` resta confinato al boundary SQL.
+Un record `pbkdf2-sha256-hmac-pepper-v1` è legacy/incompatibile e produce `invalid_record`; non
+viene reinterpretato con PBKDF2 100000.
+
+**Invarianti:** password esatta e opaca senza trim/normalizzazione/case conversion, pepper,
+salt, HMAC sign + tag 32 byte + `timingSafeEqual`, outcome strutturati, dummy work equivalente,
+non-enumeration, session hashing, cookie, CSRF, rate limiting, autorizzazione D1/WebSocket e
+protocollo realtime restano invariati. `nodejs_compat` resta obbligatorio; nessuna dipendenza,
+WASM, Argon2 o bcrypt viene introdotta.
+
+**Gate:** il local gate deve includere un vero HTTP request a un Worker locale Wrangler/workerd
+che esegue `scryptSync` con gli esatti N/r/p/maxmem e restituisce 32 byte, oltre a test/oracolo,
+build demo/live, shape Worker/DO, config staging, dry-run, checksum e Git hygiene. Il remote gate
+successivo è un unico reprovision staging fail-closed che sostituisce password esposta e pepper,
+aggiorna solo il record admin/revoca le sue sessioni, verifica read-only, deploya candidate + stesso
+pepper e conserva materiale di resume se D1 riesce ma deploy fallisce. Reprovision, D1 write,
+secret change, deploy, login reale e ogni produzione non sono autorizzati nel pass locale.

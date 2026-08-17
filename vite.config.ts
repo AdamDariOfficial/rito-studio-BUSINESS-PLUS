@@ -7,6 +7,16 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  vite: {
+    build: {
+      // `cloudflare:workers` is a Workers runtime module. The current Lovable/Nitro
+      // adapter does not install the Cloudflare Vite plugin, so keep the runtime
+      // import external instead of asking Rolldown to resolve it on the build host.
+      rolldownOptions: {
+        external: ["cloudflare:workers"],
+      },
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

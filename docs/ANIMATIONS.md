@@ -258,3 +258,49 @@ esclusi controlli circolari, azioni bianche e azioni outlined.
 Questa regola prevale sul precedente esempio generico “transizione di sfondo e testo”
 per le CTA nere. Nelle informazioni pratiche i dati statici restano privi di hover
 decorativo; una vera CTA nera mantiene invece questo pattern condiviso.
+
+## BUSINESS PLUS consultation step transition
+
+The guided consultation may animate between its four existing steps only.
+
+- forward: fade + translateX from `16px` to `0`;
+- backward: fade + translateX from `-16px` to `0`;
+- duration: `--motion-duration-ui`;
+- easing: `--motion-ease-ui`;
+- no additional step or carousel semantics are introduced;
+- `prefers-reduced-motion: reduce` disables the translation/animation entirely.
+
+
+## BUSINESS PLUS consultation success mark
+
+The successful consultation state uses a restrained confirmation seal instead of confetti or celebratory particles.
+
+- one accent outline square/circle-like mark consistent with the editorial system;
+- check icon enters with a short scale/fade;
+- one low-opacity outline ring expands once and fades;
+- total motion stays under one second and does not loop;
+- no particles, confetti, bounce cascade or sound;
+- `prefers-reduced-motion: reduce` reduces the effect to the static success mark.
+
+## BUSINESS PLUS third-refinement motion
+
+### Success status group
+
+- check e label `Richiesta ricevuta` sono allineati sulla stessa riga;
+- il check mantiene il ring singolo già approvato;
+- la label entra con fade + `translateX(-6px -> 0)` in circa 460 ms;
+- nessun loop, bounce, particella o confetti;
+- `prefers-reduced-motion` rende check/label sostanzialmente statici.
+
+### Admin request drill-in
+
+- mobile open: fade + `translateX(12px -> 0)`, circa 220 ms;
+- mobile close: fade + `translateX(0 -> 12px)`, circa 180 ms;
+- ritorno lista: fade + `translateX(-8px -> 0)`, circa 200 ms;
+- cambio dettaglio desktop: sola dissolvenza breve, senza spostare il layout;
+- nessuna transizione modifica history, dati o stato della richiesta;
+- reduced motion rende i passaggi immediati.
+
+### Consultation step viewport
+
+Il cambio step mantiene la transizione direzionale esistente, ma riporta immediatamente la viewport all'inizio del flow prima di focalizzare il pannello corrente. Non introdurre smooth scrolling di route o ritardi di navigazione.

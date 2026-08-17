@@ -31,15 +31,15 @@
 }
 
 :root {
-  --canvas: #F6F4EF;
-  --surface: #E8E1D8;
-  --ink: #1B1A18;
-  --muted: #746E67;
-  --muted-on-surface: #625C55;
-  --accent: #6A3F4B;
-  --accent-strong: #4E2E33;
-  --line: #CEC6BC;
-  --white: #FFFEFB;
+  --canvas: #f6f4ef;
+  --surface: #e8e1d8;
+  --ink: #1b1a18;
+  --muted: #746e67;
+  --muted-on-surface: #625c55;
+  --accent: #6a3f4b;
+  --accent-strong: #4e2e33;
+  --line: #cec6bc;
+  --white: #fffefb;
 
   --header-height: 68px;
 
@@ -87,7 +87,10 @@
     color: var(--white);
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.01em;
@@ -102,6 +105,15 @@
 
   button:disabled {
     cursor: not-allowed;
+  }
+
+  select:not([multiple]) {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236A3F4B' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem 1rem;
+    padding-right: 3rem;
   }
 }
 
@@ -465,6 +477,94 @@
   }
 }
 
+@keyframes consultation-step-forward {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes consultation-step-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.consultation-step-forward {
+  animation: consultation-step-forward var(--motion-duration-ui) var(--motion-ease-ui);
+}
+
+.consultation-step-backward {
+  animation: consultation-step-backward var(--motion-duration-ui) var(--motion-ease-ui);
+}
+
+@keyframes admin-request-detail-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes admin-request-detail-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+@keyframes admin-request-list-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes admin-request-detail-switch {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.admin-request-detail-in {
+  animation: admin-request-detail-in 220ms var(--motion-ease-ui) both;
+}
+
+.admin-request-detail-out {
+  animation: admin-request-detail-out 180ms var(--motion-ease-ui) both;
+}
+
+.admin-request-list-in {
+  animation: admin-request-list-in 200ms var(--motion-ease-ui) both;
+}
+
+.admin-request-detail-switch {
+  animation: admin-request-detail-switch 180ms var(--motion-ease-ui) both;
+}
+
 /* Reveal animation — start hidden only when JS activates it via [data-reveal]. */
 [data-reveal] {
   opacity: 1;
@@ -492,7 +592,9 @@
     transition: none;
   }
 
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -534,4 +636,77 @@
     transform: none;
     transition: none;
   }
+}
+
+@keyframes consultation-success-label {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.consultation-success-status {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.consultation-success-label {
+  animation: consultation-success-label 460ms var(--motion-ease-ui) 110ms both;
+}
+
+@keyframes consultation-success-mark {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes consultation-success-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  48% {
+    opacity: 0.28;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+.consultation-success-mark {
+  position: relative;
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  animation: consultation-success-mark 560ms var(--motion-ease-ui) both;
+}
+
+.consultation-success-ring {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--accent);
+  animation: consultation-success-ring 760ms var(--motion-ease-ui) 80ms both;
+}
+
+.consultation-success-icon {
+  animation: consultation-success-mark 520ms var(--motion-ease-ui) 90ms both;
 }

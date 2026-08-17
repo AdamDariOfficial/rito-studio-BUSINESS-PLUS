@@ -1,0 +1,25 @@
+{
+  // SOURCE BUILD CONFIG ONLY — DO NOT DEPLOY THIS UNPROVISIONED FILE.
+  // Remote D1, rate-limit namespaces, staging routes and native AdminAuth secrets
+  // are supplied only after explicit staging provisioning. Production remains a separate gate.
+  "name": "rito-studio-business-plus-unprovisioned-do-not-deploy",
+  "compatibility_date": "2026-07-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "LIVE_BACKEND_ENV": "unprovisioned",
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CONSULTATION_REALTIME",
+        "class_name": "ConsultationRealtimeHub",
+      },
+    ],
+  },
+  "exports": {
+    "ConsultationRealtimeHub": {
+      "type": "durable-object",
+      "storage": "sqlite",
+    },
+  },
+}

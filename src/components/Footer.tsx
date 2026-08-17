@@ -97,15 +97,6 @@ export function Footer() {
                 Cookie
               </Link>
             </li>
-            <li>
-              <a
-                href={site.contact.phoneHref}
-                aria-label={`Chiama per prenotare: ${site.contact.phone}`}
-                className={footerLinkClass}
-              >
-                Chiama per prenotare
-              </a>
-            </li>
           </ul>
         </div>
       </div>
