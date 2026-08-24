@@ -1,83 +1,139 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { EditorialArrow } from "@/components/EditorialArrow";
 import { ctaLabels } from "@/lib/site-config";
-import { useReveal } from "@/hooks/use-reveal";
+import { cn } from "@/lib/utils";
+
+const heroSlides = [
+  {
+    src: "/images/rito/rito-hero-main.webp",
+    alt: "Professionista durante un trattamento viso in atelier",
+    objectPosition: "57% 45%",
+  },
+  {
+    src: "/images/rito/rito-studio-wide.webp",
+    alt: "Interno luminoso di RITO Studio con postazioni e specchi",
+    objectPosition: "50% 50%",
+  },
+  {
+    src: "/images/rito/rito-gallery-hair-01.webp",
+    alt: "Dettaglio di capelli biondi mossi durante lo styling",
+    objectPosition: "50% 42%",
+  },
+] as const;
 
 export function Hero() {
-  const imageRef = useReveal<HTMLDivElement>();
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  function move(direction: -1 | 1) {
+    setActiveSlide((current) => (current + direction + heroSlides.length) % heroSlides.length);
+  }
 
   return (
     <section
+      data-rito-hero-commerce-carousel
       aria-label="Introduzione"
-      className="relative overflow-hidden pt-[var(--header-height)] md:min-h-[100svh]"
+      aria-roledescription="carousel"
+      className="relative isolate min-h-[100svh] overflow-hidden bg-ink pt-[var(--header-height)] text-white"
     >
-      <div className="container-editorial md:flex md:min-h-[calc(100svh-var(--header-height))] md:items-center md:py-12">
-        <div className="grid w-full md:grid-cols-12 md:items-center md:gap-8">
-          <div className="order-1 -mx-5 md:order-2 md:col-span-5 md:mx-0">
-            <div
-              ref={imageRef}
-              data-reveal
-              className="hero-image relative overflow-hidden bg-surface"
-              style={{ ["--reveal-delay" as string]: "120ms" }}
+      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)] -z-20 bg-ink">
+        {heroSlides.map((slide, index) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt={index === activeSlide ? slide.alt : ""}
+            aria-hidden={index !== activeSlide}
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
+            sizes="100vw"
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-[var(--motion-ease-ui)] motion-reduce:transition-none",
+              index === activeSlide
+                ? "scale-100 opacity-100"
+                : "pointer-events-none scale-[1.015] opacity-0",
+            )}
+            style={{ objectPosition: slide.objectPosition }}
+          />
+        ))}
+      </div>
+
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 top-[var(--header-height)] -z-10 bg-[linear-gradient(90deg,rgba(27,26,24,0.88)_0%,rgba(27,26,24,0.68)_34%,rgba(27,26,24,0.24)_68%,rgba(27,26,24,0.38)_100%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 top-[var(--header-height)] -z-10 bg-[linear-gradient(0deg,rgba(27,26,24,0.72)_0%,transparent_42%,rgba(27,26,24,0.12)_100%)]"
+      />
+
+      <div className="container-editorial relative flex min-h-[calc(100svh-var(--header-height))] items-end pb-24 pt-16 sm:pb-28 md:items-center md:pb-20 md:pt-20">
+        <div className="max-w-[44rem]">
+          <p className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-white/72">
+            Beauty &amp; Care Atelier · Padova
+          </p>
+
+          <h1 className="mt-4 font-display text-[clamp(3.25rem,15vw,5.25rem)] leading-[0.9] tracking-[-0.025em] text-white md:mt-6 md:text-[clamp(4.75rem,8vw,7.75rem)] md:leading-[0.9]">
+            La bellezza,
+            <br />
+            <span className="italic text-[#d8a9b4]">nel suo ritmo.</span>
+          </h1>
+
+          <p className="mt-5 max-w-xl text-[0.9375rem] leading-relaxed text-white/78 md:mt-7 md:text-lg">
+            Un atelier contemporaneo dedicato a capelli, pelle e benessere. Trattamenti su misura,
+            gesti precisi e il tempo necessario per ascoltarti.
+          </p>
+
+          <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center md:mt-9">
+            <Link
+              to="/consulenza"
+              aria-label={ctaLabels.startConsultation}
+              className="interactive-control inline-flex min-h-12 items-center justify-center border border-white bg-white px-6 text-sm font-medium tracking-wide text-ink hover:bg-white/90"
             >
-              <img
-                src="/images/rito/rito-hero-main.webp"
-                alt="Professionista durante un trattamento viso in atelier"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                sizes="(min-width: 1280px) 33vw, (min-width: 768px) 42vw, 100vw"
-                className="h-[58svh] min-h-[460px] w-full object-cover object-[57%_45%] md:h-[calc(100svh-var(--header-height)-6rem)] md:min-h-[32rem] md:max-h-[47rem] md:object-center"
-              />
-            </div>
-          </div>
-
-          <div className="relative z-10 order-2 -mt-20 border-t-2 border-accent bg-canvas px-6 py-7 shadow-[0_20px_50px_rgba(27,26,24,0.12)] md:order-1 md:col-span-7 md:mt-0 md:border-0 md:bg-transparent md:p-0 md:pr-6 md:shadow-none">
-            <p className="eyebrow" data-reveal style={{ ["--reveal-delay" as string]: "0ms" }}>
-              Beauty &amp; Care Atelier · Padova
-            </p>
-
-            <h1
-              className="mt-5 font-display text-[clamp(3.2rem,14vw,4.6rem)] leading-[0.9] tracking-[-0.02em] text-ink md:mt-8 md:text-[clamp(2.75rem,8vw,6.5rem)] md:leading-[0.98] md:tracking-[-0.015em]"
-              data-reveal
-              style={{ ["--reveal-delay" as string]: "80ms" }}
+              {ctaLabels.startConsultation}
+            </Link>
+            <Link
+              to="/trattamenti"
+              className="editorial-link group min-h-12 justify-center px-2 text-sm font-medium tracking-wide text-white after:bg-white hover:text-white"
             >
-              La bellezza,
-              <br />
-              <span className="italic text-accent">nel suo ritmo.</span>
-            </h1>
-
-            <p
-              className="mt-6 max-w-md text-[0.9375rem] leading-relaxed text-muted md:mt-8 md:text-lg"
-              data-reveal
-              style={{ ["--reveal-delay" as string]: "160ms" }}
-            >
-              Un atelier contemporaneo dedicato a capelli, pelle e benessere. Trattamenti su misura,
-              gesti precisi e il tempo necessario per ascoltarti.
-            </p>
-
-            <div className="mt-7 flex flex-col items-stretch gap-4 lg:mt-10 lg:flex-row lg:items-center">
-              <Link
-                to="/consulenza"
-                aria-label={ctaLabels.startConsultation}
-                data-reveal
-                style={{ ["--reveal-delay" as string]: "220ms" }}
-                className="action-primary inline-flex min-h-12 items-center justify-center border border-ink bg-ink px-6 text-sm font-medium tracking-wide text-white hover:border-accent-strong hover:bg-accent-strong"
-              >
-                {ctaLabels.startConsultation}
-              </Link>
-              <Link
-                to="/trattamenti"
-                data-reveal
-                style={{ ["--reveal-delay" as string]: "300ms" }}
-                className="editorial-link group min-h-11 justify-center px-1 text-sm font-medium tracking-wide md:min-h-12 md:px-2"
-              >
-                {ctaLabels.discoverTreatments}
-                <EditorialArrow />
-              </Link>
-            </div>
+              {ctaLabels.discoverTreatments}
+              <EditorialArrow />
+            </Link>
           </div>
         </div>
+
+        <div
+          data-rito-hero-counter
+          className="absolute bottom-7 left-5 flex items-center gap-3 text-[0.6875rem] font-medium tabular-nums tracking-[0.12em] text-white/72 sm:left-6 md:bottom-8 md:left-8"
+          aria-live="polite"
+        >
+          <span>{String(activeSlide + 1).padStart(2, "0")}</span>
+          <span aria-hidden className="h-px w-8 bg-white/45" />
+          <span>{String(heroSlides.length).padStart(2, "0")}</span>
+        </div>
+      </div>
+
+      <div
+        data-rito-hero-side-nav
+        className="pointer-events-none absolute inset-x-0 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between px-3 sm:px-5 md:px-7"
+      >
+        <button
+          type="button"
+          onClick={() => move(-1)}
+          aria-label="Immagine hero precedente"
+          className="interactive-control pointer-events-auto inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/55 bg-ink/30 text-white backdrop-blur-sm hover:border-white hover:bg-ink/55"
+        >
+          <ChevronLeft aria-hidden size={20} strokeWidth={1.6} />
+        </button>
+        <button
+          type="button"
+          onClick={() => move(1)}
+          aria-label="Immagine hero successiva"
+          className="interactive-control pointer-events-auto inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/55 bg-ink/30 text-white backdrop-blur-sm hover:border-white hover:bg-ink/55"
+        >
+          <ChevronRight aria-hidden size={20} strokeWidth={1.6} />
+        </button>
       </div>
     </section>
   );

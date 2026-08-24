@@ -45,7 +45,18 @@ export function Footer() {
         <div>
           <p className="eyebrow text-surface">Contatti</p>
           <ul className="mt-4 space-y-2 text-sm text-white">
-            <li>{site.contact.locationLabel}</li>
+            <li>
+              <a
+                data-footer-map-link
+                href={site.contact.mapExternalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={footerLinkClass}
+                aria-label={`${site.contact.locationLabel} — apri in Google Maps`}
+              >
+                {site.contact.locationLabel}
+              </a>
+            </li>
             <li>
               <a href={site.contact.phoneHref} className={footerLinkClass}>
                 {site.contact.phone}
