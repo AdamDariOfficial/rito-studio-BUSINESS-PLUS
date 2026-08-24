@@ -45,6 +45,8 @@ function TreatmentsPage() {
   const openerRef = useRef<HTMLButtonElement | null>(null);
   const filterRailRef = useRef<HTMLElement>(null);
   const activeFilterRef = useRef<HTMLAnchorElement>(null);
+  const treatmentsRef = useRef<HTMLDivElement>(null);
+  const shouldScrollToTreatmentsRef = useRef(false);
   const filterEdges = useHorizontalScrollEdges(filterRailRef);
   const invalidFilter = Boolean(
     categoria && !validCategories.has(categoria as TreatmentCategoryId),
@@ -74,18 +76,21 @@ function TreatmentsPage() {
 
     const frame = window.requestAnimationFrame(() => {
       const inset = 12;
-      const itemLeft = active.offsetLeft;
-      const itemRight = itemLeft + active.offsetWidth;
-      const visibleLeft = rail.scrollLeft + inset;
-      const visibleRight = rail.scrollLeft + rail.clientWidth - inset;
-      let nextScrollLeft = rail.scrollLeft;
+      const railRect = rail.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      const leftBoundary = railRect.left + inset;
+      const rightBoundary = railRect.right - inset;
+      let delta = 0;
 
-      if (itemLeft < visibleLeft) nextScrollLeft = Math.max(0, itemLeft - inset);
-      if (itemRight > visibleRight) {
-        nextScrollLeft = itemRight - rail.clientWidth + inset;
+      if (activeRect.left < leftBoundary) {
+        delta = activeRect.left - leftBoundary;
+      } else if (activeRect.right > rightBoundary) {
+        delta = activeRect.right - rightBoundary;
       }
 
-      if (Math.abs(nextScrollLeft - rail.scrollLeft) > 1) {
+      if (Math.abs(delta) > 1) {
+        const maxScrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
+        const nextScrollLeft = Math.min(maxScrollLeft, Math.max(0, rail.scrollLeft + delta));
         rail.scrollTo({
           left: nextScrollLeft,
           behavior: prefersReducedMotion() ? "auto" : "smooth",
@@ -95,6 +100,35 @@ function TreatmentsPage() {
 
     return () => window.cancelAnimationFrame(frame);
   }, [invalidFilter, selected]);
+
+  useEffect(() => {
+    if (!shouldScrollToTreatmentsRef.current) return;
+    shouldScrollToTreatmentsRef.current = false;
+
+    const frame = window.requestAnimationFrame(() => {
+      const target = treatmentsRef.current;
+      if (!target) return;
+
+      const headerHeight =
+        Number.parseFloat(
+          window.getComputedStyle(document.documentElement).getPropertyValue("--header-height"),
+        ) || 0;
+      const filterHeight = filterRailRef.current?.getBoundingClientRect().height ?? 0;
+      const top =
+        window.scrollY + target.getBoundingClientRect().top - headerHeight - filterHeight - 16;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [invalidFilter, selected]);
+
+  function rememberFilterScrollIntent() {
+    shouldScrollToTreatmentsRef.current = true;
+  }
 
   function closeTreatment(replace = true) {
     void navigate({
@@ -121,9 +155,15 @@ function TreatmentsPage() {
           <h2 id="catalogo-heading" className="sr-only">
             Catalogo dei trattamenti
           </h2>
-          <div className="relative min-w-0">
+          <div
+            data-treatment-filter-sticky
+            className="sticky top-[var(--header-height)] z-30 min-w-0 bg-canvas py-1"
+          >
             <nav
               ref={filterRailRef}
+              data-treatment-filter-bidirectional
+              data-treatment-filter-return-to-results
+              data-treatment-filter-force-return
               aria-label="Filtra per categoria"
               className="scrollbar-none -mx-1 flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-1 py-1"
             >
@@ -133,6 +173,9 @@ function TreatmentsPage() {
                 search={{}}
                 activeOptions={{ exact: true, includeSearch: true }}
                 resetScroll={false}
+                onClick={() => {
+                  if (selected || invalidFilter) rememberFilterScrollIntent();
+                }}
                 aria-current={!selected && !invalidFilter ? "page" : undefined}
                 className={cn(
                   "interactive-control min-h-12 shrink-0 whitespace-nowrap border-b-2 px-1 py-3 text-sm",
@@ -151,6 +194,9 @@ function TreatmentsPage() {
                   search={{ categoria: category.id }}
                   activeOptions={{ exact: true, includeSearch: true }}
                   resetScroll={false}
+                  onClick={() => {
+                    if (selected !== category.id || invalidFilter) rememberFilterScrollIntent();
+                  }}
                   aria-current={selected === category.id ? "page" : undefined}
                   className={cn(
                     "interactive-control min-h-12 shrink-0 whitespace-nowrap border-b-2 px-1 py-3 text-sm",
@@ -209,7 +255,12 @@ function TreatmentsPage() {
             </div>
           ) : null}
 
-          <div className="mt-10">
+          <div
+            key={invalidFilter ? "invalid" : (selected ?? "all")}
+            ref={treatmentsRef}
+            data-treatment-filter-results
+            className="treatment-filter-swap mt-10 scroll-mt-32"
+          >
             <TreatmentRows
               items={invalidFilter ? [] : visible}
               emptyMessage="Scegli una categoria disponibile oppure torna al catalogo completo."

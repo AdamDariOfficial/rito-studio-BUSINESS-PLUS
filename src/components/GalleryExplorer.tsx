@@ -12,6 +12,8 @@ import { galleryCategories, galleryItems, type GalleryItem } from "@/data/conten
 import { GestureProgressIndicator } from "@/components/GestureProgressIndicator";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
 import { revealVisibleElements } from "@/hooks/use-reveal-controller";
+import { useHorizontalScrollEdges } from "@/hooks/use-horizontal-scroll-edges";
+import { prefersReducedMotion } from "@/lib/scroll-to-anchor";
 import { cn } from "@/lib/utils";
 
 type GalleryCategory = (typeof galleryCategories)[number];
@@ -56,12 +58,88 @@ export function GalleryExplorer() {
   const dragRef = useRef<DragState | null>(null);
   const dragArmedRef = useRef(false);
   const gridRef = useRef<HTMLDivElement>(null);
+  const filterRailRef = useRef<HTMLDivElement>(null);
+  const activeFilterRef = useRef<HTMLButtonElement>(null);
+  const shouldScrollToGalleryRef = useRef(false);
+  const filterEdges = useHorizontalScrollEdges(filterRailRef);
   const filtered = useMemo(
     () => galleryItems.filter((item) => category === "Tutte" || item.category === category),
     [category],
   );
   const selectedIndex = filtered.findIndex((item) => item.id === selectedId);
   const selected = selectedIndex >= 0 ? filtered[selectedIndex] : undefined;
+
+  useEffect(() => {
+    const rail = filterRailRef.current;
+    const active = activeFilterRef.current;
+    if (!rail || !active) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const inset = 12;
+      const railRect = rail.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      const leftBoundary = railRect.left + inset;
+      const rightBoundary = railRect.right - inset;
+      let delta = 0;
+
+      if (activeRect.left < leftBoundary) {
+        delta = activeRect.left - leftBoundary;
+      } else if (activeRect.right > rightBoundary) {
+        delta = activeRect.right - rightBoundary;
+      }
+
+      if (Math.abs(delta) > 1) {
+        const maxScrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
+        const nextScrollLeft = Math.min(maxScrollLeft, Math.max(0, rail.scrollLeft + delta));
+        rail.scrollTo({
+          left: nextScrollLeft,
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+        });
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [category]);
+
+  useEffect(() => {
+    if (!shouldScrollToGalleryRef.current) return;
+    shouldScrollToGalleryRef.current = false;
+
+    const frame = window.requestAnimationFrame(() => {
+      const target = gridRef.current;
+      if (!target) return;
+
+      const headerHeight =
+        Number.parseFloat(
+          window.getComputedStyle(document.documentElement).getPropertyValue("--header-height"),
+        ) || 0;
+      const filterHeight = filterRailRef.current?.getBoundingClientRect().height ?? 0;
+      const top =
+        window.scrollY + target.getBoundingClientRect().top - headerHeight - filterHeight - 16;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [category]);
+
+  function rememberGalleryFilterScrollIntent() {
+    const target = gridRef.current;
+    if (!target) return;
+
+    const headerHeight =
+      Number.parseFloat(
+        window.getComputedStyle(document.documentElement).getPropertyValue("--header-height"),
+      ) || 0;
+    const filterHeight = filterRailRef.current?.getBoundingClientRect().height ?? 0;
+    const desiredTop = headerHeight + filterHeight + 16;
+    const currentTop = target.getBoundingClientRect().top;
+
+    shouldScrollToGalleryRef.current = Math.abs(currentTop - desiredTop) > 16;
+  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -208,26 +286,55 @@ export function GalleryExplorer() {
   return (
     <Dialog.Root open={Boolean(selected)} onOpenChange={(open) => !open && setSelectedId(null)}>
       <div
-        role="group"
-        className="flex flex-wrap gap-x-6 gap-y-2 border-b border-line"
-        aria-label="Filtra la galleria"
+        data-gallery-filter-rail
+        data-gallery-conditional-scroll
+        data-gallery-filter-return-to-results
+        className="sticky top-[var(--header-height)] z-30 bg-canvas py-1"
       >
-        {galleryCategories.map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setCategory(item)}
-            aria-pressed={category === item}
-            className={cn(
-              "interactive-control min-h-12 border-b-2 px-1 text-sm",
-              category === item
-                ? "border-accent text-accent"
-                : "border-transparent text-muted hover:text-ink",
-            )}
+        <div className="relative min-w-0">
+          <div
+            ref={filterRailRef}
+            data-gallery-filter-bidirectional
+            role="group"
+            className="scrollbar-none -mx-1 flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-1 py-1"
+            aria-label="Filtra la galleria"
           >
-            {item}
-          </button>
-        ))}
+            {galleryCategories.map((item) => (
+              <button
+                ref={category === item ? activeFilterRef : undefined}
+                key={item}
+                type="button"
+                onClick={() => {
+                  if (category !== item) rememberGalleryFilterScrollIntent();
+                  setCategory(item);
+                }}
+                aria-pressed={category === item}
+                className={cn(
+                  "interactive-control min-h-12 shrink-0 whitespace-nowrap border-b-2 px-1 py-3 text-sm",
+                  category === item
+                    ? "border-accent text-accent"
+                    : "border-transparent text-muted hover:text-ink",
+                )}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+          <span
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute inset-y-1 left-0 w-10 bg-gradient-to-r from-canvas via-canvas/90 to-transparent transition-opacity duration-[var(--motion-duration-fast)] motion-reduce:transition-none",
+              filterEdges.canScrollLeft ? "opacity-100" : "opacity-0",
+            )}
+          />
+          <span
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute inset-y-1 right-0 w-10 bg-gradient-to-l from-canvas via-canvas/90 to-transparent transition-opacity duration-[var(--motion-duration-fast)] motion-reduce:transition-none",
+              filterEdges.canScrollRight ? "opacity-100" : "opacity-0",
+            )}
+          />
+        </div>
       </div>
 
       <div key={category} ref={gridRef} className="mt-10 columns-1 gap-5 sm:columns-2 lg:columns-3">
@@ -268,27 +375,17 @@ export function GalleryExplorer() {
             event.preventDefault();
             openerRef.current?.focus({ preventScroll: true });
           }}
-          className="fixed inset-0 z-[81] grid min-h-0 grid-rows-[auto_1fr_auto] bg-ink p-4 text-white outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:p-6 md:p-8"
+          className="fixed inset-0 z-[81] grid min-h-0 grid-rows-[minmax(0,1fr)_auto_auto] bg-ink p-4 text-white outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:p-6 md:p-8"
         >
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <Dialog.Title className="font-display text-2xl text-white">
-                {selected?.category ?? "Galleria"}
-              </Dialog.Title>
-              <Dialog.Description className="mt-1 max-w-xl text-xs text-surface">
-                {selected?.alt}
-              </Dialog.Description>
-            </div>
-            <Dialog.Close
-              className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-white/50 text-white hover:bg-white hover:text-ink"
-              aria-label="Chiudi la galleria"
-            >
-              <X aria-hidden size={20} />
-            </Dialog.Close>
-          </div>
+          <Dialog.Close
+            className="interactive-control absolute right-4 top-4 z-20 inline-flex h-11 w-11 items-center justify-center border border-white/50 bg-ink/75 text-white backdrop-blur-sm hover:bg-white hover:text-ink sm:right-6 sm:top-6 md:right-8 md:top-8"
+            aria-label="Chiudi la galleria"
+          >
+            <X aria-hidden size={20} />
+          </Dialog.Close>
 
           <div
-            className="relative flex min-h-0 touch-pan-y select-none items-center justify-center overflow-hidden py-5"
+            className="relative flex min-h-0 touch-pan-y select-none items-center justify-center overflow-hidden pb-5 pt-16"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={finishPointerGesture}
@@ -309,7 +406,7 @@ export function GalleryExplorer() {
                 className="text-white/65 data-[armed=true]:text-white"
               />
             </div>
-            <div className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-center justify-center">
+            <div className="relative z-10 mx-auto flex h-full min-h-0 w-full max-w-[80rem] min-w-0 items-center justify-center">
               {selected?.src ? (
                 <div
                   key={selected.id}
@@ -337,7 +434,16 @@ export function GalleryExplorer() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4">
+          <div data-gallery-caption-below-image className="mx-auto w-full max-w-[80rem] pb-5 pt-2">
+            <Dialog.Title className="text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-white/55">
+              {selected?.category ?? "Galleria"}
+            </Dialog.Title>
+            <Dialog.Description className="mt-1.5 max-w-2xl text-sm leading-relaxed text-white/80">
+              {selected?.alt}
+            </Dialog.Description>
+          </div>
+
+          <div className="mx-auto flex w-full max-w-[80rem] items-center justify-between gap-4">
             <button
               type="button"
               onClick={() => move(-1)}

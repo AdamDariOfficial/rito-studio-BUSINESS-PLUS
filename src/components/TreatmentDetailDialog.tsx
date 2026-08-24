@@ -174,7 +174,7 @@ export function TreatmentDetailDialog({
           {treatment ? (
             <div
               key={treatment.slug}
-              className="treatment-detail-step grid h-full min-h-0 touch-pan-y grid-rows-[auto_1fr]"
+              className="treatment-detail-step grid h-full min-h-0 touch-pan-y grid-rows-[auto_1fr_auto]"
               style={{ ["--treatment-direction" as string]: direction }}
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
@@ -187,29 +187,34 @@ export function TreatmentDetailDialog({
                     <p className="eyebrow truncate text-accent">
                       {getCategory(treatment.category)?.name}
                     </p>
-                    <p className="mt-1 text-xs tabular-nums text-muted" aria-hidden>
-                      {currentIndex + 1} / {sequence.length}
-                    </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => move(-1)}
-                      disabled={!canMovePrevious}
-                      aria-label="Trattamento precedente"
-                      className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
-                    >
-                      <ChevronLeft aria-hidden size={19} strokeWidth={1.7} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => move(1)}
-                      disabled={!canMoveNext}
-                      aria-label="Trattamento successivo"
-                      className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
-                    >
-                      <ChevronRight aria-hidden size={19} strokeWidth={1.7} />
-                    </button>
+                    <div className="hidden items-center gap-1 md:flex">
+                      <button
+                        type="button"
+                        onClick={() => move(-1)}
+                        disabled={!canMovePrevious}
+                        aria-label="Trattamento precedente"
+                        className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
+                      >
+                        <ChevronLeft aria-hidden size={19} strokeWidth={1.7} />
+                      </button>
+                      <p
+                        className="min-w-14 text-center text-xs tabular-nums text-muted"
+                        aria-hidden
+                      >
+                        {currentIndex + 1} / {sequence.length}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => move(1)}
+                        disabled={!canMoveNext}
+                        aria-label="Trattamento successivo"
+                        className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
+                      >
+                        <ChevronRight aria-hidden size={19} strokeWidth={1.7} />
+                      </button>
+                    </div>
                     <Dialog.Close asChild>
                       <button
                         ref={closeRef}
@@ -227,26 +232,26 @@ export function TreatmentDetailDialog({
                     {treatment.name}
                   </h2>
                 </Dialog.Title>
+                <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="eyebrow">Prezzo indicativo</span>
+                  <span className="text-sm font-medium tabular-nums text-accent-strong">
+                    {treatment.priceLabel}
+                  </span>
+                </div>
                 <p className="sr-only" aria-live="polite" aria-atomic="true">
                   {treatment.name}, {currentIndex + 1} di {sequence.length}
                 </p>
               </header>
 
               <div className="min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-7 sm:px-7 md:px-10 md:pb-10 md:pt-9">
-                <dl className="grid grid-cols-2 gap-5 border-y border-line py-5">
-                  {treatment.duration ? (
+                {treatment.duration ? (
+                  <dl className="border-y border-line py-5">
                     <div>
                       <dt className="eyebrow">Durata</dt>
                       <dd className="mt-2 text-sm text-ink">{treatment.duration}</dd>
                     </div>
-                  ) : null}
-                  <div>
-                    <dt className="eyebrow">Prezzo indicativo</dt>
-                    <dd className="mt-2 text-sm font-medium tabular-nums text-accent-strong">
-                      {treatment.priceLabel}
-                    </dd>
-                  </div>
-                </dl>
+                  </dl>
+                ) : null}
 
                 <Dialog.Description asChild>
                   <p className="mt-7 max-w-2xl font-display text-2xl leading-relaxed text-ink md:text-3xl">
@@ -385,6 +390,35 @@ export function TreatmentDetailDialog({
                   </div>
                 </section>
               </div>
+
+              <footer
+                data-mobile-treatment-nav
+                className="border-t border-line bg-canvas px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 md:hidden"
+              >
+                <div className="grid grid-cols-[2.75rem_1fr_2.75rem] items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => move(-1)}
+                    disabled={!canMovePrevious}
+                    aria-label="Trattamento precedente"
+                    className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
+                  >
+                    <ChevronLeft aria-hidden size={19} strokeWidth={1.7} />
+                  </button>
+                  <p className="text-center text-sm tabular-nums text-muted" aria-live="polite">
+                    {currentIndex + 1} / {sequence.length}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => move(1)}
+                    disabled={!canMoveNext}
+                    aria-label="Trattamento successivo"
+                    className="interactive-control inline-flex h-11 w-11 items-center justify-center border border-line text-ink hover:border-ink hover:bg-surface disabled:opacity-35"
+                  >
+                    <ChevronRight aria-hidden size={19} strokeWidth={1.7} />
+                  </button>
+                </div>
+              </footer>
             </div>
           ) : null}
         </Dialog.Content>
