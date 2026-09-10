@@ -8,6 +8,7 @@ import { getConsultationCloudflareEnv } from "./features/consultation/live/cloud
 import { handlePublicConsultationSubmit } from "./features/consultation/live/public-submit.server";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { applySecurityHeaders, createHttpsRedirect } from "./lib/security-response.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -86,22 +87,36 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const environment = getConsultationCloudflareEnv().LIVE_BACKEND_ENV;
+    const httpsRedirect = createHttpsRedirect(request, environment);
+    if (httpsRedirect) return applySecurityHeaders(request, httpsRedirect, environment);
+
     try {
       const publicSubmitResponse = await handlePublicConsultationSubmit(request);
-      if (publicSubmitResponse) return publicSubmitResponse;
+      if (publicSubmitResponse) {
+        return applySecurityHeaders(request, publicSubmitResponse, environment);
+      }
 
       const realtimeResponse = await handleConsultationRealtime(request);
-      if (realtimeResponse) return realtimeResponse;
+      if (realtimeResponse) return applySecurityHeaders(request, realtimeResponse, environment);
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return applySecurityHeaders(
+        request,
+        await normalizeCatastrophicSsrResponse(response),
+        environment,
+      );
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return applySecurityHeaders(
+        request,
+        new Response(renderErrorPage(), {
+          status: 500,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+        environment,
+      );
     }
   },
 };

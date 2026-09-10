@@ -2,6 +2,11 @@ export type ConsultationProfile = "demo" | "live";
 export type ConsultationHandoff = "inbox" | "tel" | "whatsapp" | "external";
 export type ConsultationStatus = "new" | "contacted" | "booked" | "archived";
 export type PreferredContact = "phone" | "whatsapp" | "email";
+export type PreferredWindow =
+  | "Mattina"
+  | "Primo pomeriggio"
+  | "Tardo pomeriggio"
+  | "Sono flessibile";
 
 export interface ConsultationContact {
   name: string;
@@ -9,7 +14,7 @@ export interface ConsultationContact {
   email?: string;
   preferredContact: PreferredContact;
   preferredDate?: string;
-  preferredWindow: string;
+  preferredWindow: PreferredWindow;
 }
 
 export interface ConsultationSubmission {

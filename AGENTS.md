@@ -189,13 +189,16 @@ CUSTOM begins when the client needs any of:
 
 ## Writer coordination
 
-The coherent BUSINESS PLUS application pass, isolated staging deployment and required staging
-acceptance are complete. The candidate is `READY FOR HUMAN FINAL REVIEW / FREEZE`; the human
-freeze is not yet granted, and production is not certified or authorized.
+The coherent BUSINESS PLUS application pass, isolated staging acceptance and final security
+closeout are complete. `SECURITY CLOSEOUT: PASS` applies only to the exact 150-file runtime/build
+candidate `1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b`, described by
+manifest `8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e`.
 
-The current gate is documentation reconciliation followed by a separate read-only Final Human
-Freeze Audit. Do not reopen implementation, staging E2E or architecture without a new approved
-task and direct evidence.
+The current gate is the single end-to-end Final Freeze integration. Runtime/build bytes must not
+change. Documentation reconciliation is allowed only when it remains outside the runtime/build
+manifest. Stage, local commit, branch push, pull request, merge and annotated freeze tag each
+require their own explicit human authorization. Do not reopen implementation, staging E2E or
+architecture without a new approved task and direct evidence.
 
 One application writer at a time. Lovable, Cursor and Codex must not edit overlapping
 scope concurrently.
@@ -264,7 +267,7 @@ Rules:
 - Live backend work does not authorize CRM, agenda, payments, staff/resources, inventory or
   other CUSTOM scope.
 
-## Current live backend gate — staging acceptance closed
+## Current live backend gate — staging acceptance and security closeout closed
 
 The historical local adapter spike is evidence, not the current execution gate. Its generated
 Wrangler merge passed, while local D1/DO runtime remained inconclusive even in minimal cases.
@@ -281,7 +284,30 @@ admin mutation/concurrency and cross-device acceptance
 responsive, reduced-motion and physical multi-device acceptance
 ```
 
-Current candidate status is `READY FOR HUMAN FINAL REVIEW / FREEZE`. The next task is the
-separate read-only freeze audit; it must not rerun staging or grant production authority.
-Do not run `wrangler login`, create or mutate remote resources, apply migrations or deploy
-without a new explicit gate. Production remains not certified and not authorized.
+Current candidate status is `SECURITY CLOSEOUT: PASS` and `FINAL FREEZE: PENDING GIT
+INTEGRATION`. Residual security is CRITICAL 0, HIGH 0, MEDIUM 0, LOW 1
+(`RITO-SEC-007`, accepted toolchain-only debt) and INFO 1 (`RITO-SEC-008`, closed legacy
+compatibility). `RITO-SEC-009` is `CLOSED_VERIFIED`. Closeout did not perform runtime fault
+injection, broad authenticated DAST or production testing.
+
+The 10 September 2026 pre-stage OSV refresh returned two advisories not present in that closeout
+ledger: `baseline-browser-mapping@2.10.44` / `GHSA-w5vr-8v7q-w6rv` / `CVE-2026-45819`
+(upstream MODERATE) and `js-yaml@4.3.1` / `GHSA-2883-xcg3-v3hh` / `CVE-2026-84375`
+(upstream HIGH). The approved Final Freeze continuation remediated both through two compatible
+transitive-only `bun.lock` resolutions: `baseline-browser-mapping@2.11.0` and
+`js-yaml@4.3.2`. No direct dependency, framework version or application source changed.
+
+The resulting 150-file Final Freeze candidate is
+`7af8501bd6eb6740832071a11ae70e24deeca61eb08f042304a29919d2422760`; its manifest SHA-256 is
+`2c60fac63d398bf86e8e368fa9177d2fbdd048e5c010068683e9e036a3e1034c`. The only source-manifest
+delta from the historical security predecessor is `bun.lock`. The rebuilt live static assets
+are byte-identical; Worker code is byte-identical except for Nitro's regenerated public-asset
+map ordering/mtime metadata, whose normalized content is identical; generated Wrangler
+configuration and bindings are byte-identical. No remediated package is distributed in Worker
+or public assets. This is recorded as `SECURITY_RUNTIME_EVIDENCE_PRESERVED`. The refreshed OSV
+result contains only the separately accepted `RITO-SEC-007` LOW toolchain debt.
+
+Manual browser review is excluded from the current Final Freeze by user scope and must be
+recorded as not run, never as PASS. Do not run `wrangler login`, create or mutate remote
+resources, apply migrations or deploy without a new explicit gate. Production remains not
+certified and not authorized.
