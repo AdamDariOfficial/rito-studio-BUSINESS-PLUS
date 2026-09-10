@@ -1,36 +1,13 @@
-import { getTreatment } from "@/data/treatments";
-import { getConsultationQuestions } from "../config";
-import { consultationSubmissionSchema } from "../schemas";
-import type { ConsultationSubmission } from "../types";
 import { getConsultationCloudflareEnv } from "./cloudflare-env.server";
+import type { ConsultationSubmission } from "../types";
 import { d1ConsultationRepository } from "./d1-consultation-repository.server";
-import { ConsultationInputError } from "./errors";
 import { durableObjectConsultationRealtime } from "./durable-object-realtime.server";
 import { nativeAdminAuth, requireAdminCsrf } from "./native-admin-auth.server";
+import { validateSubmissionSemantics } from "./submission-validation";
 import {
-  consultationSubmitActorKey,
+  consultationPhoneActorKey,
   workersConsultationRateLimiter,
 } from "./workers-rate-limiter.server";
-
-function validateSubmissionSemantics(submission: ConsultationSubmission) {
-  const parsed = consultationSubmissionSchema.parse(submission);
-  const treatment = getTreatment(parsed.serviceSlug);
-  if (!treatment) throw new ConsultationInputError();
-
-  const questions = getConsultationQuestions(treatment.category);
-  const allowedQuestionIds = new Set(questions.map((question) => question.id));
-  for (const question of questions) {
-    const answer = parsed.answers[question.id];
-    if (!answer || !question.options.some((option) => option.value === answer)) {
-      throw new ConsultationInputError();
-    }
-  }
-  if (Object.keys(parsed.answers).some((id) => !allowedQuestionIds.has(id))) {
-    throw new ConsultationInputError();
-  }
-
-  return parsed;
-}
 
 function privacyVersion() {
   const value = getConsultationCloudflareEnv().CONSULTATION_PRIVACY_VERSION?.trim();
@@ -70,7 +47,7 @@ export async function submitConsultationLive(input: {
   if (existing) return existing;
 
   await workersConsultationRateLimiter.requireSubmitAllowed(
-    await consultationSubmitActorKey(submission.contact.phone),
+    await consultationPhoneActorKey(submission.contact.phone),
   );
   const result = await d1ConsultationRepository.create({
     submissionKey: input.submissionKey,

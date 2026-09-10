@@ -3,8 +3,8 @@ import type {
   ConsultationProfile,
   ConsultationQuestion,
   RecommendationRule,
-} from "./types";
-import type { TreatmentCategoryId } from "@/data/treatments";
+} from "./types.ts";
+import type { TreatmentCategoryId } from "../../data/treatments.ts";
 
 export const MAX_CONSULTATION_SELECTED_SERVICES = 6;
 

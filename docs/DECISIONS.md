@@ -1,8 +1,8 @@
 # RITO Studio — Decision Log
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 2.2
-**Stato:** decisioni approvate e aggiornate al 16 agosto 2026
+**Versione:** 2.3
+**Stato:** decisioni approvate e aggiornate al 10 settembre 2026
 
 ## BW-DEC-001 — Concept portfolio
 
@@ -1105,3 +1105,63 @@ successivo è un unico reprovision staging fail-closed che sostituisce password 
 aggiorna solo il record admin/revoca le sue sessioni, verifica read-only, deploya candidate + stesso
 pepper e conserva materiale di resume se D1 riesce ma deploy fallisce. Reprovision, D1 write,
 secret change, deploy, login reale e ogni produzione non sono autorizzati nel pass locale.
+
+## BW-DEC-071 — Identità security e disciplina del Final Freeze
+
+**Data:** 10 settembre 2026
+
+**Decisione:** il `SECURITY CLOSEOUT: PASS` appartiene esclusivamente ai 150 file runtime/build
+identificati dal candidate
+`1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b` e dal manifest
+SHA-256 `8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e`. Qualunque modifica a
+un file o input runtime/build invalida il trasferimento del PASS e richiede review esplicita;
+non autorizza una remediation silenziosa.
+
+La Final Freeze integra in un solo candidate Git gli esatti file runtime/build, i test permanenti,
+la documentazione canonica necessaria e un set minimo di evidence security sanitizzata. Stage,
+local commit, branch push, pull request, merge non riscrivente e tag annotato richiedono sei
+autorizzazioni umane distinte. Il merge deve preservare la history Lovable; force push, rebase,
+amend e squash di history sincronizzata restano vietati.
+
+**Residui e limiti:** CRITICAL/HIGH/MEDIUM sono zero. `RITO-SEC-007` resta LOW accettato per
+`esbuild@0.27.7` / `GHSA-g7r4-m6w7-qqqr`, toolchain-only. `RITO-SEC-008` resta INFO operativo
+chiuso e verificato; `RITO-SEC-009` è `CLOSED_VERIFIED`. Runtime fault injection, broad
+authenticated DAST e production testing non sono stati eseguiti.
+
+**Browser e produzione:** la manual browser review di questa freeze è `NOT RUN — EXCLUDED FROM
+THIS FINAL FREEZE BY USER SCOPE`. La decisione non certifica né autorizza produzione e non
+autorizza deploy, migration, DNS, secret, credenziali o provisioning.
+
+## BW-DEC-072 — Remediation supply-chain interna al Final Freeze
+
+**Data:** 10 settembre 2026
+
+**Evidenza:** il pre-stage OSV gate ha identificato
+`baseline-browser-mapping@2.10.44` / `GHSA-w5vr-8v7q-w6rv` / `CVE-2026-45819` (MODERATE;
+affected `>=2.0.0 <2.11.0`) e `js-yaml@4.3.1` / `GHSA-2883-xcg3-v3hh` /
+`CVE-2026-84375` (HIGH; affected `>=4.0.0 <4.3.2`). I patched floor verificati sono
+rispettivamente `2.11.0` e `4.3.2`. Entrambi i package sono transitivi, introdotti da
+`browserslist@4.28.7`, `@eslint/eslintrc@3.3.5` e `xmlbuilder2@4.0.3`, e i range esistenti
+accettano le versioni corrette.
+
+**Decisione:** nello stesso Final Freeze aggiornare esclusivamente le due risoluzioni in
+`bun.lock`, senza dipendenze dirette, override, framework upgrade, mass update o modifica
+dell'application source. Il security predecessor
+`1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b` resta storico e
+immutabile. Il nuovo Final Freeze candidate è
+`7af8501bd6eb6740832071a11ae70e24deeca61eb08f042304a29919d2422760`, con manifest SHA-256
+`2c60fac63d398bf86e8e368fa9177d2fbdd048e5c010068683e9e036a3e1034c`; l'unico delta nel set
+dei 150 file è `bun.lock`.
+
+**Runtime preservation:** il build live post-fix conserva byte per byte tutti i 46 asset
+distribuiti, 60/61 file Worker e le configurazioni/binding Wrangler. L'unico Worker raw-different,
+`server/index.mjs`, differisce esclusivamente per ordine della mappa asset e 37 mtime generati;
+path, ETag, size e contenuti coincidono e l'hash normalizzato è identico. `nitro.json` differisce
+solo per il timestamp di build. Nessun package corretto compare nel Worker o negli asset e non
+esiste un nuovo runtime dependency. Stato: `SECURITY_RUNTIME_EVIDENCE_PRESERVED`.
+
+**Gate:** l'OSV refresh deve eliminare entrambi gli advisory e lasciare separato
+`RITO-SEC-007`; frozen install, test security/funzionali, typecheck, lint baseline, build demo/live,
+Git/whitespace/secret checks e manifest/allowlist devono passare prima della richiesta di stage.
+Questa decisione non autorizza stage, commit, push, PR, merge, tag, deploy, migration, DNS,
+secret, provisioning o produzione.

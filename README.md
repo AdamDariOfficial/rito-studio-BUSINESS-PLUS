@@ -115,15 +115,19 @@ STAGING_IMPLEMENTATION_COMPLETE
 STAGING_DEPLOYMENT_COMPLETE
 STAGING_E2E_COMPLETE
 REQUIRED_STAGING_SECURITY_GATES_COMPLETE
-READY FOR HUMAN FINAL REVIEW / FREEZE
-HUMAN_FINAL_REVIEW_FREEZE_NOT_YET_GRANTED
+SECURITY_CLOSEOUT_PASS
+SECURITY_CANDIDATE_1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b
+SECURITY_MANIFEST_8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e
+RUNTIME_BUILD_150_OF_150_EXACT
+FINAL_FREEZE_GIT_INTEGRATION_PENDING
 PRODUCTION_NOT_CERTIFIED
 PRODUCTION_NOT_AUTHORIZED
 ```
 
-The application and staging validation are complete. The candidate is not a frozen baseline
-until a separate read-only Final Human Freeze Audit grants that gate. Staging evidence does not
-certify production readiness or authorize production.
+The application, staging validation and final security closeout are complete. The candidate is
+not a frozen baseline until exact Git integration, canonical-main attestation and the annotated
+freeze tag complete their explicit gates. Security and staging evidence do not certify
+production readiness or authorize production.
 
 See:
 
@@ -175,13 +179,36 @@ See:
 - `docs/BUSINESS_PLUS_LIVE_STORE.md` v2.3
 - `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.0
 
-## Current gate — final human freeze audit
+## Current gate — Final Freeze integration
 
 The isolated Cloudflare staging implementation, native AdminAuth scrypt v2 reprovision/deploy
 and required functional, security, responsive and multi-device acceptance are complete. D1 is
 the canonical store; Durable Object/WebSocket realtime remains a best-effort notification layer
 with reconnect and one-shot D1 catch-up.
 
-The next step is a fresh **read-only Final Human Freeze Audit**. The source `wrangler.jsonc`
-remains unprovisioned and must not be deployed directly. No secret value belongs in the
-repository. Production remains not certified and not authorized.
+The final security closeout passed for the exact 150-file runtime/build candidate
+`1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b`; its canonical
+manifest SHA-256 is `8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e`.
+Open CRITICAL, HIGH and MEDIUM findings are zero. `RITO-SEC-007` remains accepted LOW
+toolchain-only debt for `esbuild@0.27.7` / `GHSA-g7r4-m6w7-qqqr`; `RITO-SEC-008` remains a
+closed INFO legacy-compatibility residual and `RITO-SEC-009` is `CLOSED_VERIFIED`.
+
+The current gate integrates those exact runtime/build bytes plus permanent tests, canonical
+documentation and sanitized closeout evidence. Stage, commit, push, pull request, merge and
+annotated tag remain separate explicit approvals. Manual browser review is not run in this
+freeze because the user excluded it from scope. The source `wrangler.jsonc` remains
+unprovisioned and must not be deployed directly. No secret value belongs in the repository.
+Production remains not certified and not authorized.
+
+The 10 September 2026 pre-stage OSV refresh found
+`baseline-browser-mapping@2.10.44` / `GHSA-w5vr-8v7q-w6rv` / `CVE-2026-45819` (upstream
+MODERATE) and `js-yaml@4.3.1` / `GHSA-2883-xcg3-v3hh` / `CVE-2026-84375` (upstream HIGH).
+The approved Final Freeze continuation removed both with compatible transitive-only lockfile
+resolutions to `2.11.0` and `4.3.2`. No direct dependency, framework version or application
+source changed. The new 150-file Final Freeze candidate is
+`7af8501bd6eb6740832071a11ae70e24deeca61eb08f042304a29919d2422760` with manifest SHA-256
+`2c60fac63d398bf86e8e368fa9177d2fbdd048e5c010068683e9e036a3e1034c`; the historical security
+predecessor remains unchanged. Live assets are byte-identical and the regenerated Worker is
+semantically identical after normalizing Nitro-only asset ordering/mtime metadata, so
+`SECURITY_RUNTIME_EVIDENCE_PRESERVED` applies. The refreshed OSV scan reports only the already
+accepted `RITO-SEC-007` LOW debt. Git stage remains subject to its explicit human gate.

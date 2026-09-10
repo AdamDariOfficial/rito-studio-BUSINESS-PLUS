@@ -50,4 +50,5 @@ export interface AdminAuth {
 
 export interface ConsultationRateLimiter {
   requireSubmitAllowed(actorKey: string): Promise<void>;
+  requireIngressAllowed(request: Request): Promise<void>;
 }

@@ -1,5 +1,5 @@
-import { getTreatment, treatments } from "@/data/treatments";
-import { recommendationRules } from "./config";
+import { getTreatment, treatments } from "../../data/treatments.ts";
+import { recommendationRules } from "./config.ts";
 
 function matches(rule: Record<string, string>, answers: Record<string, string>) {
   return Object.entries(rule).every(([key, value]) => answers[key] === value);

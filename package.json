@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types tools/live-backend/test-native-admin-auth.ts"
+    "test": "node --experimental-strip-types tools/live-backend/test-native-admin-auth.ts",
+    "test:security": "node --experimental-strip-types tools/security/test-security-remediation.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

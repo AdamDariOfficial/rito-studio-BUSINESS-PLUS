@@ -61,6 +61,7 @@ import type {
   ConsultationRequest,
   ConsultationStatus,
   PreferredContact,
+  PreferredWindow,
 } from "@/features/consultation/types";
 import { buildHead, routeSeo } from "@/lib/seo";
 import { cn } from "@/lib/utils";
@@ -1231,7 +1232,9 @@ function RequestEditForm({
             <span className="text-base font-medium text-ink">Fascia preferita</span>
             <select
               value={contact.preferredWindow}
-              onChange={(event) => onContact({ ...contact, preferredWindow: event.target.value })}
+              onChange={(event) =>
+                onContact({ ...contact, preferredWindow: event.target.value as PreferredWindow })
+              }
               className="mt-2 min-h-12 w-full border border-line bg-canvas px-4 text-base text-ink outline-none focus:border-accent"
             >
               {consultationWindows.map((windowLabel) => (

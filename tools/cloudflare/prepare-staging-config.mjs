@@ -1,10 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import {
+  applyStagingAssetBoundary,
+  STAGING_ENTRY_FILENAME,
+  STAGING_SECURITY_RESPONSE_FILENAME,
+} from "./staging-config-core.mjs";
 
 const DEFAULT_WORKER_NAME = "rito-studio-business-plus-staging";
 const D1_NAME = "rito-studio-business-plus-staging";
 const REQUIRED_DO_CLASS = "ConsultationRealtimeHub";
+const STAGING_ENTRY_TEMPLATE = "staging-worker-entry.template.mjs";
 
 function fail(message) {
   throw new Error(message);
@@ -137,7 +143,26 @@ if (!fs.existsSync(sourcePath)) fail(`Missing generated Worker config: ${sourceP
 const config = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
 assertGeneratedWorker(config);
 
-const staging = structuredClone(config);
+const generatedEntryPath = path.join(repoRoot, ".output", "server", "index.mjs");
+const generatedEntry = fs.readFileSync(generatedEntryPath, "utf8");
+if (
+  !generatedEntry.includes("env.ASSETS && isPublicAssetURL(url.pathname)") ||
+  !generatedEntry.includes("return env.ASSETS.fetch(cfRequest)")
+) {
+  fail("Generated Nitro entry no longer exposes the verified streaming ASSETS fallback.");
+}
+
+const toolingDirectory = path.join(repoRoot, "tools", "cloudflare");
+fs.copyFileSync(
+  path.join(toolingDirectory, STAGING_ENTRY_TEMPLATE),
+  path.join(repoRoot, ".output", "server", STAGING_ENTRY_FILENAME),
+);
+fs.copyFileSync(
+  path.join(toolingDirectory, STAGING_SECURITY_RESPONSE_FILENAME),
+  path.join(repoRoot, ".output", "server", STAGING_SECURITY_RESPONSE_FILENAME),
+);
+
+const staging = applyStagingAssetBoundary(structuredClone(config));
 staging.name = workerName;
 staging.workers_dev = false;
 staging.preview_urls = false;
@@ -183,4 +208,5 @@ console.log(`D1:     ${D1_NAME} (${databaseId})`);
 console.log(`Submit rate: namespace ${submitRateNamespaceId}, 5 per 60s`);
 console.log(`Login rate:  namespace ${loginRateNamespaceId}, 5 per 60s`);
 console.log(`Privacy version: ${privacyVersion}`);
+console.log(`Entry:  ${STAGING_ENTRY_FILENAME} (Worker-first static security boundary)`);
 console.log("Secrets ADMIN_AUTH_PEPPER and ADMIN_AUTH_CSRF_SECRET must be provisioned separately.");

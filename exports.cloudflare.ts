@@ -1,6 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
 import { consultationRealtimeEventSchema } from "./src/features/consultation/realtime";
 import type { D1DatabaseBinding } from "./src/features/consultation/live/cloudflare-env.server";
+import { handleConsultationWebSocketClose } from "./src/features/consultation/live/websocket-close";
 
 type ConsultationRealtimeEnv = {
   CONSULTATION_DB?: D1DatabaseBinding;
@@ -121,7 +122,7 @@ export class ConsultationRealtimeHub extends DurableObject<ConsultationRealtimeE
     // is handled by the runtime; no application heartbeat keeps the Object awake.
   }
 
-  webSocketClose(webSocket: WebSocket, code: number, reason: string) {
-    webSocket.close(code, reason);
+  webSocketClose(webSocket: WebSocket, code: number, reason: string, wasClean: boolean) {
+    handleConsultationWebSocketClose(webSocket, code, reason, wasClean);
   }
 }

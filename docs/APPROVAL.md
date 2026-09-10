@@ -1,8 +1,8 @@
-# RITO Studio BUSINESS — Authorization and Baseline Record
+# RITO Studio BUSINESS PLUS — Authorization and Baseline Record
 
-**Updated:** 17 August 2026
-**Status:** `BUSINESS_APPLICATION_BASELINE_MERGED`
-**Repository:** `AdamDariOfficial/rito-studio-BUSINESS`
+**Updated:** 10 September 2026
+**Status:** `FINAL_FREEZE_GIT_INTEGRATION_PENDING`
+**Repository:** `AdamDariOfficial/rito-studio-BUSINESS-PLUS`
 **Default branch:** `main`
 **Remix baseline:** `222c331db44b1775aa2f877634f3a0f3dfdfbe69`
 
@@ -589,3 +589,60 @@ Git publication actions:            NOT AUTHORIZED
 This record closes evidence collection only. It does not itself approve the human freeze or
 authorize staging/production mutation, deployment, real production data, stage, commit, push,
 pull request or merge.
+
+## BUSINESS PLUS security closeout and Final Freeze authorization — 10 September 2026
+
+The user authorized one continuous Final Freeze macro-phase for the exact security-validated
+candidate, with a mandatory explicit stop at each Git publication gate.
+
+```text
+SECURITY CLOSEOUT: PASS
+security candidate: 1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b
+security manifest:  8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e
+runtime/build:      150/150 exact; missing 0; mismatch 0
+open severity:      CRITICAL 0 / HIGH 0 / MEDIUM 0
+accepted residual:  RITO-SEC-007 LOW_ACCEPTED_SECURITY_DEBT
+operational info:   RITO-SEC-008 CLOSED_VERIFIED
+RITO-SEC-009:       CLOSED_VERIFIED
+```
+
+`RITO-SEC-007` is the toolchain-only `esbuild@0.27.7` /
+`GHSA-g7r4-m6w7-qqqr` debt. Known closeout limitations are no runtime fault injection, no broad
+authenticated DAST and no production testing. These limits are retained without converting them
+into PASS claims.
+
+Manual browser review:
+`NOT RUN — EXCLUDED FROM THIS FINAL FREEZE BY USER SCOPE`
+
+The security PASS cannot be transferred to changed runtime/build input. Documentation-only
+reconciliation is authorized only when the 150-file candidate remains byte-exact. The following
+actions require separate explicit authorization in order: exact stage, one local commit, normal
+branch push, one pull request to `main`, non-history-rewriting merge and annotated freeze tag
+creation/push. Production remains `NOT CERTIFIED` and `NOT AUTHORIZED`.
+
+The pre-stage OSV refresh on 10 September 2026 subsequently returned two advisories absent from
+the approved closeout ledger: `GHSA-w5vr-8v7q-w6rv` / `CVE-2026-45819` for
+`baseline-browser-mapping@2.10.44` (upstream MODERATE) and `GHSA-2883-xcg3-v3hh` /
+`CVE-2026-84375` for `js-yaml@4.3.1` (upstream HIGH).
+
+The user then explicitly authorized treating both as an internal supply-chain blocker in the same
+Final Freeze, including a narrow compatible dependency remediation, a new candidate identity and
+targeted runtime-preservation proof. The resulting change is limited to two transitive resolution
+records in `bun.lock`: `baseline-browser-mapping@2.11.0` and `js-yaml@4.3.2`. No application
+source, direct dependency, override, framework or unrelated package changed.
+
+The new Final Freeze candidate is
+`7af8501bd6eb6740832071a11ae70e24deeca61eb08f042304a29919d2422760`, manifest SHA-256
+`2c60fac63d398bf86e8e368fa9177d2fbdd048e5c010068683e9e036a3e1034c`, with `150/150` current
+files and `bun.lock` as the only delta from the immutable security predecessor. Live static assets,
+Wrangler config and bindings are byte-identical; the Worker is identical after normalizing only
+Nitro-generated public-asset ordering and mtime metadata. The refreshed OSV scan removed both new
+advisories and retained only accepted LOW `RITO-SEC-007`. Therefore:
+
+```text
+SECURITY_RUNTIME_EVIDENCE_PRESERVED
+dependency remediation: AUTHORIZED AND COMPLETED
+stage:                  NOT AUTHORIZED / NOT PERFORMED
+commit/push/PR/merge/tag: NOT AUTHORIZED
+production:             NOT CERTIFIED / NOT AUTHORIZED
+```

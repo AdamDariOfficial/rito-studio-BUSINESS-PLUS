@@ -1,13 +1,130 @@
 # RITO Studio BUSINESS PLUS — Status
 
-**Updated:** 17 August 2026
+**Updated:** 10 September 2026
 **Project:** RITO Studio BUSINESS PLUS
 **Family:** Tretnix Beauty & Wellness `v1.1`
 **Repository:** `AdamDariOfficial/rito-studio-BUSINESS-PLUS`
-**Working branch:** `feat/rito-business-plus-complete`
+**Working branch:** `codex/security-assessment`
 **Bootstrap HEAD:** `eba1a2a91fd3a531b4a4667d038b631758d0a664`
 **Parent BUSINESS baseline:** `b95a63c6127d2bc1dd396d74b2dd25f87b952226`
 **Canonical START baseline:** `34c13cd78255b7ac009533790329cada74ae9d8a`
+
+## Current authoritative Final Freeze state — 10 September 2026
+
+This section supersedes earlier pending/pre-security status statements below; those sections are
+retained as historical implementation and staging evidence.
+
+```text
+repository:             AdamDariOfficial/rito-studio-BUSINESS-PLUS
+remote:                 https://github.com/AdamDariOfficial/rito-studio-BUSINESS-PLUS.git
+branch:                 codex/security-assessment
+local HEAD:             cb8ef71d48177413adfeb5fb4eccc71cb23f2e0f
+origin/main:            cb8ef71d48177413adfeb5fb4eccc71cb23f2e0f
+ahead / behind:         0 / 0
+remote working branch:  absent at preflight
+staged paths:           0 at preflight
+repository tags:        none at preflight
+```
+
+The authoritative predecessor is `security-closeout-v1.0.5`:
+
+```text
+SECURITY CLOSEOUT:         PASS
+security candidate:       1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b
+security manifest:        8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e
+runtime/build:             150/150 exact
+missing / mismatch:       0 / 0
+CRITICAL / HIGH / MEDIUM: 0 / 0 / 0
+LOW:                       1 — RITO-SEC-007 LOW_ACCEPTED_SECURITY_DEBT
+INFO:                      1 — RITO-SEC-008 CLOSED_VERIFIED legacy compatibility
+RITO-SEC-009:              CLOSED_VERIFIED
+```
+
+The accepted LOW is `esbuild@0.27.7` / `GHSA-g7r4-m6w7-qqqr`, limited to the toolchain and
+absent from the deployed Worker/assets according to the final security evidence. Closeout
+limitations remain explicit: runtime fault injection was not performed, broad authenticated
+DAST was not performed and production was not tested.
+
+Manual browser review:
+`NOT RUN — EXCLUDED FROM THIS FINAL FREEZE BY USER SCOPE`
+
+```text
+Git freeze: PENDING until merge + verified canonical tag
+Production: NOT CERTIFIED
+Production: NOT AUTHORIZED
+```
+
+The current Final Freeze task permits documentation-only reconciliation outside the security
+runtime/build manifest. Stage, local commit, branch push, pull request creation, merge and
+annotated freeze tag creation/push remain six separate explicit human gates. No deployment,
+migration, DNS, secret, credential, provisioning or production operation is authorized.
+
+### Pre-stage dependency remediation — 10 September 2026
+
+The required OSV refresh completed successfully against 566 locked packages and returned three
+matches. `esbuild@0.27.7` / `GHSA-g7r4-m6w7-qqqr` is the already accepted LOW debt. Two matches
+are new relative to the authoritative closeout ledger:
+
+| Package | Advisory | Upstream severity | Observed chain |
+|---|---|---|---|
+| `baseline-browser-mapping@2.10.44` | `GHSA-w5vr-8v7q-w6rv` | MODERATE | Browserslist/Babel toolchain |
+| `js-yaml@4.3.1` | `GHSA-2883-xcg3-v3hh` | HIGH | ESLint and TanStack/XML build toolchain |
+
+Independent advisory verification confirmed the following current boundaries:
+
+| Package | CVE | Affected | Patched floor | Direct/transitive | Introduced by | Classification |
+|---|---|---|---|---|---|---|
+| `baseline-browser-mapping` | `CVE-2026-45819` | `>=2.0.0 <2.11.0` | `2.11.0` | transitive | `browserslist@4.28.7` through Babel/TanStack/Vite build paths | dev/build toolchain |
+| `js-yaml` | `CVE-2026-84375` | `>=4.0.0 <4.3.2` | `4.3.2` | transitive | `@eslint/eslintrc@3.3.5` and `xmlbuilder2@4.0.3` | lint/build toolchain |
+
+Both patched versions satisfy the existing introducing ranges. The approved continuation changed
+only the two resolved package records in `bun.lock`; it did not add an override, direct
+dependency, framework upgrade or application-source change. `bun install --frozen-lockfile`
+installed exactly two packages. The vulnerable versions no longer occur in the lockfile and the
+refreshed OSV scan over 566 locked packages reports one match only: the pre-existing accepted
+`RITO-SEC-007` LOW `esbuild@0.27.7` debt.
+
+Reachability evidence is narrower than the upstream network scores. Neither package name nor its
+advisory identifier occurs in the Worker/public output. ESLint lazy-loads `js-yaml` only for
+legacy/YAML configuration; the repository uses `eslint.config.js`, contains no executable YAML
+configuration and an instrumented lint run loaded neither remediated package. `xmlbuilder2` can
+parse YAML, but no application or TanStack import site invokes that reader with visitor input.
+`baseline-browser-mapping` is a Browserslist build dependency; its vulnerable invalid/conflicting
+parameter path receives build configuration, not request data. These observations are
+defense-in-depth evidence only: remediation was still required and completed.
+
+The historical security identity is retained as immutable closeout evidence. Because `bun.lock`
+is one of the 150 runtime/build inputs, the Final Freeze identity is superseded exactly once:
+
+```text
+historical security candidate:      1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b
+historical security manifest:       8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e
+historical manifest delta:          bun.lock only
+old bun.lock SHA-256:               4708e4a2bc4b164c51458ac83aacdbab510c417a2ee7f21c9479a38a7720bae2
+new bun.lock SHA-256:               50a057c0fc2ce10fc68735ee49ae06d1255eb282c7f99e5241a2f141718ab706
+Final Freeze candidate:             7af8501bd6eb6740832071a11ae70e24deeca61eb08f042304a29919d2422760
+Final Freeze manifest SHA-256:      2c60fac63d398bf86e8e368fa9177d2fbdd048e5c010068683e9e036a3e1034c
+Final Freeze runtime/build:         150/150 exact; missing 0
+```
+
+The canonical live build comparison found 113 generated files on each side. All 46 static assets
+are byte-identical. Sixty of 61 Worker code files are byte-identical; the sole raw mismatch is
+`server/index.mjs`, where only public-asset entry ordering and 37 regenerated mtimes differ.
+After removing those non-content metadata fields and canonicalizing entry order, both Worker
+files hash to `6b147e318c7bbd1faebb76a4aaa809c3e1f38f10de3dc40da2fa2d0e08e49d93`.
+All asset paths, sizes, ETags and payload hashes match. Wrangler config/bindings are byte-identical;
+the other mismatch, `nitro.json`, is its build timestamp only. No runtime dependency was added.
+
+```text
+SECURITY_RUNTIME_EVIDENCE_PRESERVED
+dependency gate: PASS
+stage:           NOT PERFORMED — EXPLICIT HUMAN APPROVAL REQUIRED
+production:      NOT CERTIFIED / NOT AUTHORIZED
+```
+
+The prior pentest/staging security closeout is not rerun indiscriminately because runtime behavior
+and distributed bytes are preserved with strong targeted evidence. The historical closeout
+limitations remain unchanged.
 
 ## Approved baseline state
 

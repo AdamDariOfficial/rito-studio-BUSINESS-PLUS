@@ -1,21 +1,39 @@
-import { getTreatment } from "@/data/treatments";
-import { MAX_CONSULTATION_SELECTED_SERVICES } from "./config";
+import { getTreatment } from "../../data/treatments.ts";
+import { consultationWindows, MAX_CONSULTATION_SELECTED_SERVICES } from "./config.ts";
 import { z } from "zod";
+
+function isRealIsoDate(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
+  );
+}
+
+const consultationPhoneSchema = z
+  .string()
+  .trim()
+  .regex(/^\+?[0-9\s()/-]+$/)
+  .refine((value) => {
+    const digitCount = value.replace(/[^0-9]/g, "").length;
+    return digitCount >= 6 && digitCount <= 15;
+  })
+  .transform((value) => `${value.startsWith("+") ? "+" : ""}${value.replace(/[^0-9]/g, "")}`);
 
 export const consultationStatusSchema = z.enum(["new", "contacted", "booked", "archived"]);
 
 export const consultationContactSchema = z
   .object({
     name: z.string().trim().min(2).max(80),
-    phone: z.string().trim().min(6).max(32),
+    phone: consultationPhoneSchema,
     email: z.string().trim().email().max(120).optional().or(z.literal("")),
     preferredContact: z.enum(["phone", "whatsapp", "email"]),
-    preferredDate: z
-      .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/)
-      .optional()
-      .or(z.literal("")),
-    preferredWindow: z.string().trim().min(1).max(120),
+    preferredDate: z.string().refine(isRealIsoDate).optional().or(z.literal("")),
+    preferredWindow: z.enum(consultationWindows),
   })
   .superRefine((contact, ctx) => {
     if (contact.preferredContact === "email" && !contact.email) {

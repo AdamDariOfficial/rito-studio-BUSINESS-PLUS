@@ -1,5 +1,3 @@
-import { consultationRequestSchema } from "../schemas";
-import type { ConsultationRequest } from "../types";
 import type {
   ConsultationCreateInput,
   ConsultationEditInput,
@@ -7,28 +5,11 @@ import type {
   ConsultationUpdateInput,
 } from "./contracts";
 import { requireLiveBinding, type D1DatabaseBinding } from "./cloudflare-env.server";
-
-type ConsultationRow = {
-  id: string;
-  submission_key: string;
-  created_at: string;
-  updated_at: string;
-  version: number;
-  status: string;
-  service_slug: string;
-  answers_json: string;
-  recommended_slugs_json: string;
-  selected_slugs_json: string;
-  name: string;
-  phone: string;
-  email: string;
-  preferred_contact: string;
-  preferred_date: string;
-  preferred_window: string;
-  consent_at: string;
-  privacy_version: string;
-  note: string;
-};
+import {
+  listValidConsultationRows,
+  parseConsultationRow,
+  type ConsultationRow,
+} from "./d1-consultation-row.server";
 
 const SELECT_COLUMNS = `
   id, submission_key, created_at, updated_at, version, status, service_slug,
@@ -41,45 +22,12 @@ function database() {
   return requireLiveBinding("CONSULTATION_DB") as D1DatabaseBinding;
 }
 
-function parseJson<T>(raw: string, fallback: T): T {
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-function mapRow(row: ConsultationRow): ConsultationRequest {
-  return consultationRequestSchema.parse({
-    id: row.id,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-    version: row.version,
-    serviceSlug: row.service_slug,
-    answers: parseJson(row.answers_json, {}),
-    recommendedSlugs: parseJson(row.recommended_slugs_json, []),
-    selectedServiceSlugs: parseJson(row.selected_slugs_json, []),
-    contact: {
-      name: row.name,
-      phone: row.phone,
-      email: row.email,
-      preferredContact: row.preferred_contact,
-      preferredDate: row.preferred_date,
-      preferredWindow: row.preferred_window,
-    },
-    consent: true,
-    status: row.status,
-    note: row.note,
-    source: "live",
-  });
-}
-
 async function getById(db: D1DatabaseBinding, id: string) {
   const row = await db
     .prepare(`SELECT ${SELECT_COLUMNS} FROM consultation_requests WHERE id = ? LIMIT 1`)
     .bind(id)
     .first<ConsultationRow>();
-  return row ? mapRow(row) : null;
+  return row ? parseConsultationRow(row) : null;
 }
 
 async function getBySubmissionKey(db: D1DatabaseBinding, submissionKey: string) {
@@ -87,7 +35,7 @@ async function getBySubmissionKey(db: D1DatabaseBinding, submissionKey: string) 
     .prepare(`SELECT ${SELECT_COLUMNS} FROM consultation_requests WHERE submission_key = ? LIMIT 1`)
     .bind(submissionKey)
     .first<ConsultationRow>();
-  return row ? mapRow(row) : null;
+  return row ? parseConsultationRow(row) : null;
 }
 
 async function requireUpdatedRecord(
@@ -152,12 +100,17 @@ export const d1ConsultationRepository: ConsultationRepository = {
   },
 
   async list() {
-    const result = await database()
-      .prepare(
-        `SELECT ${SELECT_COLUMNS} FROM consultation_requests ORDER BY created_at DESC LIMIT 1000`,
-      )
-      .all<ConsultationRow>();
-    return (result.results ?? []).map(mapRow);
+    return listValidConsultationRows(async () => {
+      const result = await database()
+        .prepare(
+          `SELECT ${SELECT_COLUMNS} FROM consultation_requests ORDER BY created_at DESC LIMIT 1000`,
+        )
+        .all<ConsultationRow>();
+      if (!Array.isArray(result.results)) {
+        throw new Error("D1 consultation query returned an invalid result.");
+      }
+      return result.results;
+    });
   },
 
   async get(id) {
