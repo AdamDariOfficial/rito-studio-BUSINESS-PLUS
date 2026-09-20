@@ -1,7 +1,7 @@
 # RITO Studio — Design Direction
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 1.0
+**Versione:** 1.1
 **Stato:** approvato
 
 ## 1. Direzione
@@ -342,3 +342,23 @@ Una volta approvato lo START del cliente, il BUSINESS deve ereditarne esattament
 - I servizi non sono presentati come una griglia uniforme di card.
 - Mobile 360 px non presenta tagli o overflow.
 - Il focus è visibile e coerente.
+
+<!-- RITO_PLUS_FULL_PARITY_2026_09_20 -->
+## BUSINESS PLUS — parità visuale corrente con BUSINESS
+
+**Data:** 20 settembre 2026
+
+BUSINESS PLUS non introduce una seconda identità visuale del piano BUSINESS. Sulle superfici condivise deve mantenere la stessa composizione, densità, spacing, divider, affordance e motion del BUSINESS corrente.
+
+Contratto corrente:
+
+- hero home: stessa composizione editoriale split del BUSINESS; cambia soltanto l'intento della CTA primaria, che apre `/consulenza`;
+- ritmo verticale compatto sulle route condivise (intro, catalogo, FAQ, galleria, contatti, Studio e sezioni home);
+- `RitualFeature` include gli stessi tre principi `Ascolto`, `Precisione`, `Continuità`;
+- `/studio` usa la stessa struttura compatta: intro con una sola immagine, `Dentro RITO` con `Ambiente / Materiali / Cura`, fascia utility finale;
+- home gallery identica al BUSINESS per ordine, dimensioni, rail, fade, hint e gesto end-of-rail;
+- filtri orizzontali di `/trattamenti` e `/galleria` usano la stessa geometria full-bleed mobile e gli stessi inset;
+- divider editoriali autonomi non cambiano box model, odd/even, padding, gap o flow;
+- footer, header, link persistenti, legal strip e coppia Privacy/Cookie usano lo stesso sistema.
+
+Sono differenze intenzionali soltanto le capacità PLUS: consulenza guidata, Consultation Inbox, admin/live backend e la sostituzione delle CTA di booking primarie con la CTA di consulenza dove il prodotto lo richiede.

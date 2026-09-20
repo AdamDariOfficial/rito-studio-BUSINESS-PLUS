@@ -30,7 +30,7 @@ export function TreatmentRows({
             aria-haspopup="dialog"
             aria-controls="treatment-detail-dialog"
             onClick={(event) => onSelect(treatment, event.currentTarget)}
-            className="interactive-row treatment-row group grid min-h-16 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-3.5 text-left md:min-h-28 md:grid-cols-12 md:gap-8 md:py-7"
+            className="interactive-row treatment-row group grid min-h-16 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-3.5 text-left md:min-h-24 md:grid-cols-12 md:gap-8 md:py-5"
           >
             <span className="eyebrow hidden text-accent md:col-span-1 md:block">
               {String(index + 1).padStart(2, "0")}

@@ -156,6 +156,24 @@ changes it:
 
 Do not copy Hospitality visual identity.
 
+## Current BUSINESS presentation parity — 20 September 2026
+
+The historical product parent remains BUSINESS `b95a63c6127d2bc1dd396d74b2dd25f87b952226`.
+For inherited public presentation and interaction quality, the current reviewed parity reference is
+`AdamDariOfficial/rito-studio-BUSINESS@3f0ff4d3ed8e675725d8d640c305ab61d47217d7`.
+
+Apply current BUSINESS patterns to inherited public surfaces unless a BUSINESS PLUS decision
+explicitly overrides the product behavior. This includes route density, spacing, reveal/divider
+behavior, gallery rail composition, Studio composition, legal-footer treatment, persistent-link
+affordance, route focus/top behavior and reduced-motion semantics.
+
+BUSINESS PLUS intentionally keeps its own consultation conversion layer, Consultation Inbox,
+native AdminAuth/live backend and approved consultation/admin motion. Do not overwrite those
+PLUS-specific capabilities merely to obtain source equality with BUSINESS.
+
+The detailed reconciliation matrix and acceptance boundary are recorded in
+`docs/CURRENT_BUSINESS_PARITY.md`.
+
 ## CUSTOM boundary
 
 CUSTOM begins when the client needs any of:

@@ -1,7 +1,7 @@
 # RITO Studio — Testing and Verification
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 1.9
+**Versione:** 2.0
 **Stato:** matrice approvata; gli esiti dei pass sono registrati in `docs/STATUS.md`
 
 ## 1. Regola di evidenza
@@ -965,3 +965,25 @@ revoked sessions:   1
 All mandatory staging acceptance items in this testing matrix and the staging runbook are now
 recorded as passed. The candidate is `READY FOR HUMAN FINAL REVIEW / FREEZE`; this is not
 production authorization or production-readiness certification.
+
+<!-- RITO_PLUS_FULL_PARITY_2026_09_20 -->
+## 20. BUSINESS PLUS — full parity browser/regression gate
+
+Dopo l'Apply e l'intera validazione automatica, eseguire **una sola sessione browser aggregata** sul candidate completo.
+
+Verificare almeno a 320 / 360 / 375 / 390 / 430 / 768 / 1024 / 1440 px e al 200% zoom:
+
+- hero, rhythm, spacing e CTA geometry corrispondono al BUSINESS; primaria PLUS apre `/consulenza`;
+- `RitualFeature`, `StudioEditorial`, `/studio`, FAQ, contatti, policy e catalogo hanno la stessa densità e gerarchia BUSINESS;
+- home gallery: stesso ordine, dimensioni, gap, fade/hint, native scroll e end-of-rail cancellation clamp;
+- `/trattamenti` e `/galleria`: rail filtri full-bleed mobile, active item leggibile, nessun overflow pagina;
+- divider reveal opacity-only senza layout shift;
+- review surface demo visibile, chiaramente dimostrativa e priva di falsa attribuzione/piattaforma;
+- header/drawer/footer/BrandHomeLink/RouteFocus: keyboard, focus trap, Escape, outside click, modifier click, Back/Forward, direct URL, refresh, hash e same-path;
+- Privacy + Cookie restano una coppia visuale non separabile; attribuzione Tretnix invariata;
+- `prefers-reduced-motion: reduce` elimina motion non essenziale senza nascondere contenuti;
+- `/consulenza`: quattro step, recommendation cap, manual-add cap, review/confirmation e responsive layout invariati;
+- `/admin/login`, `/admin` e `/_demo/tools`: smoke visuale/responsive, senza attribuire al browser-only harness prove D1/auth/CSRF/rate-limit/realtime;
+- console errors = 0 e `document.documentElement.scrollWidth <= document.documentElement.clientWidth`.
+
+La regression automatica deve includere frozen install, typecheck, lint, native auth test, security test, build, static/config contract, whitespace e Development OS. Poiché il pass non modifica backend/auth/data/infra, ogni eventuale gate live resta distinto e non può essere dichiarato PASS per inferenza.

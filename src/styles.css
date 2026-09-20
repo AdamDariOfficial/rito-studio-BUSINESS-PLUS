@@ -31,15 +31,15 @@
 }
 
 :root {
-  --canvas: #f6f4ef;
-  --surface: #e8e1d8;
-  --ink: #1b1a18;
-  --muted: #746e67;
-  --muted-on-surface: #625c55;
-  --accent: #6a3f4b;
-  --accent-strong: #4e2e33;
-  --line: #cec6bc;
-  --white: #fffefb;
+  --canvas: #F6F4EF;
+  --surface: #E8E1D8;
+  --ink: #1B1A18;
+  --muted: #746E67;
+  --muted-on-surface: #625C55;
+  --accent: #6A3F4B;
+  --accent-strong: #4E2E33;
+  --line: #CEC6BC;
+  --white: #FFFEFB;
 
   --header-height: 68px;
 
@@ -87,10 +87,7 @@
     color: var(--white);
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.01em;
@@ -184,6 +181,52 @@
     box-shadow:
       0 5px 14px rgb(27 26 24 / 0.13),
       inset 0 1px 0 rgb(255 254 251 / 0.1);
+    transform: translateY(0) scale(0.995);
+  }
+
+  /* Light counterpart of the approved premium dark CTA motion. */
+  .action-primary-light {
+    background-color: var(--white) !important;
+    border-color: var(--white) !important;
+    background-image: linear-gradient(
+      108deg,
+      transparent 0%,
+      transparent 34%,
+      rgb(27 26 24 / 0.055) 48%,
+      transparent 62%,
+      transparent 100%
+    );
+    background-position: 100% 50%;
+    background-size: 245% 100%;
+    transition:
+      background-position 640ms var(--motion-ease-reveal),
+      box-shadow 360ms var(--motion-ease-ui),
+      transform 360ms var(--motion-ease-ui);
+  }
+
+  .action-primary-light:focus-visible {
+    background-position: 0 50%;
+    box-shadow:
+      0 12px 28px rgb(27 26 24 / 0.16),
+      inset 0 1px 0 rgb(255 255 255 / 0.88);
+    transform: translateY(-1px);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .action-primary-light:hover {
+      background-position: 0 50%;
+      box-shadow:
+        0 12px 28px rgb(27 26 24 / 0.16),
+        inset 0 1px 0 rgb(255 255 255 / 0.88);
+      transform: translateY(-1px);
+    }
+  }
+
+  .action-primary-light:active {
+    background-position: 22% 50%;
+    box-shadow:
+      0 5px 14px rgb(27 26 24 / 0.13),
+      inset 0 1px 0 rgb(255 255 255 / 0.82);
     transform: translateY(0) scale(0.995);
   }
 
@@ -432,6 +475,81 @@
   animation: rito-accordion-close var(--motion-duration-ui) var(--motion-ease-ui);
 }
 
+@keyframes rito-contact-dialog-overlay-open {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rito-contact-dialog-overlay-close {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rito-contact-dialog-content-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 12px)) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes rito-contact-dialog-content-close {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px)) scale(0.99);
+  }
+}
+
+.rito-contact-dialog-overlay[data-state="open"] {
+  animation: rito-contact-dialog-overlay-open var(--motion-duration-ui) var(--motion-ease-ui);
+}
+
+.rito-contact-dialog-overlay[data-state="closed"] {
+  animation: rito-contact-dialog-overlay-close var(--motion-duration-fast) var(--motion-ease-ui);
+}
+
+.rito-contact-dialog-content {
+  transform: translate(-50%, -50%);
+}
+
+.rito-contact-dialog-content[data-state="open"] {
+  animation: rito-contact-dialog-content-open var(--motion-duration-ui) var(--motion-ease-ui);
+}
+
+.rito-contact-dialog-content[data-state="closed"] {
+  animation: rito-contact-dialog-content-close var(--motion-duration-fast) var(--motion-ease-ui);
+}
+
+@keyframes rito-treatment-filter-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.treatment-filter-swap {
+  animation: rito-treatment-filter-in 240ms var(--motion-ease-ui) both;
+}
+
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
@@ -477,6 +595,106 @@
   }
 }
 
+/* Reveal animation — start hidden only when JS activates it via [data-reveal]. */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--motion-duration-reveal) var(--motion-ease-reveal),
+    transform var(--motion-duration-reveal) var(--motion-ease-reveal);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal][data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-divider-reveal] {
+  opacity: 1;
+}
+
+.js [data-divider-reveal] {
+  opacity: 0;
+  transition: opacity var(--motion-duration-reveal) var(--motion-ease-reveal);
+  transition-delay: var(--divider-reveal-delay, 0ms);
+}
+
+.js [data-divider-reveal][data-divider-revealed="true"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .treatment-filter-swap {
+    animation: none;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .js [data-divider-reveal] {
+    opacity: 1;
+    transition: none;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .action-primary:hover,
+  .action-primary:active,
+  .action-primary-light,
+  .action-primary-light:hover,
+  .action-primary-light:focus-visible,
+  .action-primary-light:active,
+  :is(a, button).bg-ink:not(.rounded-full),
+  :is(a, button).bg-ink:not(.rounded-full):hover,
+  :is(a, button).bg-ink:not(.rounded-full):focus-visible,
+  :is(a, button).bg-ink:not(.rounded-full):active,
+  .group:hover .editorial-arrow,
+  .group:focus-visible .editorial-arrow,
+  .group:active .editorial-arrow,
+  .editorial-link:hover .editorial-arrow,
+  .editorial-link:focus-visible .editorial-arrow,
+  .gallery-step-image {
+    transform: none !important;
+  }
+
+  .action-primary-light,
+  :is(a, button).bg-ink:not(.rounded-full) {
+    background-image: none;
+  }
+}
+
+/* Hero image reveal: subtle scale 1.025 -> 1 */
+.hero-image {
+  transform: scale(1.025);
+  transition: transform var(--motion-duration-hero) var(--motion-ease-reveal);
+}
+
+.js .hero-image[data-revealed="true"] {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* BUSINESS PLUS consultation/admin motion — preserved product-specific layer */
 @keyframes consultation-step-forward {
   from {
     opacity: 0;
@@ -565,79 +783,6 @@
   animation: admin-request-detail-switch 180ms var(--motion-ease-ui) both;
 }
 
-/* Reveal animation — start hidden only when JS activates it via [data-reveal]. */
-[data-reveal] {
-  opacity: 1;
-  transform: none;
-}
-
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity var(--motion-duration-reveal) var(--motion-ease-reveal),
-    transform var(--motion-duration-reveal) var(--motion-ease-reveal);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.js [data-reveal][data-revealed="true"] {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .action-primary:hover,
-  .action-primary:active,
-  :is(a, button).bg-ink:not(.rounded-full),
-  :is(a, button).bg-ink:not(.rounded-full):hover,
-  :is(a, button).bg-ink:not(.rounded-full):focus-visible,
-  :is(a, button).bg-ink:not(.rounded-full):active,
-  .group:hover .editorial-arrow,
-  .group:focus-visible .editorial-arrow,
-  .group:active .editorial-arrow,
-  .editorial-link:hover .editorial-arrow,
-  .editorial-link:focus-visible .editorial-arrow,
-  .gallery-step-image {
-    transform: none !important;
-  }
-
-  :is(a, button).bg-ink:not(.rounded-full) {
-    background-image: none;
-  }
-}
-
-/* Hero image reveal: subtle scale 1.025 -> 1 */
-.hero-image {
-  transform: scale(1.025);
-  transition: transform var(--motion-duration-hero) var(--motion-ease-reveal);
-}
-
-.js .hero-image[data-revealed="true"] {
-  transform: scale(1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-image {
-    transform: none;
-    transition: none;
-  }
-}
-
 @keyframes consultation-success-label {
   from {
     opacity: 0;
@@ -709,26 +854,4 @@
 
 .consultation-success-icon {
   animation: consultation-success-mark 520ms var(--motion-ease-ui) 90ms both;
-}
-
-/* RITO public interaction refinement v1 */
-@keyframes rito-treatment-filter-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.treatment-filter-swap {
-  animation: rito-treatment-filter-in 240ms var(--motion-ease-ui) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .treatment-filter-swap {
-    animation: none;
-  }
 }

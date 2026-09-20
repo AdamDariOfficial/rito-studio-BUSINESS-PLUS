@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { SeoDocumentHead } from "@/components/SeoDocumentHead";
+import { RouteFocus } from "@/components/RouteFocus";
 import { SiteShell } from "@/components/SiteShell";
 import { routeSeo } from "@/lib/seo";
 
@@ -131,6 +132,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <RouteFocus />
       <Outlet />
     </QueryClientProvider>
   );

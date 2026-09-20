@@ -1,41 +1,24 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { type MouseEvent } from "react";
-import { scrollToTop } from "@/lib/scroll-to-anchor";
+import { BrandHomeLink } from "@/components/BrandHomeLink";
+import { RevealDivider } from "@/components/RevealDivider";
 import { site } from "@/lib/site-config";
 
 const footerLinkClass =
-  "text-white transition-colors hover:text-surface focus-visible:outline-white";
+  "text-white underline decoration-white/35 underline-offset-4 transition-[color,text-decoration-color] hover:text-surface hover:decoration-surface focus-visible:outline-white";
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const navigate = useNavigate();
-
-  function handleBrandClick(event: MouseEvent<HTMLAnchorElement>) {
-    if (pathname !== "/") return;
-
-    event.preventDefault();
-    void navigate({
-      to: "/",
-      replace: true,
-      resetScroll: false,
-    }).then(() => scrollToTop());
-  }
-
   return (
     <footer className="border-t border-ink bg-ink text-white">
       <div className="container-editorial grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:py-16">
         <div>
-          <Link
-            to="/"
-            resetScroll={pathname !== "/"}
-            onClick={handleBrandClick}
+          <BrandHomeLink
             className="inline-flex font-display text-2xl text-white transition-colors hover:text-surface focus-visible:outline-white"
-            aria-label={`${site.brand.name} — home`}
+            ariaLabel={`${site.brand.name} — home`}
           >
             {site.brand.name}
-          </Link>
+          </BrandHomeLink>
           <p className="mt-1 text-sm text-surface">{site.brand.descriptor}</p>
           <p className="mt-6 max-w-xs text-xs leading-relaxed text-surface">
             Capelli, pelle e benessere in un ambiente essenziale, su appuntamento.
@@ -47,12 +30,11 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-white">
             <li>
               <a
-                data-footer-map-link
                 href={site.contact.mapExternalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={footerLinkClass}
-                aria-label={`${site.contact.locationLabel} — apri in Google Maps`}
+                aria-label={`${site.contact.locationLabel} — apri su Google Maps in una nuova scheda`}
               >
                 {site.contact.locationLabel}
               </a>
@@ -98,25 +80,26 @@ export function Footer() {
                 Contatti
               </Link>
             </li>
-            <li>
-              <Link to="/privacy" className={footerLinkClass}>
-                Privacy
-              </Link>
-            </li>
-            <li>
-              <Link to="/cookie" className={footerLinkClass}>
-                Cookie
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-white/15">
-        <div className="container-editorial flex flex-col-reverse items-start justify-between gap-3 py-6 text-xs text-surface md:flex-row md:items-center">
-          <p>
-            © {year} {site.brand.name}. Tutti i diritti riservati.
-          </p>
+      <div className="relative border-t border-transparent">
+        <RevealDivider className="inset-x-0 -top-px h-px bg-white/15" />
+        <div className="container-editorial flex flex-col gap-3 py-6 text-xs text-surface md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p>
+              © {year} {site.brand.name}. Tutti i diritti riservati.
+            </p>
+            <span className="inline-flex shrink-0 items-center gap-x-4">
+              <Link to="/privacy" className={footerLinkClass}>
+                Privacy
+              </Link>
+              <Link to="/cookie" className={footerLinkClass}>
+                Cookie
+              </Link>
+            </span>
+          </div>
           <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
             <span>{site.attribution.text}</span>
             <a

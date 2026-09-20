@@ -1,7 +1,7 @@
 # RITO Studio — Content System
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 1.0
+**Versione:** 1.1
 **Stato:** approvato
 
 ## 1. Voce del brand
@@ -541,7 +541,7 @@ Questa è una demo Tretnix. Nessun dato è stato inviato.
 - Usare `.example` per email e dominio.
 - Non usare indirizzi reali.
 - Non integrare mappe verso luoghi reali.
-- Non mostrare recensioni inventate.
+- Non presentare recensioni sintetiche come autentiche; le fixture demo seguono `TRX-DEC-040`.
 - Non mostrare contatori clienti.
 - Non mostrare certificazioni non possedute.
 - Segnalare nel footer che il concept è dimostrativo.
@@ -661,7 +661,7 @@ Restano obbligatori:
 - `noindex, follow`;
 - nessun backend o invio dati;
 - nessun dato strutturato commerciale;
-- nessuna recensione, metrica, certificazione o attività reale inventata.
+- nessuna recensione sintetica presentata come autentica e nessuna metrica, certificazione o attività reale inventata; le fixture demo seguono `TRX-DEC-040`.
 
 ### Gallery mobile
 
@@ -730,3 +730,12 @@ l’arricchimento dettagliato può essere riservato ai soli servizi che ne hanno
 
 Team non è un modulo attivo o richiesto nel BUSINESS base. Un’eventuale reintroduzione
 richiede una decisione futura separata.
+
+<!-- RITO_PLUS_FULL_PARITY_2026_09_20 -->
+## BUSINESS PLUS — recensioni demo e copy di conversione
+
+**Data:** 20 settembre 2026
+
+Per la portfolio demo corrente, `TRX-DEC-040` sostituisce il precedente divieto assoluto di recensioni sintetiche: sono ammesse esclusivamente fixture typed in modalità `demo`, con wording neutro, iniziali non riconducibili a persone reali, nessuna attribuzione a piattaforme, nessun falso URL e nessun review/rating structured data commerciale. Un progetto cliente reale deve sostituirle con recensioni autentiche verificate o disabilitare la sezione.
+
+Sulle superfici condivise il copy editoriale resta quello del BUSINESS. Dove il BUSINESS usa una CTA primaria di prenotazione, BUSINESS PLUS usa l'intento `Inizia la consulenza` senza alterare gerarchia, spacing o trattamento visuale del componente. Le azioni di contatto generale mantengono email + telefono; la consulenza resta una richiesta e non conferma automaticamente un appuntamento.

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { EditorialArrow } from "@/components/EditorialArrow";
+import { RevealDivider } from "@/components/RevealDivider";
 import { faqItems } from "@/data/content";
 
 export function FaqTeaser() {
@@ -19,10 +20,18 @@ export function FaqTeaser() {
           </h2>
         </div>
         <div className="md:col-span-7 md:col-start-6">
-          <ul className="border-t border-line">
-            {faqItems.slice(0, 3).map((item) => (
-              <li key={item.id} className="border-b border-line py-5 text-sm text-ink" data-reveal>
-                {item.question}
+          <ul className="relative border-t border-transparent">
+            <RevealDivider className="inset-x-0 -top-px h-px bg-line" />
+            {faqItems.slice(0, 3).map((item, index) => (
+              <li
+                key={item.id}
+                className="relative border-b border-transparent py-5 text-sm text-ink"
+                style={{ ["--reveal-delay" as string]: `${Math.min(index * 60, 240)}ms` }}
+              >
+                <span className="block" data-reveal>
+                  {item.question}
+                </span>
+                <RevealDivider className="inset-x-0 -bottom-px h-px bg-line" />
               </li>
             ))}
           </ul>

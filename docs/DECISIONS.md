@@ -1,8 +1,8 @@
 # RITO Studio — Decision Log
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 2.3
-**Stato:** decisioni approvate e aggiornate al 10 settembre 2026
+**Versione:** 2.4
+**Stato:** decisioni approvate e aggiornate al 20 settembre 2026
 
 ## BW-DEC-001 — Concept portfolio
 
@@ -1165,3 +1165,20 @@ esiste un nuovo runtime dependency. Stato: `SECURITY_RUNTIME_EVIDENCE_PRESERVED`
 Git/whitespace/secret checks e manifest/allowlist devono passare prima della richiesta di stage.
 Questa decisione non autorizza stage, commit, push, PR, merge, tag, deploy, migration, DNS,
 secret, provisioning o produzione.
+
+<!-- RITO_PLUS_FULL_PARITY_2026_09_20 -->
+## BW-DEC-073 — BUSINESS PLUS full shared-surface parity reconciliation
+
+**Data:** 20 settembre 2026
+
+**Decisione:** riallineare in un solo pass controllato tutte le superfici pubbliche condivise di RITO Studio BUSINESS PLUS al riferimento qualità corrente RITO Studio BUSINESS `main@3f0ff4d3ed8e675725d8d640c305ab61d47217d7`, preservando la baseline storica PLUS `family-business-plus-v1.0` e senza riscrivere la lineage.
+
+Il pass porta nel PLUS i pattern condivisi correnti che erano rimasti indietro dopo la derivazione iniziale: ritmo compatto, hero editoriale split, Studio compatto, gallery home corrente, full-bleed filter rails, divider reveal autonomi, white-primary motion, link/contatti persistenti, review surface demo typed, footer/legal pair, brand-home semantics e route focus.
+
+**Regola di sostituzione PLUS:** struttura, spacing, motion e component anatomy restano quelli BUSINESS; dove il BUSINESS converte verso booking, il PLUS può sostituire esclusivamente l'intento primario con `/consulenza` mantenendo la stessa gerarchia visuale. Le azioni di contatto generale possono riusare il medesimo adapter email/telefono.
+
+**Preservazioni obbligatorie:** `/consulenza`, massimo quattro step, massimo due raccomandazioni curate, massimo sei servizi selezionati, Consultation Inbox, native AdminAuth, D1, Durable Object/WebSocket, CSRF, rate limit, migrations, staging architecture e demo tools non vengono modificati da questo pass. Nessuna dipendenza o route viene aggiunta/rimossa.
+
+**Review demo:** la home usa `ReviewsSection` con fixture sintetiche typed esclusivamente secondo `TRX-DEC-040`; nessuna falsa piattaforma, URL, persona reale, aggregate rating o structured data commerciale.
+
+**Gate:** Apply/Validate locali tramite Controlled Change Package; browser QA completo unico dopo che l'intero allineamento è applicato. Stage, commit, push, PR, merge, deploy, migration, DNS, secret e produzione restano separati.

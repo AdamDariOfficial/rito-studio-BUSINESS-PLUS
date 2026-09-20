@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { EditorialArrow } from "@/components/EditorialArrow";
+import { RevealDivider } from "@/components/RevealDivider";
 import { treatmentCategories } from "@/data/treatments";
 
 export function TreatmentCategoryTeaser() {
@@ -34,33 +35,40 @@ export function TreatmentCategoryTeaser() {
           </div>
 
           <div className="md:col-span-7">
-            <ol className="grid grid-cols-2 border-t border-line">
-              {treatmentCategories.map((category, index) => (
-                <li
-                  key={category.id}
-                  className="border-b border-line odd:border-r odd:pr-4 even:pl-4 md:odd:pr-7 md:even:pl-7"
-                  data-reveal
-                  style={{ ["--reveal-delay" as string]: `${index * 45}ms` }}
-                >
-                  <Link
-                    to="/trattamenti"
-                    search={{ categoria: category.id }}
-                    className="interactive-row group flex min-h-28 items-start justify-between gap-3 py-5 sm:min-h-32 sm:gap-5 sm:py-6"
+            <div className="relative">
+              <RevealDivider className="inset-x-0 -top-px h-px bg-line" />
+              <ol className="grid grid-cols-2 border-t border-transparent">
+                {treatmentCategories.map((category, index) => (
+                  <li
+                    key={category.id}
+                    className="relative border-b border-transparent odd:border-r odd:pr-4 even:pl-4 md:odd:pr-7 md:even:pl-7"
                   >
-                    <span className="min-w-0">
-                      <span className="eyebrow text-accent">{category.index}</span>
-                      <span className="mt-3 block font-display text-xl leading-tight text-ink transition-colors duration-[var(--motion-duration-ui)] group-hover:text-accent group-focus-visible:text-accent sm:text-2xl md:text-3xl">
-                        {category.name}
+                    <Link
+                      to="/trattamenti"
+                      search={{ categoria: category.id }}
+                      data-reveal
+                      style={{ ["--reveal-delay" as string]: `${index * 45}ms` }}
+                      className="interactive-row group flex min-h-28 items-start justify-between gap-3 py-5 sm:min-h-32 sm:gap-5 sm:py-6"
+                    >
+                      <span className="min-w-0">
+                        <span className="eyebrow text-accent">{category.index}</span>
+                        <span className="mt-3 block font-display text-xl leading-tight text-ink transition-colors duration-[var(--motion-duration-ui)] group-hover:text-accent group-focus-visible:text-accent sm:text-2xl md:text-3xl">
+                          {category.name}
+                        </span>
+                        <span className="mt-2 hidden max-w-sm text-sm leading-relaxed text-muted-on-surface sm:block">
+                          {category.introduction}
+                        </span>
                       </span>
-                      <span className="mt-2 hidden max-w-sm text-sm leading-relaxed text-muted-on-surface sm:block">
-                        {category.introduction}
-                      </span>
-                    </span>
-                    <EditorialArrow className="mt-1" />
-                  </Link>
-                </li>
-              ))}
-            </ol>
+                      <EditorialArrow className="mt-1" />
+                    </Link>
+                    <RevealDivider className="inset-x-0 -bottom-px h-px bg-line" />
+                    {index % 2 === 0 && (
+                      <RevealDivider className="inset-y-0 -right-px w-px bg-line" />
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </div>
 
             <div className="flex justify-center pt-6 md:pt-7">
               <Link

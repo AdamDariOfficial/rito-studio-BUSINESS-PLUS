@@ -150,14 +150,14 @@ function TreatmentsPage() {
         intro="Esplora i rituali per area, prezzo indicativo ed esigenza. Ogni scheda raccoglie le informazioni disponibili."
       />
 
-      <section className="py-16 md:py-24" aria-labelledby="catalogo-heading">
+      <section className="py-10 md:py-14" aria-labelledby="catalogo-heading">
         <div className="container-editorial">
           <h2 id="catalogo-heading" className="sr-only">
             Catalogo dei trattamenti
           </h2>
           <div
             data-treatment-filter-sticky
-            className="sticky top-[var(--header-height)] z-30 min-w-0 bg-canvas py-1"
+            className="sticky top-[var(--header-height)] z-30 -mx-5 min-w-0 bg-canvas py-1 md:mx-0"
           >
             <nav
               ref={filterRailRef}
@@ -165,7 +165,7 @@ function TreatmentsPage() {
               data-treatment-filter-return-to-results
               data-treatment-filter-force-return
               aria-label="Filtra per categoria"
-              className="scrollbar-none -mx-1 flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-1 py-1"
+              className="scrollbar-none flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-5 py-1 md:-mx-1 md:px-1"
             >
               <Link
                 ref={!selected && !invalidFilter ? activeFilterRef : undefined}
@@ -259,7 +259,7 @@ function TreatmentsPage() {
             key={invalidFilter ? "invalid" : (selected ?? "all")}
             ref={treatmentsRef}
             data-treatment-filter-results
-            className="treatment-filter-swap mt-10 scroll-mt-32"
+            className="treatment-filter-swap mt-6 scroll-mt-32"
           >
             <TreatmentRows
               items={invalidFilter ? [] : visible}
@@ -276,7 +276,7 @@ function TreatmentsPage() {
               }}
             />
           </div>
-          <p className="mt-8 max-w-2xl text-xs italic leading-relaxed text-muted">{servicesNote}</p>
+          <p className="mt-6 max-w-2xl text-xs italic leading-relaxed text-muted">{servicesNote}</p>
         </div>
       </section>
 
