@@ -1,0 +1,496 @@
+{
+  "$schema": "schemas/tretnix-project.schema.json",
+  "schema_version": 1,
+  "project": {
+    "id": "rito-studio-business-plus",
+    "family": "beauty-wellness",
+    "plan": "BUSINESS PLUS",
+    "repository": "AdamDariOfficial/rito-studio-BUSINESS-PLUS",
+    "default_branch": "main",
+    "allowed_branch_prefixes": [
+      "feature/",
+      "fix/",
+      "audit/",
+      "refactor/",
+      "docs/",
+      "chore/",
+      "codex/"
+    ]
+  },
+  "sources": {
+    "agents": [
+      "AGENTS.md"
+    ],
+    "status": [],
+    "local_decisions": [
+      "docs/DECISIONS.md"
+    ],
+    "knowledge_tags": [
+      "core",
+      "frontend",
+      "workflow",
+      "security",
+      "tooling",
+      "release"
+    ]
+  },
+  "context": {
+    "compact_adapters": [
+      {
+        "base": "repo",
+        "path": "docs/STATUS.md",
+        "sections": [
+          "## Current authoritative Final Freeze state — 10 September 2026"
+        ],
+        "reason": "Historical Final Freeze constraints only; current baseline must come from Git."
+      }
+    ],
+    "source_allowlists": {
+      "repo": [
+        "AGENTS.md",
+        "README.md",
+        "docs/**",
+        "compiled/**",
+        "prompts/**",
+        "src/**",
+        "tools/**",
+        "migrations/**",
+        "package.json",
+        "bun.lock",
+        "bunfig.toml",
+        "tsconfig.json",
+        "eslint.config.js",
+        "vite.config.ts",
+        "wrangler.jsonc",
+        "exports.cloudflare.ts",
+        "components.json",
+        "tretnix.project.json"
+      ],
+      "knowledge": [
+        "DEVELOPMENT_STANDARDS.md",
+        "DECISIONS.md",
+        "BEAUTY_WELLNESS_FAMILY.md",
+        "DEVELOPMENT_OS.md",
+        "tools/tretnix/README.md",
+        "skills/TASK_ADMISSION.md",
+        "skills/SECURITY_RETEST.md",
+        "skills/RELEASE_FREEZE.md",
+        "skills/CONTROLLED_CHANGE_PACKAGE.md"
+      ]
+    },
+    "tag_sources": {
+      "core": [
+        {
+          "base": "knowledge",
+          "path": "DEVELOPMENT_STANDARDS.md",
+          "sections": [
+            "## 1. Principi generali",
+            "## 2. Analisi prima dell’implementazione",
+            "## 3. Git e GitHub"
+          ],
+          "reason": "Shared development constraints and branch conventions."
+        }
+      ],
+      "frontend": [
+        {
+          "base": "knowledge",
+          "path": "DEVELOPMENT_STANDARDS.md",
+          "sections": [
+            "## 8. Responsive",
+            "## 9. Routing, navigazione e scroll",
+            "## 10. Animazioni",
+            "## 11. Accessibilità"
+          ],
+          "reason": "Responsive, navigation, motion and accessibility parity contract."
+        },
+        {
+          "base": "knowledge",
+          "path": "BEAUTY_WELLNESS_FAMILY.md",
+          "sections": [
+            "## 4. Identità approvata",
+            "## 7. Motion",
+            "## 8. Integrità dei contenuti"
+          ],
+          "reason": "Family identity and honest demo content."
+        },
+        {
+          "base": "repo",
+          "path": "docs/ROUTES.md",
+          "reason": "Existing PLUS route and navigation specification."
+        },
+        {
+          "base": "repo",
+          "path": "docs/PRODUCT.md",
+          "reason": "Existing product definition; PLUS decisions supersede historical base scope."
+        }
+      ],
+      "workflow": [
+        {
+          "base": "knowledge",
+          "path": "DECISIONS.md",
+          "sections": [
+            "## TRX-DEC-041 — Toolchain operativo ChatGPT + Codex e Development OS v1"
+          ],
+          "reason": "Approved Development OS decision."
+        },
+        {
+          "base": "knowledge",
+          "path": "skills/TASK_ADMISSION.md",
+          "reason": "Task admission and write boundaries."
+        },
+        {
+          "base": "knowledge",
+          "path": "skills/CONTROLLED_CHANGE_PACKAGE.md",
+          "reason": "Controlled application and separate human gates."
+        }
+      ],
+      "security": [
+        {
+          "base": "knowledge",
+          "path": "DEVELOPMENT_STANDARDS.md",
+          "sections": [
+            "## 14. Sicurezza generale"
+          ],
+          "reason": "Shared security constraints."
+        },
+        {
+          "base": "knowledge",
+          "path": "skills/SECURITY_RETEST.md",
+          "reason": "Delta-based local retest and separate live evidence."
+        }
+      ],
+      "tooling": [
+        {
+          "base": "knowledge",
+          "path": "DEVELOPMENT_OS.md",
+          "sections": [
+            "## 4. Context resolution e context cache",
+            "## 5. Repository fingerprint",
+            "## 6. Delta-first validation e validation cache",
+            "## 8. Confini di automazione"
+          ],
+          "reason": "Exact-state context, fingerprint, cache and command restrictions."
+        },
+        {
+          "base": "knowledge",
+          "path": "tools/tretnix/README.md",
+          "reason": "Canonical CLI invocation and exit-code contract."
+        }
+      ],
+      "release": [
+        {
+          "base": "knowledge",
+          "path": "skills/RELEASE_FREEZE.md",
+          "reason": "Distinct candidate, review, Git, deployment and freeze gates."
+        }
+      ]
+    }
+  },
+  "commands": {
+    "install": null,
+    "typecheck": "bun run typecheck",
+    "lint": "bun run lint",
+    "test": "bun run test",
+    "security": "bun run test:security",
+    "build": "bun run build"
+  },
+  "validation": {
+    "lockfiles": [
+      "bun.lock"
+    ],
+    "generated_paths": [
+      "src/routeTree.gen.ts",
+      ".output/",
+      ".tanstack/",
+      ".nitro/",
+      ".wrangler/"
+    ],
+    "sensitive_path_prefixes": [
+      ".dev.vars",
+      ".wrangler/"
+    ],
+    "security_sensitive_prefixes": [
+      "src/server.ts",
+      "src/start.ts",
+      "exports.cloudflare.ts",
+      "src/lib/security-response.server.ts",
+      "src/features/consultation/live/",
+      "src/features/consultation/consultation.functions.ts",
+      "src/features/consultation/admin-auth.schemas.ts",
+      "src/features/consultation/schemas.ts",
+      "src/features/consultation/realtime.ts",
+      "src/features/consultation/consultation-submit.ts",
+      "src/features/consultation/demo-store.ts",
+      "src/features/consultation/config.ts",
+      "src/routes/admin.tsx",
+      "src/routes/admin_.login.tsx",
+      "src/routes/consulenza.tsx",
+      "src/types/",
+      "migrations/",
+      "tools/admin/",
+      "tools/security/",
+      "tools/live-backend/",
+      "tools/cloudflare/",
+      "wrangler.jsonc",
+      "vite.config.ts",
+      "package.json",
+      "bun.lock",
+      "bunfig.toml",
+      "tsconfig.json",
+      "eslint.config.js",
+      "tretnix.project.json",
+      "tools/development-os/"
+    ],
+    "docs_only_prefixes": [
+      "AGENTS.md",
+      "README.md",
+      "docs/",
+      "compiled/",
+      "prompts/",
+      "src/routes/README.md"
+    ],
+    "frontend_prefixes": [
+      "src/components/",
+      "src/routes/",
+      "src/hooks/",
+      "src/data/",
+      "src/styles.css",
+      "src/router.tsx",
+      "src/routeTree.gen.ts",
+      "src/lib/",
+      "src/features/consultation/",
+      "components.json",
+      "public/"
+    ],
+    "backend_prefixes": [
+      "src/server.ts",
+      "src/start.ts",
+      "src/features/consultation/live/",
+      "src/features/consultation/consultation.functions.ts",
+      "src/lib/security-response.server.ts",
+      "exports.cloudflare.ts",
+      "src/types/"
+    ],
+    "release_or_infra_prefixes": [
+      "wrangler.jsonc",
+      "vite.config.ts",
+      "exports.cloudflare.ts",
+      "src/server.ts",
+      "src/start.ts",
+      "src/types/",
+      "migrations/",
+      "tools/cloudflare/",
+      "tools/admin/",
+      "package.json",
+      "bun.lock",
+      "bunfig.toml",
+      "tsconfig.json",
+      "eslint.config.js",
+      ".gitignore",
+      "tretnix.project.json",
+      ".gitattributes",
+      "CHECKSUMS.sha256",
+      "tools/development-os/"
+    ],
+    "supported_task_classes": [
+      "docs_only",
+      "frontend",
+      "backend",
+      "security_or_data",
+      "release_or_infra"
+    ],
+    "required_capabilities": {
+      "docs_only": [
+        "static",
+        "whitespace"
+      ],
+      "frontend": [
+        "typecheck",
+        "lint",
+        "test",
+        "build"
+      ],
+      "backend": [
+        "typecheck",
+        "lint",
+        "test",
+        "security"
+      ],
+      "security_or_data": [
+        "static",
+        "test",
+        "security",
+        "whitespace"
+      ],
+      "release_or_infra": [
+        "static",
+        "test",
+        "config",
+        "whitespace"
+      ]
+    },
+    "allowed_executables": [],
+    "validators": [
+      {
+        "id": "static-config-contract",
+        "command": "node tools/development-os/validate-project-contract.mjs",
+        "runtime": "node",
+        "task_classes": [
+          "docs_only",
+          "security_or_data",
+          "release_or_infra"
+        ],
+        "capabilities": [
+          "static",
+          "config"
+        ],
+        "reviewed_script": {
+          "validator_id": "static-config-contract",
+          "path": "tools/development-os/validate-project-contract.mjs",
+          "sha256": "6848cdc59a3b3b8bb7dea5aba24d1809e66edbbeea0f259df59c071a88738fda",
+          "capabilities": [
+            "static",
+            "config"
+          ]
+        },
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 30000
+      },
+      {
+        "id": "typecheck",
+        "command": "bun run typecheck",
+        "runtime": "node",
+        "task_classes": [
+          "frontend",
+          "backend"
+        ],
+        "capabilities": [
+          "typecheck"
+        ],
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 120000
+      },
+      {
+        "id": "lint",
+        "command": "bun run lint",
+        "runtime": "node",
+        "task_classes": [
+          "frontend",
+          "backend"
+        ],
+        "capabilities": [
+          "lint"
+        ],
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 120000
+      },
+      {
+        "id": "native-auth-test",
+        "command": "bun run test",
+        "runtime": "node",
+        "task_classes": [
+          "frontend",
+          "backend",
+          "security_or_data",
+          "release_or_infra"
+        ],
+        "capabilities": [
+          "test"
+        ],
+        "reviewed_script": {
+          "validator_id": "native-auth-test",
+          "path": "tools/live-backend/test-native-admin-auth.ts",
+          "sha256": "c60f74b354f380c2c1b2b3fea082615856d1d98d043cdc95ceddf319c6934f2b",
+          "capabilities": [
+            "test"
+          ]
+        },
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 180000
+      },
+      {
+        "id": "security-test",
+        "command": "bun run test:security",
+        "runtime": "node",
+        "task_classes": [
+          "backend",
+          "security_or_data"
+        ],
+        "capabilities": [
+          "security"
+        ],
+        "reviewed_script": {
+          "validator_id": "security-test",
+          "path": "tools/security/test-security-remediation.ts",
+          "sha256": "33febb10f33fb5d8067a843d921d6ddc790ee84c2e96c4ef59b4dc33184eaca9",
+          "capabilities": [
+            "security"
+          ]
+        },
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 180000
+      },
+      {
+        "id": "build",
+        "command": "bun run build",
+        "runtime": "node",
+        "task_classes": [
+          "frontend"
+        ],
+        "capabilities": [
+          "build"
+        ],
+        "deterministic": true,
+        "cacheable": false,
+        "contract_version": "1.0.0",
+        "timeout_ms": 240000
+      },
+      {
+        "id": "git-diff-check",
+        "command": "git -c core.whitespace=cr-at-eol diff --check",
+        "runtime": "git",
+        "task_classes": [
+          "all"
+        ],
+        "capabilities": [
+          "whitespace"
+        ],
+        "deterministic": true,
+        "cacheable": true,
+        "contract_version": "1.0.0",
+        "timeout_ms": 30000
+      }
+    ]
+  },
+  "gates": {
+    "browser": true,
+    "backend": true,
+    "staging": true,
+    "production": false
+  },
+  "forbidden_automatic_actions": [
+    "stage",
+    "commit",
+    "push",
+    "pull_request",
+    "merge",
+    "deploy",
+    "publish",
+    "migration",
+    "dns",
+    "infrastructure_mutation",
+    "provisioning",
+    "secret_mutation",
+    "production_write"
+  ]
+}
