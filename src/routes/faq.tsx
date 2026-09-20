@@ -22,8 +22,8 @@ function FaqPage() {
         }
         intro="Indicazioni essenziali per scegliere, prepararti e gestire l’appuntamento con semplicità."
       />
-      <section className="py-16 md:py-24" aria-label="Domande frequenti">
-        <div className="container-editorial grid gap-12 md:grid-cols-12">
+      <section className="py-10 md:py-14" aria-label="Domande frequenti">
+        <div className="container-editorial grid gap-8 md:grid-cols-12">
           <div className="md:col-span-8">
             <FaqAccordion />
           </div>

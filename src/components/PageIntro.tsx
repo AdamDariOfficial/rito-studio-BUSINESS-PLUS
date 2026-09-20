@@ -13,11 +13,11 @@ export function PageIntro({ eyebrow, title, intro, aside, className }: PageIntro
   return (
     <header
       className={cn(
-        "border-b border-line pb-14 pt-[calc(var(--header-height)+4rem)] md:pb-20 md:pt-[calc(var(--header-height)+6rem)]",
+        "border-b border-line pb-10 pt-[calc(var(--header-height)+3rem)] md:pb-14 md:pt-[calc(var(--header-height)+4.5rem)]",
         className,
       )}
     >
-      <div className="container-editorial grid gap-10 md:grid-cols-12 md:items-end">
+      <div className="container-editorial grid gap-8 md:grid-cols-12 md:items-end">
         <div className="md:col-span-8">
           <p className="eyebrow" data-reveal>
             {eyebrow}

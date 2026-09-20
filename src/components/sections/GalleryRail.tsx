@@ -1,20 +1,17 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { ArrowRight } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { EditorialArrow } from "@/components/EditorialArrow";
+import { useNavigate } from "@tanstack/react-router";
 import { GestureProgressIndicator } from "@/components/GestureProgressIndicator";
-import { galleryItems } from "@/data/content";
-import { useHorizontalScrollEdges } from "@/hooks/use-horizontal-scroll-edges";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
+import { galleryItems } from "@/data/content";
 import { cn } from "@/lib/utils";
 
-type DragAxis = "pending" | "horizontal" | "vertical";
+type DragAxis = "pending" | "horizontal" | "vertical" | "rejected";
 
 interface EndGestureState {
   pointerId: number;
   startX: number;
   startY: number;
-  lastX: number;
   axis: DragAxis;
   startedAtEnd: boolean;
 }
@@ -22,20 +19,32 @@ interface EndGestureState {
 interface EndTouchState {
   startX: number;
   startY: number;
-  lastX: number;
   axis: DragAxis;
   startedAtEnd: boolean;
 }
 
 const scrollDescriptionId = "gallery-scroll-description";
-const scrollEndTolerance = 8;
+const scrollEndThreshold = 8;
 const openGalleryThreshold = 96;
 const homeIndicatorRevealDistance = 112;
-const gallerySlots = galleryItems.slice(0, 4).map((item, index) => ({
-  ...item,
-  ratio: `${item.width} / ${item.height}`,
-  tone: (["canvas", "surface", "ink", "canvas"] as const)[index] ?? "surface",
-}));
+const homeGalleryIds = [
+  "hair-texture",
+  "skin-gesture",
+  "studio-detail",
+  "hair-professional",
+] as const;
+const homeGalleryTones = ["canvas", "surface", "ink", "canvas"] as const;
+
+const gallerySlots = homeGalleryIds.map((id, index) => {
+  const item = galleryItems.find((candidate) => candidate.id === id);
+  if (!item) throw new Error(`Missing home gallery item: ${id}`);
+
+  return {
+    ...item,
+    ratio: `${item.width} / ${item.height}`,
+    tone: homeGalleryTones[index] ?? "surface",
+  };
+});
 
 export function GalleryRail() {
   const railRef = useRef<HTMLDivElement>(null);
@@ -43,11 +52,11 @@ export function GalleryRail() {
   const touchRef = useRef<EndTouchState | null>(null);
   const armedRef = useRef(false);
   const navigatingRef = useRef(false);
+  const [hasMoreContent, setHasMoreContent] = useState(true);
   const [railRevealOffset, setRailRevealOffset] = useState(0);
   const [progress, setProgress] = useState(0);
   const [armed, setArmed] = useState(false);
   const [announcement, setAnnouncement] = useState("");
-  const edges = useHorizontalScrollEdges(railRef, scrollEndTolerance);
   const navigate = useNavigate();
 
   function resetGesture() {
@@ -64,6 +73,30 @@ export function GalleryRail() {
     const rail = railRef.current;
     if (!rail) return;
 
+    const updateScrollHint = () => {
+      const remainingScroll = rail.scrollWidth - rail.clientWidth - rail.scrollLeft;
+      setHasMoreContent(remainingScroll > scrollEndThreshold);
+    };
+
+    const animationFrame = window.requestAnimationFrame(updateScrollHint);
+    rail.addEventListener("scroll", updateScrollHint, { passive: true });
+    window.addEventListener("resize", updateScrollHint);
+
+    const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(updateScrollHint) : null;
+    resizeObserver?.observe(rail);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      rail.removeEventListener("scroll", updateScrollHint);
+      window.removeEventListener("resize", updateScrollHint);
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
     const handleTouchStart = (event: TouchEvent) => {
       if (event.touches.length !== 1) return;
       const touch = event.touches[0];
@@ -72,9 +105,8 @@ export function GalleryRail() {
       touchRef.current = {
         startX: touch.clientX,
         startY: touch.clientY,
-        lastX: touch.clientX,
         axis: "pending",
-        startedAtEnd: rail.scrollWidth > rail.clientWidth && remaining <= scrollEndTolerance,
+        startedAtEnd: rail.scrollWidth > rail.clientWidth && remaining <= scrollEndThreshold,
       };
       armedRef.current = false;
       setRailRevealOffset(0);
@@ -91,22 +123,29 @@ export function GalleryRail() {
       const deltaY = touch.clientY - drag.startY;
 
       if (drag.axis === "pending") {
-        if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 10) return;
-        drag.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.25 ? "horizontal" : "vertical";
-      }
-      if (drag.axis !== "horizontal" || deltaX >= 0) {
-        if (drag.axis === "horizontal") {
-          armedRef.current = false;
-          setRailRevealOffset(0);
-          setProgress(0);
-          setArmed(false);
-          setAnnouncement("");
-        }
-        return;
-      }
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
 
-      event.preventDefault();
-      drag.lastX = touch.clientX;
+        // At the true end, acquire an outward horizontal drag as early as possible
+        // so the browser never turns a later same-press reversal into native rail scroll.
+        if (deltaX < 0 && absX >= 2 && absX > absY) {
+          drag.axis = "horizontal";
+        } else if (Math.max(absX, absY) < 10) {
+          return;
+        } else if (absX > absY && deltaX >= 0) {
+          drag.axis = "rejected";
+          return;
+        } else {
+          drag.axis = "vertical";
+          return;
+        }
+      }
+      if (drag.axis !== "horizontal") return;
+
+      // Once the deliberate end gesture is acquired, reverse movement may cancel
+      // the extra drag back to its origin, but never scroll the underlying rail
+      // farther backward during the same press.
+      if (event.cancelable) event.preventDefault();
       const nextExtraDrag = Math.max(0, -deltaX);
       const nextProgress = Math.min(1, nextExtraDrag / openGalleryThreshold);
       const nextArmed = nextProgress >= 1;
@@ -153,9 +192,8 @@ export function GalleryRail() {
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      lastX: event.clientX,
       axis: "pending",
-      startedAtEnd: rail.scrollWidth > rail.clientWidth && remaining <= scrollEndTolerance,
+      startedAtEnd: rail.scrollWidth > rail.clientWidth && remaining <= scrollEndThreshold,
     };
     armedRef.current = false;
     setRailRevealOffset(0);
@@ -171,27 +209,31 @@ export function GalleryRail() {
     const deltaX = event.clientX - drag.startX;
     const deltaY = event.clientY - drag.startY;
     if (drag.axis === "pending") {
-      if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 10) return;
-      drag.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.25 ? "horizontal" : "vertical";
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      if (deltaX < 0 && absX >= 2 && absX > absY) {
+        drag.axis = "horizontal";
+      } else if (Math.max(absX, absY) < 10) {
+        return;
+      } else if (absX > absY && deltaX >= 0) {
+        drag.axis = "rejected";
+        return;
+      } else {
+        drag.axis = "vertical";
+        return;
+      }
     }
 
-    if (drag.axis !== "horizontal" || deltaX >= 0) {
-      if (drag.axis === "horizontal") {
-        armedRef.current = false;
-        setRailRevealOffset(0);
-        setProgress(0);
-        setArmed(false);
-        setAnnouncement("");
-      }
-      return;
-    }
+    if (drag.axis !== "horizontal") return;
 
     if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.setPointerCapture(event.pointerId);
     }
     event.preventDefault();
-    drag.lastX = event.clientX;
 
+    // Match touch behavior: reverse movement retracts only the synthetic extra
+    // drag back to zero. Going past zero is clamped until release/cancel.
     const nextExtraDrag = Math.max(0, -deltaX);
     const nextProgress = Math.min(1, nextExtraDrag / openGalleryThreshold);
     const nextArmed = nextProgress >= 1;
@@ -230,21 +272,12 @@ export function GalleryRail() {
   }
 
   return (
-    <section aria-label="Immagini dello studio" className="bg-canvas py-16 md:py-20">
-      <div className="container-editorial min-w-0">
-        <div className="mb-8 flex items-end justify-between gap-5">
-          <div>
-            <p className="eyebrow">Galleria</p>
-            <h2 className="mt-3 font-display text-3xl text-ink md:text-4xl">Gesti e materia.</h2>
-          </div>
-          <Link
-            to="/galleria"
-            className="editorial-link group hidden min-h-11 text-sm font-medium sm:inline-flex"
-          >
-            Apri la galleria
-            <EditorialArrow />
-          </Link>
-        </div>
+    <section
+      id="galleria"
+      aria-label="Immagini dello studio"
+      className="scroll-mt-[calc(var(--header-height)+24px)] bg-surface pb-20 pt-4 md:pb-24 md:pt-5 lg:pt-6"
+    >
+      <div className="container-editorial">
         <p id={scrollDescriptionId} className="sr-only">
           Su schermi piccoli, scorri orizzontalmente per visualizzare tutte le immagini. Alla fine,
           un ulteriore gesto deliberato apre la galleria completa.
@@ -252,7 +285,11 @@ export function GalleryRail() {
         <div className="relative min-w-0">
           <div
             data-js-only
-            className="pointer-events-none absolute inset-y-0 right-0 z-0 flex w-28 items-center justify-end md:hidden"
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute inset-y-0 right-0 z-0 flex w-28 items-center justify-end transition-opacity duration-200 motion-reduce:transition-none md:hidden",
+              progress > 0 ? "opacity-100" : "opacity-0",
+            )}
           >
             <GestureProgressIndicator
               progress={progress}
@@ -263,13 +300,14 @@ export function GalleryRail() {
               className="text-muted data-[armed=true]:text-accent-strong"
             />
           </div>
+
           <div
             ref={railRef}
             role="list"
             tabIndex={0}
             aria-describedby={scrollDescriptionId}
             className={cn(
-              "scrollbar-none relative z-10 -ml-5 flex min-w-0 select-none snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain bg-canvas pb-3 pl-5 pr-3 pt-1 md:ml-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:bg-transparent md:px-0 md:py-0 lg:grid-cols-12 lg:gap-6",
+              "relative z-10 -mx-5 flex min-w-0 select-none snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 lg:grid-cols-12 lg:gap-6",
               railRevealOffset === 0
                 ? "transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-ui)] motion-reduce:transition-none"
                 : "will-change-transform transition-none",
@@ -288,7 +326,7 @@ export function GalleryRail() {
                 <div
                   key={slot.id}
                   role="listitem"
-                  className={`w-[72vw] max-w-[22rem] shrink-0 snap-start md:w-auto md:max-w-none lg:col-span-3 ${offsets[index]}`}
+                  className={`w-[72%] shrink-0 snap-start md:w-auto lg:col-span-3 ${offsets[index]}`}
                   data-reveal
                   style={{ ["--reveal-delay" as string]: `${index * 70}ms` }}
                 >
@@ -306,31 +344,42 @@ export function GalleryRail() {
           </div>
 
           <div
+            aria-hidden
+            className={`pointer-events-none absolute inset-y-0 -right-5 z-20 w-14 bg-gradient-to-l from-surface to-transparent transition-opacity duration-200 motion-reduce:transition-none md:hidden ${
+              hasMoreContent ? "opacity-100" : "opacity-0"
+            }`}
+          />
+
+          <div
             data-js-only
             aria-hidden
-            className="pointer-events-none absolute right-2 top-1/2 z-20 -translate-y-1/2 md:hidden"
+            className={`pointer-events-none absolute right-2 top-1/2 z-30 -translate-y-1/2 transition-opacity duration-200 motion-reduce:transition-none md:hidden ${
+              hasMoreContent ? "opacity-100" : "opacity-0"
+            }`}
           >
-            <span
-              className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-full border border-line bg-canvas/90 text-accent-strong backdrop-blur-sm transition-opacity duration-[var(--motion-duration-fast)] motion-reduce:transition-none",
-                edges.canScrollRight ? "opacity-100" : "opacity-0",
-              )}
-            >
+            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-canvas/90 text-accent-strong backdrop-blur-sm">
               <ArrowRight className="rito-gallery-arrow-nudge" size={18} strokeWidth={1.6} />
             </span>
           </div>
+
           <p className="sr-only" aria-live="polite" aria-atomic="true">
             {announcement}
           </p>
         </div>
-        <Link
-          to="/galleria"
-          className="editorial-link group mt-7 min-h-11 text-sm font-medium sm:hidden"
-        >
-          Apri la galleria
-          <EditorialArrow />
-        </Link>
       </div>
+
+      <style>{`
+        @keyframes rito-gallery-arrow-nudge {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(0.3rem); }
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          .rito-gallery-arrow-nudge {
+            animation: rito-gallery-arrow-nudge 1.55s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -8,6 +8,7 @@ import { GalleryRail } from "@/components/sections/GalleryRail";
 import { FaqTeaser } from "@/components/sections/FaqTeaser";
 import { BookingCTA } from "@/components/sections/BookingCTA";
 import { PracticalInfo } from "@/components/sections/PracticalInfo";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { buildHead, routeSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +25,7 @@ function Index() {
       <StudioEditorial />
       <GalleryRail />
       <FaqTeaser />
+      <ReviewsSection />
       <BookingCTA />
       <PracticalInfo />
     </SiteShell>

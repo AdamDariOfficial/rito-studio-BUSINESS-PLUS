@@ -1,7 +1,7 @@
 # RITO Studio — Animation Language
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 1.1
+**Versione:** 1.2
 **Stato:** approvato
 
 ## 1. Obiettivo
@@ -304,3 +304,18 @@ The successful consultation state uses a restrained confirmation seal instead of
 ### Consultation step viewport
 
 Il cambio step mantiene la transizione direzionale esistente, ma riporta immediatamente la viewport all'inizio del flow prima di focalizzare il pannello corrente. Non introdurre smooth scrolling di route o ritardi di navigazione.
+
+<!-- RITO_PLUS_FULL_PARITY_2026_09_20 -->
+## BUSINESS PLUS — shared-surface parity con BUSINESS corrente
+
+**Data:** 20 settembre 2026
+
+Le superfici pubbliche condivise con BUSINESS usano gli stessi contratti motion del riferimento `rito-studio-BUSINESS@3f0ff4d3ed8e675725d8d640c305ab61d47217d7`:
+
+- reveal contenuto con i token `--motion-duration-reveal` / `--motion-ease-reveal`;
+- divider editoriali con reveal autonomo **opacity-only**, geometria invariata e stato immediatamente visibile con `prefers-reduced-motion: reduce`;
+- primary action scura e variante bianca `action-primary-light` con sweep discreto, lift massimo 1 px e micro-compressione, disabilitati in reduced motion;
+- home gallery con scroll nativo, fade/hint e gesto additivo di fine rail identico al BUSINESS, compresa la cancellazione clampata della gesture;
+- route PUSH verso pathname diverso: reset immediato in cima + focus del `main`; Back/Forward, hash, same-path e modal attive restano esclusi dal reset.
+
+Le animazioni specifiche BUSINESS PLUS (step consulenza, conferma e drill-in admin) restano additive e non modificano i contratti condivisi.

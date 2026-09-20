@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useId, useRef, useState, type MouseEvent } from "react";
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
+import { BrandHomeLink } from "@/components/BrandHomeLink";
 import { ctaLabels, nav, site } from "@/lib/site-config";
-import { prefersReducedMotion, scrollToTop } from "@/lib/scroll-to-anchor";
+import { prefersReducedMotion } from "@/lib/scroll-to-anchor";
 import { cn } from "@/lib/utils";
 
 const FOCUSABLE_SELECTOR = [
@@ -34,7 +35,6 @@ export function StickyHeader() {
   const restoreFocusRef = useRef(false);
   const closeTimerRef = useRef<number | null>(null);
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const navigate = useNavigate();
   const drawerActive = open || closing;
 
   const closeDrawer = useCallback((restoreFocus = true) => {
@@ -160,15 +160,8 @@ export function StickyHeader() {
   const isActive = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
 
-  function handleBrandClick(event: MouseEvent<HTMLAnchorElement>) {
-    if (pathname !== "/") return;
-
-    event.preventDefault();
-    void navigate({
-      to: "/",
-      replace: true,
-      resetScroll: false,
-    }).then(() => scrollToTop());
+  function handleBrandActivate() {
+    if (open) closeDrawer(false);
   }
 
   return (
@@ -184,16 +177,14 @@ export function StickyHeader() {
       style={{ height: "var(--header-height)" }}
     >
       <div className="container-editorial flex h-full items-center justify-between gap-5">
-        <Link
-          to="/"
-          resetScroll={pathname !== "/"}
-          onClick={handleBrandClick}
+        <BrandHomeLink
           inert={open}
+          onActivate={handleBrandActivate}
           className="shrink-0 font-display text-lg leading-none tracking-tight text-ink"
-          aria-label={`${site.brand.name} — home`}
+          ariaLabel={`${site.brand.name} — home`}
         >
           {site.brand.name}
-        </Link>
+        </BrandHomeLink>
 
         <nav
           inert={open}

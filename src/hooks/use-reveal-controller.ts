@@ -1,22 +1,35 @@
 import { useEffect } from "react";
 
+const pendingRevealSelector =
+  "[data-reveal]:not([data-revealed]), [data-divider-reveal]:not([data-divider-revealed])";
+
+function revealElement(element: HTMLElement) {
+  if (element.hasAttribute("data-reveal")) {
+    element.dataset.revealed = "true";
+  }
+
+  if (element.hasAttribute("data-divider-reveal")) {
+    element.dataset.dividerRevealed = "true";
+  }
+}
+
 export function revealVisibleElements(root: ParentNode = document) {
   if (typeof window === "undefined") return;
   const revealBoundary = window.innerHeight * 0.94;
-  root.querySelectorAll<HTMLElement>("[data-reveal]:not([data-revealed])").forEach((element) => {
+  root.querySelectorAll<HTMLElement>(pendingRevealSelector).forEach((element) => {
     const rect = element.getBoundingClientRect();
     const visibleHeight = Math.min(rect.bottom, revealBoundary) - Math.max(rect.top, 0);
     if (visibleHeight > 0 && visibleHeight / Math.max(rect.height, 1) >= 0.1) {
-      element.dataset.revealed = "true";
+      revealElement(element);
     }
   });
 }
 
 /**
- * Global reveal controller. Adds `.js` to <html> and observes every element
- * that carries a `data-reveal` attribute, promoting it to `data-revealed`
- * when it enters the viewport. Elements already revealed are skipped. When
- * IntersectionObserver is unavailable, every element is revealed immediately.
+ * Global reveal controller. Adds `.js` to <html> and observes content and divider
+ * reveal elements, promoting each one to its own revealed state when it enters
+ * the viewport. Elements already revealed are skipped. When IntersectionObserver
+ * is unavailable, the `.js` class is removed so all content stays visible.
  */
 export function useRevealController() {
   useEffect(() => {
@@ -32,7 +45,7 @@ export function useRevealController() {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            (entry.target as HTMLElement).dataset.revealed = "true";
+            revealElement(entry.target as HTMLElement);
             io.unobserve(entry.target);
           }
         }
@@ -41,27 +54,21 @@ export function useRevealController() {
     );
 
     function observeAll() {
-      document
-        .querySelectorAll<HTMLElement>("[data-reveal]:not([data-revealed])")
-        .forEach((el) => io.observe(el));
+      document.querySelectorAll<HTMLElement>(pendingRevealSelector).forEach((el) => io.observe(el));
     }
 
     function observeNode(node: Node) {
       if (!(node instanceof HTMLElement)) return;
-      if (node.matches("[data-reveal]:not([data-revealed])")) io.observe(node);
-      node
-        .querySelectorAll<HTMLElement>("[data-reveal]:not([data-revealed])")
-        .forEach((el) => io.observe(el));
+      if (node.matches(pendingRevealSelector)) io.observe(node);
+      node.querySelectorAll<HTMLElement>(pendingRevealSelector).forEach((el) => io.observe(el));
     }
 
     function refreshPendingReveals() {
       revealVisibleElements();
-      document
-        .querySelectorAll<HTMLElement>("[data-reveal]:not([data-revealed])")
-        .forEach((element) => {
-          io.unobserve(element);
-          io.observe(element);
-        });
+      document.querySelectorAll<HTMLElement>(pendingRevealSelector).forEach((element) => {
+        io.unobserve(element);
+        io.observe(element);
+      });
     }
 
     observeAll();

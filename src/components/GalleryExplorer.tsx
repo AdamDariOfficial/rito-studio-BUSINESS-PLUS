@@ -289,14 +289,14 @@ export function GalleryExplorer() {
         data-gallery-filter-rail
         data-gallery-conditional-scroll
         data-gallery-filter-return-to-results
-        className="sticky top-[var(--header-height)] z-30 bg-canvas py-1"
+        className="sticky top-[var(--header-height)] z-30 -mx-5 bg-canvas py-1 md:mx-0"
       >
         <div className="relative min-w-0">
           <div
             ref={filterRailRef}
             data-gallery-filter-bidirectional
             role="group"
-            className="scrollbar-none -mx-1 flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-1 py-1"
+            className="scrollbar-none flex min-w-0 flex-nowrap gap-x-6 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-line px-5 py-1 md:-mx-1 md:px-1"
             aria-label="Filtra la galleria"
           >
             {galleryCategories.map((item) => (
