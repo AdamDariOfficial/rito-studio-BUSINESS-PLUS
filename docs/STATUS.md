@@ -1,6 +1,6 @@
 # RITO Studio BUSINESS PLUS — Status
 
-**Updated:** 22 September 2026
+**Updated:** 23 September 2026
 **Project:** RITO Studio BUSINESS PLUS
 **Family:** Tretnix Beauty & Wellness `v1.1`
 **Repository:** `AdamDariOfficial/rito-studio-BUSINESS-PLUS`
@@ -8,6 +8,29 @@
 **Bootstrap HEAD:** `eba1a2a91fd3a531b4a4667d038b631758d0a664`
 **Parent BUSINESS baseline:** `b95a63c6127d2bc1dd396d74b2dd25f87b952226`
 **Canonical START baseline:** `34c13cd78255b7ac009533790329cada74ae9d8a`
+
+## Current production-readiness authorization — 23 September 2026
+
+Owner authorization covers one complete production-readiness and production-cutover workstream.
+The canonical repository state at authorization is main@7e4582e1f2e9f93b8715533f1f94d7d6134e9784.
+
+Current state:
+
+- staging acceptance: PASS;
+- targeted security closeout: PASS;
+- production source/tooling: implementation authorized;
+- production legal/controller inputs: required and must not be invented;
+- production D1/Worker/secrets: not yet provisioned;
+- production migration/deploy: authorized only after fail-closed preflight;
+- production runtime acceptance: pending direct evidence;
+- freeze/tag: intentionally deferred;
+- later small refinement: intentionally expected after Forno Lume alignment and Tretnix case-study completion.
+
+RITO Studio remains a fictional Tretnix portfolio concept. Tretnix Portfolio V1 still keeps
+BUSINESS PLUS unpublished until the later case-study workstream authorizes publication.
+
+The production runbook is docs/BUSINESS_PLUS_PRODUCTION_RUNBOOK.md. Source wrangler.jsonc
+remains unprovisioned and must never be deployed directly.
 
 ## Current authoritative post-merge staging/security state — 22 September 2026
 

@@ -224,6 +224,11 @@ The current OSV refresh reports only the previously accepted RITO-SEC-007 LOW to
 See `security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md` and
 `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.1 for the sanitized evidence and limitations.
 
-Production has not been tested, certified or authorized. Production migration, Worker deploy,
-DNS/route changes, secrets/provisioning and production data mutations remain separate explicit
-gates.
+Production readiness and cutover are now owner-authorized as one controlled workstream. Real-data
+activation remains fail-closed until controller/contact, lawful basis, recipients, retention and
+privacy-version inputs are configured. The exact sequence is documented in
+docs/BUSINESS_PLUS_PRODUCTION_RUNBOOK.md.
+
+The product is intentionally not frozen. A later small refinement is expected after Forno Lume
+alignment and Tretnix case-study completion; that change will require revalidation and redeploy
+before a future freeze.

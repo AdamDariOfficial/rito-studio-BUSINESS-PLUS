@@ -521,10 +521,11 @@ Rules:
 - take/record a Time Travel bookmark before destructive or high-risk production migrations;
 - rollback/recovery instructions are part of every migration-bearing change.
 
-The implementation includes `migrations/0001_consultation_requests.sql` and
-`migrations/0002_native_admin_auth.sql`. Their staging application was completed under an
-explicit manual gate; applying migrations to any other remote D1 database remains separately
-controlled and is not authorized by this document.
+The implementation includes `migrations/0001_consultation_requests.sql`,
+`migrations/0002_native_admin_auth.sql` and `migrations/0003_hero_management.sql`. Their staging
+application was completed under controlled operator gates. Production application must follow
+`docs/BUSINESS_PLUS_PRODUCTION_RUNBOOK.md`, use the isolated production D1 name/config and retain
+direct migration-ledger evidence.
 
 ## 14. Durable Object lifecycle
 
