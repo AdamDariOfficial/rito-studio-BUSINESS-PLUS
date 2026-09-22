@@ -462,6 +462,11 @@ in questo pass.
 - 320/360/375/390/430/768/1024/1440 e 200% zoom non introducono overflow orizzontale;
 - `/admin/hero` consente create/edit/duplicate/delete/reorder fino a 5 schermate;
 - stato, scheduling, CTA, immagine approvata e preview restano coerenti con la hero pubblica;
+- la fascia metadata interna alla slide non compare né nella hero pubblica né nelle preview admin;
+- ogni schermata supporta asset desktop + asset mobile opzionale; sotto `md` usa il mobile quando configurato e altrimenti fa fallback al desktop;
+- la preview admin consente confronto Desktop/Mobile usando lo stesso renderer della home;
+- demo state legacy senza campi mobile viene normalizzato senza reset dei dati;
+- `/admin` e `/admin/hero` mostrano lo stesso header condiviso, senza overflow, con stato attivo corretto, ritorno al sito e logout coerenti;
 - non è possibile lasciare la hero senza almeno una schermata pubblicata;
 - in demo la modifica admin aggiorna la home tramite storage locale; refresh e nuova tab convergono;
 - static/security checks provano che la variante live usa D1 esistente + native AdminAuth + CSRF;

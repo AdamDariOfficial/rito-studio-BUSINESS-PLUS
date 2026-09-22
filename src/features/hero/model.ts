@@ -100,6 +100,8 @@ const heroSlideDraftBaseSchema = z.object({
   body: z.string().trim().min(1).max(360),
   imageRef: z.enum(heroImageRefs),
   imageAlt: z.string().trim().min(1).max(180),
+  mobileImageRef: z.enum(heroImageRefs).or(z.literal("")).optional().default(""),
+  mobileImageAlt: z.string().trim().max(180).optional().default(""),
   primaryCta: heroCtaSchema,
   secondaryCta: heroCtaSchema.nullable(),
   status: z.enum(heroSlideStatuses),

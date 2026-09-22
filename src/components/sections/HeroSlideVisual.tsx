@@ -7,35 +7,74 @@ export function HeroSlideVisual({
   slide,
   interactive = true,
   preview = false,
-  positionLabel,
+  previewViewport = "desktop",
 }: {
   slide: HeroSlide;
   interactive?: boolean;
   preview?: boolean;
-  positionLabel?: string;
+  previewViewport?: "desktop" | "mobile";
 }) {
-  const image = getHeroImageOption(slide.imageRef);
+  const desktopImage = getHeroImageOption(slide.imageRef);
+  const mobileImage = slide.mobileImageRef ? getHeroImageOption(slide.mobileImageRef) : null;
+  const forcedPreviewImage =
+    previewViewport === "mobile" && mobileImage ? mobileImage : desktopImage;
 
   return (
     <section
       className={`relative isolate overflow-hidden bg-ink text-white ${
         preview
-          ? "aspect-[16/9] min-h-[18rem]"
+          ? previewViewport === "mobile"
+            ? "mx-auto aspect-[9/16] min-h-[30rem] w-full max-w-[22rem]"
+            : "aspect-[16/9] min-h-[18rem]"
           : "min-h-[calc(100svh-var(--header-height))] md:min-h-[calc(100dvh-var(--header-height))]"
       }`}
     >
-      {image ? (
-        <img
-          src={image.ref}
-          alt={slide.imageAlt}
-          draggable={false}
-          className="absolute inset-0 -z-30 h-full w-full select-none object-cover"
-          style={{ objectPosition: image.objectPosition }}
-          loading={preview || !interactive ? "lazy" : "eager"}
-          fetchPriority={!preview && interactive ? "high" : "auto"}
-          decoding="async"
-        />
-      ) : null}
+      {preview ? (
+        forcedPreviewImage ? (
+          <img
+            src={forcedPreviewImage.ref}
+            alt={
+              previewViewport === "mobile" && mobileImage
+                ? slide.mobileImageAlt || mobileImage.alt
+                : slide.imageAlt
+            }
+            draggable={false}
+            className="absolute inset-0 -z-30 h-full w-full select-none object-cover"
+            style={{ objectPosition: forcedPreviewImage.objectPosition }}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null
+      ) : (
+        <>
+          {desktopImage ? (
+            <img
+              src={desktopImage.ref}
+              alt={slide.imageAlt}
+              draggable={false}
+              className={`absolute inset-0 -z-30 h-full w-full select-none object-cover ${
+                mobileImage ? "hidden md:block" : "block"
+              }`}
+              style={{ objectPosition: desktopImage.objectPosition }}
+              loading={!interactive ? "lazy" : "eager"}
+              fetchPriority={interactive ? "high" : "auto"}
+              decoding="async"
+            />
+          ) : null}
+          {mobileImage ? (
+            <img
+              src={mobileImage.ref}
+              alt={slide.mobileImageAlt || mobileImage.alt}
+              draggable={false}
+              className="absolute inset-0 -z-30 block h-full w-full select-none object-cover md:hidden"
+              style={{ objectPosition: mobileImage.objectPosition }}
+              loading={!interactive ? "lazy" : "eager"}
+              fetchPriority={interactive ? "high" : "auto"}
+              decoding="async"
+            />
+          ) : null}
+        </>
+      )}
 
       <div
         aria-hidden
@@ -89,11 +128,6 @@ export function HeroSlideVisual({
               ) : null}
             </div>
           ) : null}
-
-          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/20 pt-4 text-xs text-white/65">
-            <span>RITO Studio · Padova</span>
-            {positionLabel ? <span className="font-medium text-white">{positionLabel}</span> : null}
-          </div>
         </div>
       </div>
     </section>

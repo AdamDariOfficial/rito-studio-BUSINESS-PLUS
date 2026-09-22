@@ -41,7 +41,7 @@ The reusable baseline may add:
 /admin/hero
 ```
 
-`/admin/login` is the branded native RITO authentication route in live mode. `/admin` remains only a Consultation Inbox. `/admin/hero` is the separate, bounded BUSINESS PLUS hero manager: at most five full-slide hero screens, approved RITO assets, copy/CTA, status, schedule and order. It is not a generic CMS, gallery editor or appointment-management suite.
+`/admin/login` is the branded native RITO authentication route in live mode. `/admin` remains only a Consultation Inbox. `/admin/hero` is the separate, bounded BUSINESS PLUS hero manager: at most five full-slide hero screens, required desktop image plus optional approved mobile art-direction image, copy/CTA, status, schedule and order. `/admin` and `/admin/hero` share one navigation shell, including Inbox/Hero navigation, site return and logout. It is not a generic CMS, gallery editor or appointment-management suite.
 
 The portfolio/demo profile keeps its request state local and resettable, but exposes no
 dedicated public tooling route. Demo maintenance utilities are not part of the client-facing

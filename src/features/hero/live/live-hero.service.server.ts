@@ -24,6 +24,7 @@ export async function createHeroSlideLive(
 ) {
   await requireAdminCsrf(request, input.csrfToken);
   requireImage(input.slide.imageRef);
+  if (input.slide.mobileImageRef) requireImage(input.slide.mobileImageRef);
   const parsed = heroSlideSchema.parse({ ...input.slide, id: "validation", order: 0, version: 1 });
   const { id: _id, order: _order, version: _version, ...draft } = parsed;
   return d1HeroRepository.create(draft);
@@ -40,6 +41,7 @@ export async function updateHeroSlideLive(
 ) {
   await requireAdminCsrf(request, input.csrfToken);
   requireImage(input.slide.imageRef);
+  if (input.slide.mobileImageRef) requireImage(input.slide.mobileImageRef);
   const parsed = heroSlideSchema.parse({
     ...input.slide,
     id: input.id,

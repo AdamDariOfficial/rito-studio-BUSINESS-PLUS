@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowDown, ArrowLeft, ArrowUp, Copy, LogOut, Plus, Save, Trash2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowDown, ArrowUp, Copy, Plus, Save, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 import { HeroSlideVisual } from "@/components/sections/HeroSlideVisual";
 import { getConsultationProfile } from "@/features/consultation/config";
 import {
@@ -69,6 +70,8 @@ type Draft = {
   body: string;
   imageRef: string;
   imageAlt: string;
+  mobileImageRef: string;
+  mobileImageAlt: string;
   primaryLabel: string;
   primaryTarget: HeroCtaTarget;
   secondaryEnabled: boolean;
@@ -99,6 +102,8 @@ function toDraft(slide?: HeroSlide): Draft {
     body: "Scrivi un messaggio breve, concreto e coerente con la promessa RITO Studio.",
     imageRef: heroImageOptions[0].ref,
     imageAlt: heroImageOptions[0].alt,
+    mobileImageRef: "",
+    mobileImageAlt: "",
     primaryCta: { label: "Inizia la consulenza", target: "consultation" as const },
     secondaryCta: { label: "Scopri i trattamenti", target: "treatments" as const },
     status: "draft" as const,
@@ -114,6 +119,8 @@ function toDraft(slide?: HeroSlide): Draft {
     body: source.body,
     imageRef: source.imageRef,
     imageAlt: source.imageAlt,
+    mobileImageRef: source.mobileImageRef,
+    mobileImageAlt: source.mobileImageAlt,
     primaryLabel: source.primaryCta.label,
     primaryTarget: source.primaryCta.target,
     secondaryEnabled: Boolean(source.secondaryCta),
@@ -138,6 +145,7 @@ function HeroAdminPage() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(() => toDraft());
+  const [previewViewport, setPreviewViewport] = useState<"desktop" | "mobile">("desktop");
   const [deleteTarget, setDeleteTarget] = useState<HeroSlide | null>(null);
 
   const refresh = useCallback(async () => {
@@ -195,6 +203,7 @@ function HeroAdminPage() {
     setDraft(toDraft(slide));
     setMessage("");
     setError("");
+    setPreviewViewport("desktop");
     setEditorOpen(true);
   }
 
@@ -207,6 +216,8 @@ function HeroAdminPage() {
       body: draft.body,
       imageRef: draft.imageRef,
       imageAlt: draft.imageAlt,
+      mobileImageRef: draft.mobileImageRef,
+      mobileImageAlt: draft.mobileImageAlt,
       primaryCta: { label: draft.primaryLabel, target: draft.primaryTarget },
       secondaryCta: draft.secondaryEnabled
         ? { label: draft.secondaryLabel, target: draft.secondaryTarget }
@@ -235,6 +246,7 @@ function HeroAdminPage() {
   function previewSlide(existing?: HeroSlide): HeroSlide {
     const current = rawDraft();
     const image = getHeroImageOption(current.imageRef) ?? heroImageOptions[0];
+    const mobileImage = current.mobileImageRef ? getHeroImageOption(current.mobileImageRef) : null;
     return {
       id: existing?.id ?? "preview",
       eyebrow: current.eyebrow.trim() || "Beauty & Care Atelier · Padova",
@@ -244,6 +256,8 @@ function HeroAdminPage() {
       body: current.body.trim() || "Anteprima del contenuto hero RITO Studio.",
       imageRef: image.ref,
       imageAlt: current.imageAlt.trim() || image.alt,
+      mobileImageRef: mobileImage?.ref ?? "",
+      mobileImageAlt: mobileImage ? current.mobileImageAlt.trim() || mobileImage.alt : "",
       primaryCta: {
         label: current.primaryCta.label.trim() || "Inizia la consulenza",
         target: current.primaryCta.target,
@@ -385,51 +399,20 @@ function HeroAdminPage() {
 
   return (
     <div className="min-h-screen bg-surface text-ink">
-      <header className="sticky top-0 z-40 border-b border-line bg-canvas/95 backdrop-blur">
-        <div className="mx-auto flex min-h-16 w-full max-w-[1520px] items-center gap-3 px-4 sm:px-6 xl:px-8">
-          <Link to="/" className="hidden shrink-0 font-display text-lg text-ink sm:block">
-            RITO Studio
-          </Link>
-          <nav aria-label="Navigazione amministrazione" className="flex items-center gap-1 sm:ml-4">
-            <Link
-              to="/admin"
-              className="interactive-control min-h-10 px-3 text-sm font-medium text-muted hover:text-ink"
-            >
-              Inbox
-            </Link>
-            <Link
-              to="/admin/hero"
-              aria-current="page"
-              className="interactive-control min-h-10 border border-ink bg-ink px-3 text-sm font-medium text-white"
-            >
-              Hero
-            </Link>
-          </nav>
-          <div className="ml-auto flex items-center gap-2">
-            <Link to="/" className="editorial-link min-h-11 text-sm font-medium">
-              <ArrowLeft aria-hidden size={16} />
-              Sito
-            </Link>
-            <button
-              type="button"
-              onClick={() => {
-                if (profile === "demo") {
-                  window.location.assign("/");
-                  return;
-                }
-                if (!csrfToken) return;
-                void logoutAdminSession({ data: { csrfToken } }).finally(() =>
-                  window.location.assign("/admin/login"),
-                );
-              }}
-              className="interactive-control inline-flex min-h-11 min-w-11 items-center justify-center border border-line px-3 text-muted hover:border-ink hover:text-ink"
-              aria-label="Esci dall'area admin"
-            >
-              <LogOut aria-hidden size={16} />
-            </button>
-          </div>
-        </div>
-      </header>
+      <AdminHeader
+        active="hero"
+        onLogout={() => {
+          if (profile === "demo") {
+            window.location.assign("/");
+            return;
+          }
+          if (!csrfToken) return;
+          void logoutAdminSession({ data: { csrfToken } })
+            .then(() => window.location.assign("/admin/login"))
+            .catch(() => setError("Non è stato possibile chiudere la sessione. Riprova."));
+        }}
+        logoutDisabled={profile === "live" && (!csrfToken || saving)}
+      />
 
       <main className="mx-auto w-full max-w-[1520px] px-4 py-6 sm:px-6 xl:px-8">
         <div className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between">
@@ -472,12 +455,7 @@ function HeroAdminPage() {
             {slides.map((slide, index) => (
               <article key={slide.id} className="overflow-hidden border border-line bg-canvas">
                 <div className="relative">
-                  <HeroSlideVisual
-                    slide={slide}
-                    interactive={false}
-                    preview
-                    positionLabel={`${index + 1} / ${slides.length}`}
-                  />
+                  <HeroSlideVisual slide={slide} interactive={false} preview />
                   <button
                     type="button"
                     onClick={() => openEditor(slide)}
@@ -586,19 +564,42 @@ function HeroAdminPage() {
                       onChange={(e) => setDraft({ ...draft, trailing: e.target.value })}
                     />
                   </Field>
-                  <Field label="Immagine">
+                  <Field label="Immagine desktop">
                     <select
                       className={fieldControlClass}
                       value={draft.imageRef}
-                      onChange={(e) => {
-                        const image = getHeroImageOption(e.target.value);
+                      onChange={(event) => {
+                        const image = getHeroImageOption(event.target.value);
                         setDraft({
                           ...draft,
-                          imageRef: e.target.value,
+                          imageRef: event.target.value,
                           imageAlt: image?.alt ?? draft.imageAlt,
                         });
                       }}
                     >
+                      {heroImageOptions.map((image) => (
+                        <option key={image.ref} value={image.ref}>
+                          {image.label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label="Immagine mobile">
+                    <select
+                      className={fieldControlClass}
+                      value={draft.mobileImageRef}
+                      onChange={(event) => {
+                        const image = event.target.value
+                          ? getHeroImageOption(event.target.value)
+                          : null;
+                        setDraft({
+                          ...draft,
+                          mobileImageRef: event.target.value,
+                          mobileImageAlt: image?.alt ?? "",
+                        });
+                      }}
+                    >
+                      <option value="">Usa immagine desktop</option>
                       {heroImageOptions.map((image) => (
                         <option key={image.ref} value={image.ref}>
                           {image.label}
@@ -613,13 +614,24 @@ function HeroAdminPage() {
                       onChange={(e) => setDraft({ ...draft, body: e.target.value })}
                     />
                   </Field>
-                  <Field label="Alt immagine" className="sm:col-span-2">
+                  <Field label="Alt immagine desktop" className="sm:col-span-2">
                     <input
                       className={fieldControlClass}
                       value={draft.imageAlt}
-                      onChange={(e) => setDraft({ ...draft, imageAlt: e.target.value })}
+                      onChange={(event) => setDraft({ ...draft, imageAlt: event.target.value })}
                     />
                   </Field>
+                  {draft.mobileImageRef ? (
+                    <Field label="Alt immagine mobile" className="sm:col-span-2">
+                      <input
+                        className={fieldControlClass}
+                        value={draft.mobileImageAlt}
+                        onChange={(event) =>
+                          setDraft({ ...draft, mobileImageAlt: event.target.value })
+                        }
+                      />
+                    </Field>
+                  ) : null}
                   <Field label="CTA primaria">
                     <input
                       className={fieldControlClass}
@@ -696,16 +708,43 @@ function HeroAdminPage() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-accent">
-                    Preview
-                  </p>
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">
+                      Preview
+                    </p>
+                    <div
+                      className="inline-flex border border-line bg-canvas"
+                      aria-label="Formato preview"
+                    >
+                      {(["desktop", "mobile"] as const).map((viewport) => (
+                        <button
+                          key={viewport}
+                          type="button"
+                          onClick={() => setPreviewViewport(viewport)}
+                          aria-pressed={previewViewport === viewport}
+                          className={`interactive-control min-h-10 px-3 text-xs font-semibold ${
+                            previewViewport === viewport
+                              ? "bg-ink text-white"
+                              : "text-muted hover:text-ink"
+                          }`}
+                        >
+                          {viewport === "desktop" ? "Desktop" : "Mobile"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   <div className="overflow-hidden border border-line bg-ink">
                     <HeroSlideVisual
                       slide={previewSlide(editingSlide ?? undefined)}
                       preview
+                      previewViewport={previewViewport}
                       interactive={false}
                     />
                   </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted">
+                    Su mobile puoi scegliere un asset verticale dedicato. Se non lo imposti, la hero
+                    usa l'immagine desktop.
+                  </p>
                 </div>
               </div>
             </div>

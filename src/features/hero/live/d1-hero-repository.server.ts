@@ -6,7 +6,7 @@ import {
 
 const SELECT_COLUMNS = `
   id, eyebrow, title, accent, trailing, body, image_ref, image_alt,
-  primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
+  mobile_image_ref, mobile_image_alt, primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
   sort_order, version
 `;
 
@@ -19,6 +19,8 @@ type HeroRow = {
   body: string;
   image_ref: string;
   image_alt: string;
+  mobile_image_ref: string;
+  mobile_image_alt: string;
   primary_cta_json: string;
   secondary_cta_json: string | null;
   status: "draft" | "published" | "archived";
@@ -42,6 +44,8 @@ function parseRow(row: HeroRow) {
     body: row.body,
     imageRef: row.image_ref,
     imageAlt: row.image_alt,
+    mobileImageRef: row.mobile_image_ref,
+    mobileImageAlt: row.mobile_image_alt,
     primaryCta: heroCtaSchema.parse(JSON.parse(row.primary_cta_json)),
     secondaryCta: row.secondary_cta_json
       ? heroCtaSchema.parse(JSON.parse(row.secondary_cta_json))
@@ -110,10 +114,10 @@ export const d1HeroRepository = {
       .prepare(
         `INSERT INTO hero_slides (
           id, eyebrow, title, accent, trailing, body, image_ref, image_alt,
-          primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
+          mobile_image_ref, mobile_image_alt, primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
           sort_order, created_at, updated_at, version
         )
-        SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                COALESCE((SELECT MAX(sort_order) + 1 FROM hero_slides), 0), ?, ?, 1
         WHERE (SELECT COUNT(*) FROM hero_slides) < 5`,
       )
@@ -126,6 +130,8 @@ export const d1HeroRepository = {
         input.body,
         input.imageRef,
         input.imageAlt,
+        input.mobileImageRef,
+        input.mobileImageAlt,
         JSON.stringify(input.primaryCta),
         input.secondaryCta ? JSON.stringify(input.secondaryCta) : null,
         input.status,
@@ -160,8 +166,8 @@ export const d1HeroRepository = {
       .prepare(
         `UPDATE hero_slides
          SET eyebrow = ?, title = ?, accent = ?, trailing = ?, body = ?,
-             image_ref = ?, image_alt = ?, primary_cta_json = ?, secondary_cta_json = ?,
-             status = ?, starts_at = ?, ends_at = ?, updated_at = ?, version = version + 1
+             image_ref = ?, image_alt = ?, mobile_image_ref = ?, mobile_image_alt = ?,
+             primary_cta_json = ?, secondary_cta_json = ?, status = ?, starts_at = ?, ends_at = ?, updated_at = ?, version = version + 1
          WHERE id = ? AND version = ?
            AND (
              status <> 'published'
@@ -177,6 +183,8 @@ export const d1HeroRepository = {
         input.body,
         input.imageRef,
         input.imageAlt,
+        input.mobileImageRef,
+        input.mobileImageAlt,
         JSON.stringify(input.primaryCta),
         input.secondaryCta ? JSON.stringify(input.secondaryCta) : null,
         input.status,

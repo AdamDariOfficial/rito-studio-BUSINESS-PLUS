@@ -352,7 +352,8 @@ BUSINESS PLUS non introduce una seconda identità visuale del piano BUSINESS. Su
 
 Contratto corrente:
 
-- hero home PLUS: divergenza intenzionale autorizzata rispetto allo split BUSINESS. Usa una hero full-slide di tipo e-commerce: ogni schermata combina fotografia RITO full-bleed, overlay editoriale, eyebrow, headline, body e CTA propri; l'intera schermata scorre orizzontalmente. Nessun autoplay. Il riferimento Forno Lume è funzionale, non visuale: palette, font, fotografia, densità e tono restano Beauty & Wellness;
+- hero home PLUS: divergenza intenzionale autorizzata rispetto allo split BUSINESS. Usa una hero full-slide di tipo e-commerce: ogni schermata combina fotografia RITO full-bleed, overlay editoriale, eyebrow, headline, body e CTA propri; l'intera schermata scorre orizzontalmente. Nessun autoplay. La fascia metadata `RITO Studio · Padova / 01/03` non viene mostrata: gli indicatori del carousel sono la sola affordance di posizione. Ogni schermata richiede un asset desktop e può definire un asset mobile verticale dedicato dalla stessa libreria approvata; in assenza di asset mobile usa il desktop. Il riferimento Forno Lume è funzionale, non visuale: palette, font, fotografia, densità e tono restano Beauty & Wellness;
+- admin PLUS: `/admin` e `/admin/hero` usano un solo header di navigazione condiviso; cambia soltanto lo stato attivo Inbox/Hero, mentre azioni operative come logout o creazione restano nel workspace della pagina;
 - ritmo verticale compatto sulle route condivise (intro, catalogo, FAQ, galleria, contatti, Studio e sezioni home);
 - `RitualFeature` include gli stessi tre principi `Ascolto`, `Precisione`, `Continuità`;
 - `/studio` usa la stessa struttura compatta: intro con una sola immagine, `Dentro RITO` con `Ambiente / Materiali / Cura`, fascia utility finale;

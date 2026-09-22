@@ -1,7 +1,7 @@
 # RITO Studio — Decision Log
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 2.6
+**Versione:** 2.7
 **Stato:** decisioni approvate e aggiornate al 21 settembre 2026
 
 ## BW-DEC-001 — Concept portfolio
@@ -1251,3 +1251,14 @@ viene versionata ma non eseguita da questo pass.
 **Gate:** candidate sostitutivo unico tramite Controlled Change Package v1.2, validazione
 automatica completa e una sola browser QA aggregata. Stage, commit, push, PR, merge, migration,
 staging deploy, DNS, secret e produzione restano gate separati.
+
+## BW-DEC-076 — Hero responsive art direction e navigazione admin unificata
+
+**Stato:** approvata — 22 settembre 2026
+
+- La fascia metadata interna alle schermate hero (`RITO Studio · Padova` + contatore) viene rimossa: frecce/indicatori restano l'unica indicazione di posizione.
+- Ogni schermata hero mantiene un asset desktop obbligatorio e può usare un asset mobile opzionale, selezionato esclusivamente dalla libreria RITO già versionata. Se l'asset mobile non è impostato, il renderer usa quello desktop.
+- `/admin/hero` espone selezione separata desktop/mobile e preview Desktop/Mobile con lo stesso renderer della home. Nessun upload, R2 o media manager viene introdotto.
+- `/admin` e `/admin/hero` condividono un unico `AdminHeader` con sezione attiva, ritorno al sito e logout coerenti; le azioni specifiche restano nel workspace.
+- `migrations/0003_hero_management.sql`, ancora non applicata, viene estesa con `mobile_image_ref` e `mobile_image_alt`. Nessuna migration remota è autorizzata da questa decisione.
+- Autoplay, max-five, native AdminAuth/CSRF, D1 esistente, consultation flow e confini CUSTOM restano invariati.

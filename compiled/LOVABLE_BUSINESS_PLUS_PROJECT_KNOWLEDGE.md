@@ -38,8 +38,9 @@ Recommendations are deterministic/configuration-driven.
 ```
 
 `/admin` remains limited to consultation requests: list/detail, status, short note and basic
-filters. `/admin/hero` manages at most five full-slide hero screens: approved RITO image,
-copy/CTA, status, schedule and order.
+filters. `/admin/hero` manages at most five full-slide hero screens: required desktop image,
+optional mobile art-direction image, copy/CTA, status, schedule and order. Both routes share the
+same admin navigation shell, including section navigation, site return and logout.
 
 This is not a generic CMS, gallery editor, CRM, calendar, payments or general dashboard.
 
@@ -113,9 +114,12 @@ Preserve these approved details:
 - mobile original answers stack question then response, and the note action moves below its preview;
 - the public demo-tools route is removed while demo persistence remains internal;
 - the home hero is a manual full-slide RITO slider: image, copy and CTA move together;
-- `/admin/hero` is the bounded max-five-screen manager; it is not a generic CMS;
+- the redundant slide metadata rail is omitted; navigation state is conveyed by the carousel controls;
+- each screen has a required desktop image and may have one optional mobile art-direction image, both from the approved RITO asset library;
+- `/admin/hero` is the bounded max-five-screen manager and offers desktop/mobile preview; it is not a generic CMS;
+- `/admin` and `/admin/hero` share one admin navigation shell, including site return and logout;
 - demo hero state is browser-local; live hero state reuses D1 + native AdminAuth/CSRF;
-- hero images stay inside the approved RITO asset library; no upload/R2 scope is introduced.
+- no upload/R2 scope is introduced.
 
 ## Approved live architecture — 11 August 2026
 

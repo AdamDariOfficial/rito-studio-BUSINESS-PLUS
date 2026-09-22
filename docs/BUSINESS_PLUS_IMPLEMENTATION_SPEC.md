@@ -223,8 +223,12 @@ inactive-slide isolation and reduced-motion fallback are required. Autoplay is f
 
 `/admin/hero` manages at most five screens with create/edit/duplicate/delete/reorder,
 `draft/published/archived` state, publication window, copy, CTA and selection from the fixed
-approved RITO image library. It is a bounded hero manager, not a generic CMS or gallery editor.
-Demo persistence is browser-local. Live persistence uses the existing D1 binding through a
+approved RITO image library. Each screen requires one desktop image and may define one mobile
+art-direction image; mobile falls back to desktop when unset. The editor exposes desktop/mobile
+preview using the same renderer as the public hero. `/admin` and `/admin/hero` share one admin
+navigation shell, including section navigation, site return and logout. This remains a bounded hero manager, not a generic CMS or gallery editor.
+Demo persistence is browser-local and legacy demo rows without mobile fields are normalized by
+schema defaults. Live persistence uses the existing D1 binding through the still-unapplied
 versioned migration and reuses native AdminAuth + CSRF; no R2/media-upload capability or new
 Cloudflare binding is introduced. The migration source is versioned here but its remote
 execution remains a separate gate.

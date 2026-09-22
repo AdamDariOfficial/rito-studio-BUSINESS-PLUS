@@ -98,11 +98,7 @@ export function Hero() {
               aria-hidden={active ? undefined : true}
               inert={!active}
             >
-              <HeroSlideVisual
-                slide={slide}
-                interactive={active}
-                positionLabel={`${String(slideIndex + 1).padStart(2, "0")} / ${String(activeSlides.length).padStart(2, "0")}`}
-              />
+              <HeroSlideVisual slide={slide} interactive={active} />
             </div>
           );
         })}

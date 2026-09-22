@@ -10,14 +10,33 @@ assert.equal(seedHeroSlides.length, 3);
 assert.ok(seedHeroSlides.every((slide) => heroSlideSchema.safeParse(slide).success));
 assert.ok(seedHeroSlides.every((slide) => getHeroImageOption(slide.imageRef)));
 assert.ok(
+  seedHeroSlides.every(
+    (slide) => !slide.mobileImageRef || Boolean(getHeroImageOption(slide.mobileImageRef)),
+  ),
+);
+assert.ok(
   seedHeroSlides.every((slide) => isHeroSlideActive(slide, new Date("2026-09-21T10:00:00.000Z"))),
 );
 assert.equal(
   heroSlideSchema.safeParse({ ...seedHeroSlides[0], imageRef: "https://example.com/image.jpg" })
     .success,
   false,
-  "hero images must stay inside the approved RITO asset allowlist",
+  "desktop hero images must stay inside the approved RITO asset allowlist",
 );
+assert.equal(
+  heroSlideSchema.safeParse({
+    ...seedHeroSlides[0],
+    mobileImageRef: "https://example.com/mobile.jpg",
+  }).success,
+  false,
+  "mobile hero images must stay inside the approved RITO asset allowlist",
+);
+const legacyWithoutMobile = { ...seedHeroSlides[1] } as Record<string, unknown>;
+delete legacyWithoutMobile.mobileImageRef;
+delete legacyWithoutMobile.mobileImageAlt;
+const legacyParsed = heroSlideSchema.parse(legacyWithoutMobile);
+assert.equal(legacyParsed.mobileImageRef, "");
+assert.equal(legacyParsed.mobileImageAlt, "");
 assert.equal(
   heroSlideSchema.safeParse({ ...seedHeroSlides[0], status: "published", startsAt: "" }).success,
   false,

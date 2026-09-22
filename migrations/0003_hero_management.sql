@@ -7,6 +7,8 @@ CREATE TABLE hero_slides (
   body TEXT NOT NULL,
   image_ref TEXT NOT NULL,
   image_alt TEXT NOT NULL,
+  mobile_image_ref TEXT NOT NULL DEFAULT '',
+  mobile_image_alt TEXT NOT NULL DEFAULT '',
   primary_cta_json TEXT NOT NULL,
   secondary_cta_json TEXT,
   status TEXT NOT NULL CHECK (status IN ('draft', 'published', 'archived')),
@@ -23,7 +25,7 @@ CREATE INDEX idx_hero_slides_status_order
 
 INSERT INTO hero_slides (
   id, eyebrow, title, accent, trailing, body, image_ref, image_alt,
-  primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
+  mobile_image_ref, mobile_image_alt, primary_cta_json, secondary_cta_json, status, starts_at, ends_at,
   sort_order, created_at, updated_at, version
 ) VALUES
 (
@@ -35,6 +37,8 @@ INSERT INTO hero_slides (
   'Un atelier contemporaneo dedicato a capelli, pelle e benessere. Trattamenti su misura, gesti precisi e il tempo necessario per ascoltarti.',
   '/images/rito/rito-hero-main.webp',
   'Professionista durante un trattamento viso in atelier',
+  '',
+  '',
   '{"label":"Inizia la consulenza","target":"consultation"}',
   '{"label":"Scopri i trattamenti","target":"treatments"}',
   'published',
@@ -54,6 +58,8 @@ INSERT INTO hero_slides (
   'Taglio, colore e texture costruiti con ascolto e precisione, per un risultato leggibile anche nella quotidianità.',
   '/images/rito/rito-gallery-professional-01.webp',
   'Applicazione professionale del colore sui capelli',
+  '',
+  '',
   '{"label":"Trova il tuo percorso","target":"consultation"}',
   '{"label":"Vedi i trattamenti","target":"treatments"}',
   'published',
@@ -73,6 +79,8 @@ INSERT INTO hero_slides (
   'Rituali essenziali per pelle e benessere, pensati per rallentare, ascoltare l''esigenza e scegliere solo ciò che serve.',
   '/images/rito/rito-gallery-skin-01.webp',
   'Trattamento viso eseguito con un gesto delicato',
+  '',
+  '',
   '{"label":"Inizia la consulenza","target":"consultation"}',
   '{"label":"Scopri lo studio","target":"studio"}',
   'published',

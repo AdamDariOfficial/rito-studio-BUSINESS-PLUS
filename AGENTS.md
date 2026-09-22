@@ -244,7 +244,8 @@ The current authorized candidate also preserves:
 - public demo-tools route removed while demo persistence remains internal to the portfolio profile;
 - home hero uses the approved full-slide manual RITO slider: image, copy and CTA move together;
 - `/admin/hero` is limited to max-five hero screens and must not expand into a generic CMS;
-- hero images remain restricted to the approved RITO asset library; no upload/R2 scope is implied.
+- each hero screen uses one required desktop image and may use one optional mobile art-direction image, both restricted to the approved RITO asset library; no upload/R2 scope is implied;
+- `/admin` and `/admin/hero` share the same admin navigation shell, including Inbox/Hero navigation, site return and logout; page-specific actions stay inside their workspaces.
 
 These are refinements only. Do not use them as justification to add routes, dependencies, CRM/agenda behavior or unrelated redesign.
 
