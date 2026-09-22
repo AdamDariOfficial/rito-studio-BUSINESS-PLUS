@@ -154,8 +154,8 @@ booked
 archived
 ```
 
-Keep the interaction intentionally small. No calendar, customer profile, content editor
-or dashboard widgets.
+Keep the interaction intentionally small. No calendar, customer profile, generic content editor
+or dashboard widgets. The separately approved `/admin/hero` route is limited to hero screens only.
 
 ## 6. Storage profiles
 
@@ -176,8 +176,9 @@ authentication boundary; its earlier provider role is a superseded design, and a
 Tretnix-only Access perimeter must remain on a separate technical surface. Periodic polling is
 not part of the approved live baseline.
 
-Required persisted domain remains narrowly limited to consultation requests and their
-admin state/note. Do not silently add CRM entities. Cloudflare-specific APIs remain
+Required persisted domain remains narrowly limited to consultation requests/admin state plus
+the bounded hero-slide configuration approved by BW-DEC-075. Hero data reuses the existing D1;
+do not silently add CRM entities or new Cloudflare bindings. Cloudflare-specific APIs remain
 behind repository/auth/realtime/rate-limit adapters.
 
 The implemented staging baseline uses direct D1 persistence, native D1-backed RITO AdminAuth
@@ -194,10 +195,11 @@ production is not certified or authorized.
 
 ```text
 POST /api/consultations                 public same-origin submit
-/_serverFn/*                            native RITO login/session + admin RPC transport
+/_serverFn/*                            native RITO login/session + application RPC transport
 /__tretnix/consultation-realtime        native-session authenticated WebSocket
 /admin/login                            branded native RITO login
 /admin                                  authenticated Consultation Inbox
+/admin/hero                             authenticated bounded hero manager
 ```
 
 The public submit is JSON-only, server validated, idempotent and rate limited. Login/session
@@ -208,27 +210,28 @@ state-changing admin handler additionally validates the session-bound CSRF token
 Staging configuration is generated only after explicit provisioning and disables
 `workers.dev`/Preview URLs in favor of a dedicated Cloudflare custom hostname.
 
-## 7. Demo tools
+## 7. Demo-local state + bounded hero management
 
-Route/profile:
+The portfolio/demo profile keeps consultation requests in browser-local state so the demo and
+Consultation Inbox remain self-contained. No dedicated `/_demo/tools` route is exposed.
+Reset/snapshot/export/import are not part of the public product surface.
 
-```text
-/_demo/tools
-```
+The home hero is a manual full-slide carousel modeled functionally on the Forno Lume BUSINESS
+PLUS pattern while preserving RITO identity. Each active screen owns image, eyebrow, headline,
+accent, body and CTA; the complete screen moves horizontally. Swipe, arrows, indicators,
+inactive-slide isolation and reduced-motion fallback are required. Autoplay is forbidden.
 
-Enabled only in the portfolio/demo profile.
-
-Functions:
-
-```text
-save snapshot
-restore snapshot
-reset to seed
-export state
-import state
-```
-
-It operates only on demo-local state and is not a client-facing CMS.
+`/admin/hero` manages at most five screens with create/edit/duplicate/delete/reorder,
+`draft/published/archived` state, publication window, copy, CTA and selection from the fixed
+approved RITO image library. Each screen requires one desktop image and may define one mobile
+art-direction image; mobile falls back to desktop when unset. The editor exposes desktop/mobile
+preview using the same renderer as the public hero. `/admin` and `/admin/hero` share one admin
+navigation shell, including section navigation, site return and logout. This remains a bounded hero manager, not a generic CMS or gallery editor.
+Demo persistence is browser-local and legacy demo rows without mobile fields are normalized by
+schema defaults. Live persistence uses the existing D1 binding through the still-unapplied
+versioned migration and reuses native AdminAuth + CSRF; no R2/media-upload capability or new
+Cloudflare binding is introduced. The migration source is versioned here but its remote
+execution remains a separate gate.
 
 ## 8. Privacy and integrity
 
@@ -299,7 +302,7 @@ CUSTOM rather than expanding the baseline.
 Not in BUSINESS PLUS baseline:
 
 ```text
-CMS/content/gallery editor
+generic CMS/content/gallery editor beyond the bounded hero manager
 full CRM
 native live agenda
 payments/deposits

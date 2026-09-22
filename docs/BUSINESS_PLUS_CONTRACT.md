@@ -38,13 +38,14 @@ The reusable baseline may add:
 /consulenza
 /admin/login
 /admin
-/_demo/tools   (demo/development profile only)
+/admin/hero
 ```
 
-`/admin/login` is the branded native RITO authentication route in live mode. `/admin` is only a Consultation Inbox. It may edit narrowly bounded operational request fields and delete a request with explicit confirmation, but it must not become a CRM or appointment-management suite.
+`/admin/login` is the branded native RITO authentication route in live mode. `/admin` remains only a Consultation Inbox. `/admin/hero` is the separate, bounded BUSINESS PLUS hero manager: at most five full-slide hero screens, required desktop image plus optional approved mobile art-direction image, copy/CTA, status, schedule and order. `/admin` and `/admin/hero` share one navigation shell, including Inbox/Hero navigation, site return and logout. It is not a generic CMS, gallery editor or appointment-management suite.
 
-`/_demo/tools` is never a client CMS. It exists only to reset/snapshot the local demo
-state used during portfolio presentation and testing.
+The portfolio/demo profile keeps its request state local and resettable, but exposes no
+dedicated public tooling route. Demo maintenance utilities are not part of the client-facing
+product surface.
 
 ## Consultation output
 
@@ -69,10 +70,12 @@ browser.
 ### Live client
 
 A shared Consultation Inbox requires the standardized minimal remote request store and
-minimal admin authentication. This is an explicitly bounded BUSINESS PLUS module.
+minimal admin authentication. The bounded hero manager may reuse the same per-client D1 and
+native AdminAuth boundary, with its own versioned hero table and CSRF-protected mutations.
 
-Any expansion into customer records, appointment history, agenda, payments, roles,
-staff/resources, packages/fidelity or reporting crosses into CUSTOM.
+Any expansion beyond Consultation Inbox + bounded hero management into customer records,
+appointment history, agenda, payments, roles, staff/resources, packages/fidelity, generic
+content management or reporting crosses into CUSTOM.
 
 ## Regression rule
 

@@ -450,12 +450,27 @@ in questo pass.
 - sotto `sm`, ogni risposta originale appare sotto la relativa domanda senza compressione orizzontale;
 - sotto `sm`, `Aggiungi/Modifica` nota va su una riga separata e resta un touch target adeguato.
 
-### Demo tools
+### Demo-local state + hero full-slide
 
-- desktop `lg+` presenta Stato corrente e Import/Export JSON in due colonne;
-- mobile/tablet resta a colonna singola;
-- a 1440 px il layout normale non richiede scroll verticale soltanto per raggiungere il secondo pannello;
-- snapshot/reset/export/import mantengono comportamento e messaggi invariati.
+- `/_demo/tools` non risolve più come route applicativa dedicata;
+- `/consulenza` e `/admin` continuano a condividere correttamente lo stato locale demo;
+- ogni schermata hero muove insieme immagine, eyebrow, headline, body e CTA;
+- frecce, indicatori e swipe raggiungono tutte le schermate, incluso wrap prima/ultima;
+- nessun autoplay, timer o avanzamento automatico modifica la schermata;
+- le schermate inattive sono `aria-hidden`/inert e non entrano nel focus order;
+- reduced motion elimina la transizione senza disabilitare i controlli;
+- 320/360/375/390/430/768/1024/1440 e 200% zoom non introducono overflow orizzontale;
+- `/admin/hero` consente create/edit/duplicate/delete/reorder fino a 5 schermate;
+- stato, scheduling, CTA, immagine approvata e preview restano coerenti con la hero pubblica;
+- la fascia metadata interna alla slide non compare né nella hero pubblica né nelle preview admin;
+- ogni schermata supporta asset desktop + asset mobile opzionale; sotto `md` usa il mobile quando configurato e altrimenti fa fallback al desktop;
+- la preview admin consente confronto Desktop/Mobile usando lo stesso renderer della home;
+- demo state legacy senza campi mobile viene normalizzato senza reset dei dati;
+- `/admin` e `/admin/hero` mostrano lo stesso header condiviso, senza overflow, con stato attivo corretto, ritorno al sito e logout coerenti;
+- non è possibile lasciare la hero senza almeno una schermata pubblicata;
+- in demo la modifica admin aggiorna la home tramite storage locale; refresh e nuova tab convergono;
+- static/security checks provano che la variante live usa D1 esistente + native AdminAuth + CSRF;
+- `migrations/0003_hero_management.sql` è verificata come source ma non viene applicata da questo gate.
 
 ## 17. BUSINESS PLUS live architecture implementation gates
 
@@ -983,7 +998,7 @@ Verificare almeno a 320 / 360 / 375 / 390 / 430 / 768 / 1024 / 1440 px e al 200%
 - Privacy + Cookie restano una coppia visuale non separabile; attribuzione Tretnix invariata;
 - `prefers-reduced-motion: reduce` elimina motion non essenziale senza nascondere contenuti;
 - `/consulenza`: quattro step, recommendation cap, manual-add cap, review/confirmation e responsive layout invariati;
-- `/admin/login`, `/admin` e `/_demo/tools`: smoke visuale/responsive, senza attribuire al browser-only harness prove D1/auth/CSRF/rate-limit/realtime;
+- `/admin/login` e `/admin`: smoke visuale/responsive, senza attribuire al browser-only harness prove D1/auth/CSRF/rate-limit/realtime;
 - console errors = 0 e `document.documentElement.scrollWidth <= document.documentElement.clientWidth`.
 
 La regression automatica deve includere frozen install, typecheck, lint, native auth test, security test, build, static/config contract, whitespace e Development OS. Poiché il pass non modifica backend/auth/data/infra, ogni eventuale gate live resta distinto e non può essere dichiarato PASS per inferenza.

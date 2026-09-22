@@ -51,6 +51,17 @@ Sequenza:
 4. immagine con scale minima `1.025 → 1`;
 5. microdato.
 
+### Hero slider BUSINESS PLUS
+
+- lo slider è esclusivamente manuale: nessun autoplay, timer o avanzamento automatico;
+- ogni schermata è una hero completa; fotografia, eyebrow, headline, body e CTA traslano insieme;
+- transizione orizzontale: 620 ms con `--motion-ease-reveal`;
+- swipe valido solo quando il gesto orizzontale supera la soglia e domina quello verticale;
+- frecce e indicatori restano controlli semanticamente nominati e keyboard-accessible;
+- le schermate inattive sono escluse dall'interazione e dal focus order;
+- `prefers-reduced-motion: reduce` elimina la transizione mantenendo invariata la navigazione;
+- nessun effetto di transizione può introdurre layout shift o bloccare lo scroll verticale.
+
 Vincoli:
 
 - nessun ritardo superiore a 250ms prima del contenuto principale;

@@ -1,17 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowLeft,
-  Check,
-  ChevronLeft,
-  Copy,
-  LogOut,
-  Mail,
-  Pencil,
-  Phone,
-  RefreshCw,
-  Trash2,
-} from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Check, ChevronLeft, Copy, Mail, Pencil, Phone, RefreshCw, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -63,6 +52,7 @@ import type {
   PreferredContact,
   PreferredWindow,
 } from "@/features/consultation/types";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 import { buildHead, routeSeo } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -412,6 +402,24 @@ function ConsultationAdminPage() {
     setMobileDetailOpen(false);
   }
 
+  async function handleLogout() {
+    if (profile === "demo") {
+      window.location.assign("/");
+      return;
+    }
+    if (!csrfToken) return;
+    setSaving(true);
+    setDataError("");
+    try {
+      await logoutAdminSession({ data: { csrfToken } });
+      window.location.assign("/admin/login");
+    } catch {
+      setDataError("Non è stato possibile chiudere la sessione. Riprova.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (sessionLoading) {
     return (
       <AdminFrame>
@@ -429,7 +437,10 @@ function ConsultationAdminPage() {
   }
 
   return (
-    <AdminFrame>
+    <AdminFrame
+      onLogout={() => void handleLogout()}
+      logoutDisabled={profile === "live" && (!csrfToken || saving)}
+    >
       <div
         data-admin-workspace="operations-v2-readability"
         data-admin-qa-correction="2026-08-23"
@@ -486,37 +497,6 @@ function ConsultationAdminPage() {
                   </button>
                 </>
               ) : null}
-              <button
-                type="button"
-                data-admin-logout
-                data-admin-exit
-                onClick={() => {
-                  if (profile === "demo") {
-                    window.location.assign("/");
-                    return;
-                  }
-                  if (!csrfToken) return;
-                  setSaving(true);
-                  setDataError("");
-                  void logoutAdminSession({ data: { csrfToken } })
-                    .then(() => {
-                      window.location.assign("/admin/login");
-                    })
-                    .catch(() => {
-                      setDataError("Non è stato possibile chiudere la sessione. Riprova.");
-                    })
-                    .finally(() => {
-                      setSaving(false);
-                    });
-                }}
-                disabled={profile === "live" && (!csrfToken || saving)}
-                className="interactive-control inline-flex min-h-11 min-w-11 items-center justify-center gap-2 border border-line px-2 text-muted hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-50 sm:px-3"
-                aria-label={profile === "demo" ? "Esci dalla demo admin" : "Esci dall'area admin"}
-                title="Esci"
-              >
-                <LogOut aria-hidden size={16} strokeWidth={1.7} />
-                <span className="hidden text-sm font-medium sm:inline">Esci</span>
-              </button>
             </div>
           </div>
         </div>
@@ -605,20 +585,18 @@ function ConsultationAdminPage() {
   );
 }
 
-function AdminFrame({ children }: { children: ReactNode }) {
+function AdminFrame({
+  children,
+  onLogout,
+  logoutDisabled = false,
+}: {
+  children: ReactNode;
+  onLogout?: () => void;
+  logoutDisabled?: boolean;
+}) {
   return (
     <div className="min-h-screen bg-canvas text-ink lg:h-screen lg:overflow-hidden">
-      <header className="border-b border-line bg-canvas">
-        <div className="mx-auto flex min-h-14 w-full max-w-[1520px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-8">
-          <Link to="/" className="font-display text-lg text-ink">
-            RITO Studio
-          </Link>
-          <Link to="/" className="editorial-link min-h-11 text-base font-medium">
-            <ArrowLeft aria-hidden size={16} strokeWidth={1.7} />
-            Torna al sito
-          </Link>
-        </div>
-      </header>
+      <AdminHeader active="inbox" onLogout={onLogout} logoutDisabled={logoutDisabled} />
       <main className="mx-auto w-full max-w-[1520px] lg:h-[calc(100vh-3.5rem)]">{children}</main>
     </div>
   );

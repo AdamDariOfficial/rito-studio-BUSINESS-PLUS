@@ -331,13 +331,11 @@ BUSINESS PLUS preserva tutte le route BUSINESS e aggiunge:
 /consulenza
 /admin
 /admin/login
+/admin/hero
 ```
 
-Solo nel profilo portfolio/demo:
-
-```text
-/_demo/tools
-```
+Il profilo portfolio/demo non aggiunge route pubbliche di tooling. La memoria locale
+dimostrativa resta interna a `/consulenza` e `/admin`.
 
 ### `/consulenza`
 
@@ -385,6 +383,26 @@ delete con conferma
 
 Il profilo live richiede accesso admin minimo e request store condiviso. L'edit operativo può modificare contatto, giorno/fascia preferita e i servizi aggiunti fino a 6 servizi selezionati totali; servizio principale e risposte originali restano immutabili. La cancellazione è definitiva e richiede conferma esplicita.
 
+### `/admin/hero`
+
+Non compare nella navigazione pubblica ed è separata dalla Consultation Inbox.
+
+È esclusivamente il manager hero BUSINESS PLUS:
+
+```text
+max 5 schermate
+copy + CTA per schermata
+immagine da asset RITO approvati
+draft / published / archived
+inizio/fine pubblicazione
+ordine / duplica / elimina
+preview reale
+```
+
+Nel profilo demo usa memoria browser locale. Nel profilo live legge e modifica lo stesso D1
+del deployment tramite native AdminAuth; ogni mutation richiede sessione valida + CSRF.
+Non introduce upload media, R2 o un CMS generico.
+
 Nel profilo `client-live`, il sito usa inoltre boundary HTTP interni/non navigazionali:
 
 ```text
@@ -399,19 +417,10 @@ mutation richiedono anche il token CSRF legato alla sessione. Il path
 realtime accetta solo WebSocket admin autenticati. Questi endpoint non ampliano la route
 pubblica/editoriale del prodotto.
 
-### `/_demo/tools`
+### Stato demo locale
 
-Solo profilo portfolio/demo:
-
-```text
-snapshot
-restore
-reset seed
-export
-import
-```
-
-Opera esclusivamente sulla memoria locale demo.
+Il profilo portfolio/demo continua a usare memoria locale resettable per richieste e inbox
+dimostrative, ma non espone una route dedicata a snapshot/reset/export/import.
 
 ### Nessuna `/percorsi`
 
@@ -420,5 +429,5 @@ La baseline non aggiunge `/percorsi`. Il percorso consigliato è parte del risul
 
 ### CUSTOM-only routes/features
 
-Una vera area cliente, CMS, agenda, pagamenti, CRM o admin estesa richiedono un nuovo
-scope CUSTOM.
+Una vera area cliente, un CMS oltre il manager hero approvato, agenda, pagamenti, CRM o
+admin estesa richiedono un nuovo scope CUSTOM.

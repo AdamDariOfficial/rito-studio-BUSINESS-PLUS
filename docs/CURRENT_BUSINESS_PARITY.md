@@ -35,8 +35,11 @@ The following remain intentionally different and are not parity defects:
 - public conversion CTAs may lead to `/consulenza` instead of opening the BUSINESS booking adapter;
 - the footer omits the redundant booking entry, while phone/email remain in Contacts;
 - treatment detail may seed `/consulenza` and retain the approved direct contact fallback;
-- `/admin`, `/admin/login`, `/_demo/tools`, consultation state, native AdminAuth, D1, CSRF,
+- `/admin`, `/admin/login`, consultation state, native AdminAuth, D1, CSRF,
   rate limiting, realtime and live submission remain BUSINESS PLUS-only;
+- the PLUS home intentionally diverges from the BUSINESS split hero with the approved
+  full-slide manual e-commerce hero; each screen owns image/copy/CTA, while RITO identity remains;
+- `/admin/hero` is a bounded PLUS-only hero manager (max 5 screens), not a generic CMS;
 - consultation/admin motion approved by BW-DEC-054/BW-DEC-056 remains in addition to the shared
   BUSINESS motion system;
 - consultation price totals require the PLUS-only `priceAmount`/`priceFrom` treatment metadata.

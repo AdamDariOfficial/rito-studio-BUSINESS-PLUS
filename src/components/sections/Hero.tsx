@@ -1,86 +1,165 @@
-import { Link } from "@tanstack/react-router";
-import { MessageCircle } from "lucide-react";
-import { EditorialArrow } from "@/components/EditorialArrow";
-import { ctaLabels } from "@/lib/site-config";
-import { useReveal } from "@/hooks/use-reveal";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { HeroSlideVisual } from "@/components/sections/HeroSlideVisual";
+import { getConsultationProfile } from "@/features/consultation/config";
+import { listDemoHeroSlides, subscribeDemoHeroSlides } from "@/features/hero/demo-store";
+import { listPublicHeroSlides } from "@/features/hero/hero.functions";
+import { isHeroSlideActive, type HeroSlide } from "@/features/hero/model";
+import { seedHeroSlides } from "@/features/hero/seed";
+
+const SWIPE_THRESHOLD = 52;
 
 export function Hero() {
-  const imageRef = useReveal<HTMLDivElement>();
+  const profile = getConsultationProfile();
+  const [slides, setSlides] = useState<HeroSlide[]>(() =>
+    profile === "demo" ? listDemoHeroSlides() : seedHeroSlides,
+  );
+  const [index, setIndex] = useState(0);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (profile === "demo") {
+      const sync = () => setSlides(listDemoHeroSlides());
+      sync();
+      return subscribeDemoHeroSlides(sync);
+    }
+
+    let cancelled = false;
+    void listPublicHeroSlides()
+      .then((next) => {
+        if (!cancelled) setSlides(next);
+      })
+      .catch(() => {
+        if (!cancelled) setSlides([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile]);
+
+  const activeSlides = useMemo(
+    () => slides.filter((slide) => isHeroSlideActive(slide)).sort((a, b) => a.order - b.order),
+    [slides],
+  );
+
+  useEffect(() => {
+    setIndex((current) => Math.min(current, Math.max(0, activeSlides.length - 1)));
+  }, [activeSlides.length]);
+
+  if (activeSlides.length === 0) {
+    return (
+      <section
+        aria-label="Hero non configurata"
+        className="min-h-[calc(100svh-var(--header-height))] bg-ink md:min-h-[calc(100dvh-var(--header-height))]"
+      />
+    );
+  }
+
+  if (activeSlides.length === 1) {
+    return <HeroSlideVisual slide={activeSlides[0]} />;
+  }
+
+  const go = (direction: -1 | 1) => {
+    setIndex((current) => (current + direction + activeSlides.length) % activeSlides.length);
+  };
 
   return (
     <section
-      aria-label="Introduzione"
-      className="relative overflow-hidden pt-[var(--header-height)] md:min-h-[100svh]"
+      aria-roledescription="carosello"
+      aria-label="In evidenza RITO Studio"
+      className="relative isolate min-h-[calc(100svh-var(--header-height))] overflow-hidden bg-ink md:min-h-[calc(100dvh-var(--header-height))]"
+      onPointerDown={(event) => {
+        if (event.button !== 0) return;
+        pointerStart.current = { x: event.clientX, y: event.clientY };
+      }}
+      onPointerUp={(event) => {
+        const start = pointerStart.current;
+        pointerStart.current = null;
+        if (!start) return;
+        const dx = event.clientX - start.x;
+        const dy = event.clientY - start.y;
+        if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) <= Math.abs(dy) * 1.15) return;
+        go(dx < 0 ? 1 : -1);
+      }}
+      onPointerCancel={() => {
+        pointerStart.current = null;
+      }}
     >
-      <div className="container-editorial md:flex md:min-h-[calc(100svh-var(--header-height))] md:items-center md:py-12">
-        <div className="grid w-full md:grid-cols-12 md:items-center md:gap-8">
-          <div className="order-1 -mx-5 md:order-2 md:col-span-5 md:mx-0">
+      <div
+        className="flex min-h-[inherit] w-full touch-pan-y transition-transform duration-[620ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+        style={{ transform: `translate3d(-${index * 100}%,0,0)` }}
+      >
+        {activeSlides.map((slide, slideIndex) => {
+          const active = slideIndex === index;
+          return (
             <div
-              ref={imageRef}
-              data-reveal
-              className="hero-image relative overflow-hidden bg-surface"
-              style={{ ["--reveal-delay" as string]: "120ms" }}
+              key={slide.id}
+              className="min-h-[inherit] w-full shrink-0"
+              aria-hidden={active ? undefined : true}
+              inert={!active}
             >
-              <img
-                src="/images/rito/rito-hero-main.webp"
-                alt="Professionista durante un trattamento viso in atelier"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                sizes="(min-width: 1280px) 33vw, (min-width: 768px) 42vw, 100vw"
-                className="h-[58svh] min-h-[460px] w-full object-cover object-[57%_45%] md:h-[calc(100svh-var(--header-height)-6rem)] md:min-h-[32rem] md:max-h-[47rem] md:object-center"
+              <HeroSlideVisual slide={slide} interactive={active} />
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => go(-1)}
+        className="absolute left-5 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white backdrop-blur-md transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none xl:inline-flex"
+        aria-label="Schermata precedente"
+      >
+        <ChevronLeft aria-hidden size={20} />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => go(1)}
+        className="absolute right-5 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white backdrop-blur-md transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none xl:inline-flex"
+        aria-label="Schermata successiva"
+      >
+        <ChevronRight aria-hidden size={20} />
+      </button>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex justify-center px-4">
+        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/25 bg-black/40 p-1.5 shadow-[0_14px_34px_rgba(0,0,0,0.2)] backdrop-blur-md">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white xl:hidden"
+            aria-label="Schermata precedente"
+          >
+            <ChevronLeft aria-hidden size={19} />
+          </button>
+          <div className="flex min-w-[5.5rem] items-center justify-center gap-2 px-1">
+            {activeSlides.map((slide, slideIndex) => (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => setIndex(slideIndex)}
+                aria-label={`Vai alla schermata ${slideIndex + 1}`}
+                aria-current={slideIndex === index ? "true" : undefined}
+                className={`h-1.5 rounded-full transition-[width,background-color] duration-300 motion-reduce:transition-none ${
+                  slideIndex === index ? "w-8 bg-[#d9a8b6]" : "w-2.5 bg-white/40 hover:bg-white/70"
+                }`}
               />
-            </div>
+            ))}
           </div>
-
-          <div className="relative z-10 order-2 -mt-20 border-t-2 border-accent bg-canvas px-6 py-7 shadow-[0_20px_50px_rgba(27,26,24,0.12)] md:order-1 md:col-span-7 md:mt-0 md:border-0 md:bg-transparent md:p-0 md:pr-6 md:shadow-none">
-            <p className="eyebrow" data-reveal style={{ ["--reveal-delay" as string]: "0ms" }}>
-              Beauty &amp; Care Atelier · Padova
-            </p>
-
-            <h1
-              className="mt-5 font-display text-[clamp(3.2rem,14vw,4.6rem)] leading-[0.9] tracking-[-0.02em] text-ink md:mt-8 md:text-[clamp(2.75rem,8vw,6.5rem)] md:leading-[0.98] md:tracking-[-0.015em]"
-              data-reveal
-              style={{ ["--reveal-delay" as string]: "80ms" }}
-            >
-              La bellezza,
-              <br />
-              <span className="italic text-accent">nel suo ritmo.</span>
-            </h1>
-
-            <p
-              className="mt-6 max-w-md text-[0.9375rem] leading-relaxed text-muted md:mt-8 md:text-lg"
-              data-reveal
-              style={{ ["--reveal-delay" as string]: "160ms" }}
-            >
-              Un atelier contemporaneo dedicato a capelli, pelle e benessere. Trattamenti su misura,
-              gesti precisi e il tempo necessario per ascoltarti.
-            </p>
-
-            <div className="mt-7 flex flex-col items-stretch gap-4 lg:mt-10 lg:flex-row lg:items-center">
-              <div data-reveal style={{ ["--reveal-delay" as string]: "220ms" }}>
-                <Link
-                  to="/consulenza"
-                  aria-label={ctaLabels.startConsultation}
-                  className="action-primary inline-flex min-h-12 w-full items-center justify-center gap-2 border border-ink bg-ink px-6 text-sm font-medium tracking-wide text-white hover:border-accent-strong hover:bg-accent-strong lg:w-auto"
-                >
-                  <MessageCircle aria-hidden size={16} strokeWidth={1.7} />
-                  {ctaLabels.startConsultation}
-                </Link>
-              </div>
-              <Link
-                to="/trattamenti"
-                data-reveal
-                style={{ ["--reveal-delay" as string]: "300ms" }}
-                className="editorial-link group min-h-11 justify-center px-1 text-sm font-medium tracking-wide md:min-h-12 md:px-2"
-              >
-                {ctaLabels.discoverTreatments}
-                <EditorialArrow />
-              </Link>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white xl:hidden"
+            aria-label="Schermata successiva"
+          >
+            <ChevronRight aria-hidden size={19} />
+          </button>
         </div>
       </div>
+
+      <span className="sr-only" aria-live="polite">
+        Schermata {index + 1} di {activeSlides.length}
+      </span>
     </section>
   );
 }
