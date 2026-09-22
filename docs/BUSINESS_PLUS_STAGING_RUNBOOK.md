@@ -1,8 +1,8 @@
 # RITO Studio BUSINESS PLUS — Live Backend Staging Runbook
 
-**Status:** Staging acceptance closed; ready for human final review/freeze; production unauthorized
-**Version:** 2.0
-**Date:** 17 August 2026
+**Status:** Post-merge hero staging acceptance and targeted security closeout complete; production unauthorized
+**Version:** 2.1
+**Date:** 22 September 2026
 **Scope:** Cloudflare staging only; production is not authorized
 
 ## 1. Purpose
@@ -18,7 +18,49 @@ Staging uses test data only.
 
 ## 2. Current staging baseline
 
-Direct evidence formalized on 16–17 August 2026 closes the required staging gate:
+### Post-merge hero/admin staging closure — 22 September 2026
+
+The current canonical source and staging runtime are:
+
+```text
+canonical main:              8a4ce4e43d5b60fec1ec7f4b29b91df973d5152c
+canonical tree:              d880e919e531e5ee0050f04007fca133493ff1ce
+staging Worker version:      e19570f7-88b0-423a-a571-dd0c49b30f86
+migration 0001:              applied
+migration 0002:              applied
+migration 0003:              APPLIED + VERIFIED
+hero rows:                   3
+live build / dry-run:        PASS / PASS
+HTTP smoke:                  PASS
+manual staging runtime QA:   PASS
+AdminAuth runtime:           PASS
+hero protected write:        PASS
+Consultation E2E:            PASS
+targeted security closeout:  PASS
+production:                  NOT TOUCHED / NOT AUTHORIZED
+```
+
+The targeted security closeout is recorded in
+`security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md`. It preserves the historical
+v1.0.5 broad closeout and adds direct evidence for the merged hero/admin refinement: four
+CSRF-protected hero mutation paths, authenticated admin reads, approved desktop/mobile image
+allowlists, migration 0003, security headers, HTTPS redirect, malformed-input rejection and the
+removed demo surface.
+
+The generated runtime/build evidence contains 124 files with aggregate fingerprint
+`c6501c510209d661232a4ce07abfbe011a9ea377d6bbfd721309c63fdb88adb2`. The OSV refresh scanned
+566 locked packages and returned only the already accepted RITO-SEC-007 LOW toolchain debt.
+
+No secret value was read or changed. One later read-only secret-name query was inconsistent with
+the immediate post-deploy preservation check; real AdminAuth login and authenticated/CSRF hero
+writes subsequently passed. Treat that as a tooling/readback observation, not as authorization to
+rotate or reprovision secrets.
+
+Production remains a separate gate and is not certified or authorized by this staging closure.
+
+### Historical staging baseline — 16–17 August 2026
+
+Direct evidence formalized on 16–17 August 2026 closed the then-required staging gate:
 
 ```text
 isolated Worker/custom hosts + EU D1:                     COMPLETE
