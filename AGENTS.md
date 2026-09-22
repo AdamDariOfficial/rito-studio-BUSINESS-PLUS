@@ -222,10 +222,15 @@ The current targeted evidence is recorded in
 `security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md`. The accepted RITO-SEC-007 LOW
 toolchain-only debt remains; the 22 September OSV refresh found no new accepted advisory.
 
-The current gate is production-readiness planning. Production is not tested, certified or
-authorized. Do not apply production migrations, deploy a production Worker, change production
-DNS/routes, rotate/provision production secrets or mutate production data without a new explicit
-gate and direct preflight evidence.
+The owner authorized one complete production-readiness and production-cutover workstream on
+23 September 2026. The work remains fail-closed: real-data activation requires explicit
+controller/contact, lawful-basis, recipient, retention and privacy-version values and direct
+preflight evidence. Production deploys must use the generated production config, never source
+wrangler.jsonc.
+
+The product is intentionally not frozen. Do not create or move a freeze tag now. A small
+follow-up refinement is intentionally expected after the Forno Lume alignment and Tretnix
+case-study completion; it requires revalidation and redeploy before any later freeze.
 
 One application writer at a time. Lovable, Cursor and Codex must not edit overlapping scope
 concurrently. Stage, commit, push, PR, merge, deployment and production backend enablement remain

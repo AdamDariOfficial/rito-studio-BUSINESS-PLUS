@@ -1262,3 +1262,35 @@ staging deploy, DNS, secret e produzione restano gate separati.
 - `/admin` e `/admin/hero` condividono un unico `AdminHeader` con sezione attiva, ritorno al sito e logout coerenti; le azioni specifiche restano nel workspace.
 - `migrations/0003_hero_management.sql`, ancora non applicata, viene estesa con `mobile_image_ref` e `mobile_image_alt`. Nessuna migration remota è autorizzata da questa decisione.
 - Autoplay, max-five, native AdminAuth/CSRF, D1 esistente, consultation flow e confini CUSTOM restano invariati.
+
+## BW-DEC-077 — Production readiness autorizzata; freeze rinviato
+
+**Data:** 23 settembre 2026
+
+**Decisione:** il proprietario autorizza un unico workstream completo di production readiness,
+provisioning, migration, deploy, acceptance e closeout per RITO Studio BUSINESS PLUS, con
+esecuzione fail-closed e senza frammentare il lavoro in micro-gate non necessari.
+
+L'autorizzazione non consente di inventare dati legali o cliente. Prima di abilitare raccolta
+reale in configurazione client-live devono essere forniti e validati titolare/contatto, base
+giuridica, destinatari, retention, data/versione privacy e identità admin operativa. Il portfolio
+concept resta demo-safe finché tali valori non esistono.
+
+Target tecnico production predefinito:
+
+- Worker: rito-studio-business-plus-production
+- D1: rito-studio-business-plus-production
+- public host: rito-studio-business-plus.tretnix.com
+- admin host: admin.rito-studio-business-plus.tretnix.com
+
+Il D1 production deve nascere con giurisdizione EU; staging e production non condividono D1,
+secret o namespace rate-limit. Il deploy usa esclusivamente una config production generata e
+validata, mai il source wrangler.jsonc.
+
+**Freeze:** il prodotto NON viene freezato/taggato ora. È intenzionalmente prevista una piccola
+modifica successiva al riallineamento Forno Lume e al completamento dei casi studio Tretnix.
+Qualunque modifica successiva richiede nuova validazione e redeploy prima di un eventuale freeze
+futuro.
+
+Tretnix Portfolio V1 continua a mantenere BUSINESS PLUS non pubblicato finché il relativo
+workstream case-study non autorizza una modifica separata.

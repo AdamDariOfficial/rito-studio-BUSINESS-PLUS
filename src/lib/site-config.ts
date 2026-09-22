@@ -161,7 +161,12 @@ export const site = {
     ],
   } satisfies ReviewsConfig,
   legal: {
-    lastUpdated: "4 agosto 2026",
+    lastUpdated: import.meta.env.VITE_PRIVACY_LAST_UPDATED || "4 agosto 2026",
+    controllerName: import.meta.env.VITE_PRIVACY_CONTROLLER_NAME || "",
+    controllerContact: import.meta.env.VITE_PRIVACY_CONTROLLER_CONTACT || "",
+    lawfulBasis: import.meta.env.VITE_PRIVACY_LAWFUL_BASIS || "",
+    recipients: import.meta.env.VITE_PRIVACY_RECIPIENTS || "",
+    retentionDays: Number.parseInt(import.meta.env.VITE_PRIVACY_RETENTION_DAYS || "0", 10) || 0,
   },
   attribution: {
     text: "Progettato e sviluppato da",
@@ -169,7 +174,7 @@ export const site = {
     href: "https://tretnix.com",
   },
   seo: {
-    siteUrl: "https://rito-studio-business.tretnix.com",
+    siteUrl: import.meta.env.VITE_SITE_URL || "https://rito-studio-business.tretnix.com",
     locale: "it_IT",
     defaultSocialImage: {
       src: "/images/rito/rito-studio-wide.webp",

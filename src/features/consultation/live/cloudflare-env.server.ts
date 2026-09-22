@@ -39,6 +39,7 @@ export interface ConsultationCloudflareEnv {
   ADMIN_AUTH_PEPPER?: string;
   ADMIN_AUTH_CSRF_SECRET?: string;
   CONSULTATION_PRIVACY_VERSION?: string;
+  CONSULTATION_RETENTION_DAYS?: string;
   LIVE_BACKEND_ENV?: string;
 }
 
