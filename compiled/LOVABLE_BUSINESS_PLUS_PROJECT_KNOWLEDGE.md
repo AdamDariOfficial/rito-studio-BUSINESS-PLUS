@@ -33,28 +33,20 @@ Recommendations are deterministic/configuration-driven.
 ## Minimal admin
 
 ```text
-/admin
+/admin       Consultation Inbox
+/admin/hero  bounded hero manager
 ```
 
-Only consultation requests:
+`/admin` remains limited to consultation requests: list/detail, status, short note and basic
+filters. `/admin/hero` manages at most five full-slide hero screens: approved RITO image,
+copy/CTA, status, schedule and order.
 
-```text
-list
-detail
-new / contacted / booked / archived
-short note
-basic filters
-```
+This is not a generic CMS, gallery editor, CRM, calendar, payments or general dashboard.
 
-No CMS, gallery editing, CRM, calendar, payments or general dashboard.
+## Demo-local profile
 
-## Demo tools
-
-```text
-/_demo/tools
-```
-
-Portfolio/demo profile only. Reset/snapshot/export/import local demo state.
+Portfolio/demo requests remain browser-local and resettable, but there is no dedicated public
+`/_demo/tools` route. The Consultation Inbox continues to demonstrate local request state.
 
 ## Storage truth
 
@@ -99,7 +91,7 @@ explicit later gate and synchronization with the canonical repository state.
 - `/admin` uses desktop independent-scroll master/detail and mobile list/detail drill-in.
 - Admin may edit contact/preferred scheduling fields and added services up to max 6 selected services total, but original main service and consultation answers remain read-only.
 - Admin delete is permanent, confirmation-gated and server-authorized in live mode.
-- Demo admin has only a subtle bottom `Strumenti` link; public confirmation contains no demo banner.
+- Demo admin keeps browser-local state only; no public demo-tools route or demo banner is exposed.
 - Native selects use consistent right-arrow inset.
 - Consultation steps animate directionally with reduced-motion fallback.
 - Prices and an indicative total remain visible through recommendation, review and confirmation.
@@ -119,7 +111,11 @@ Preserve these approved details:
 - footer Info does not include the redundant `Chiama per prenotare` link;
 - admin mobile drill-in animates open/close briefly and reduced motion is immediate; desktop detail switches use only a short fade;
 - mobile original answers stack question then response, and the note action moves below its preview;
-- demo tools uses two columns on desktop and one column below `lg`.
+- the public demo-tools route is removed while demo persistence remains internal;
+- the home hero is a manual full-slide RITO slider: image, copy and CTA move together;
+- `/admin/hero` is the bounded max-five-screen manager; it is not a generic CMS;
+- demo hero state is browser-local; live hero state reuses D1 + native AdminAuth/CSRF;
+- hero images stay inside the approved RITO asset library; no upload/R2 scope is introduced.
 
 ## Approved live architecture — 11 August 2026
 

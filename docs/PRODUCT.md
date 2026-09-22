@@ -325,7 +325,10 @@ consulenza breve e intuitiva, senza trasformare il prodotto in un gestionale.
 - handoff configurabile `inbox`, `tel`, `whatsapp`, `external`;
 - `/admin` limitata alla Consultation Inbox, con edit operativo circoscritto e cancellazione confermata;
 - profilo portfolio/demo con memoria locale resettable;
-- `/_demo/tools` solo per demo/sviluppo;
+- nessuna route pubblica di tooling demo; la memoria locale resta interna al profilo portfolio/demo;
+- hero home full-slide manuale, senza autoplay, con massimo 5 schermate e contenuti/CTA per slide;
+- `/admin/hero` dedicata alla sola gestione hero: ordine, stato, scheduling e asset RITO approvati;
+- persistenza hero demo locale e live nello stesso D1 già previsto, senza nuovo binding o upload R2;
 - profilo live con D1 condiviso per il singolo deployment cliente quando la inbox è attiva;
 - sincronizzazione `/admin` realtime tramite Durable Objects + Hibernation WebSockets, senza polling periodico;
 - autenticazione admin nativa RITO con utenti/sessioni D1, cookie server-side sicuro, CSRF e autorizzazione server-side per ogni operazione;
@@ -337,7 +340,7 @@ consulenza breve e intuitiva, senza trasformare il prodotto in un gestionale.
 ### Non include
 
 - route `/percorsi` separata;
-- CMS o editor gallery/contenuti;
+- CMS generico o editor gallery/contenuti oltre il manager hero dedicato;
 - CRM o profilo cliente completo;
 - agenda nativa/live;
 - pagamenti/depositi;

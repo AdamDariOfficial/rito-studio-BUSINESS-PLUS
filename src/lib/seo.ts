@@ -77,10 +77,10 @@ export const routeSeo = {
     "Accesso admin — RITO Studio",
     "Accesso riservato alla Consultation Inbox RITO Studio.",
   ),
-  demoTools: defineSeo(
-    "/_demo/tools",
-    "Demo tools — RITO Studio",
-    "Strumenti locali per ripristinare e controllare lo stato dimostrativo BUSINESS PLUS.",
+  adminHero: defineSeo(
+    "/admin/hero",
+    "Gestione hero — RITO Studio",
+    "Area riservata alla gestione delle schermate hero RITO Studio.",
   ),
   privacy: defineSeo(
     "/privacy",

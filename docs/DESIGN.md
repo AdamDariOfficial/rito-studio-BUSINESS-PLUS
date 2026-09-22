@@ -352,7 +352,7 @@ BUSINESS PLUS non introduce una seconda identità visuale del piano BUSINESS. Su
 
 Contratto corrente:
 
-- hero home: stessa composizione editoriale split del BUSINESS; cambia soltanto l'intento della CTA primaria, che apre `/consulenza`;
+- hero home PLUS: divergenza intenzionale autorizzata rispetto allo split BUSINESS. Usa una hero full-slide di tipo e-commerce: ogni schermata combina fotografia RITO full-bleed, overlay editoriale, eyebrow, headline, body e CTA propri; l'intera schermata scorre orizzontalmente. Nessun autoplay. Il riferimento Forno Lume è funzionale, non visuale: palette, font, fotografia, densità e tono restano Beauty & Wellness;
 - ritmo verticale compatto sulle route condivise (intro, catalogo, FAQ, galleria, contatti, Studio e sezioni home);
 - `RitualFeature` include gli stessi tre principi `Ascolto`, `Precisione`, `Continuità`;
 - `/studio` usa la stessa struttura compatta: intro con una sola immagine, `Dentro RITO` con `Ambiente / Materiali / Cura`, fascia utility finale;

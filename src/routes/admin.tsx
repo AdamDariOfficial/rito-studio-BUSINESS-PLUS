@@ -609,13 +609,32 @@ function AdminFrame({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-canvas text-ink lg:h-screen lg:overflow-hidden">
       <header className="border-b border-line bg-canvas">
-        <div className="mx-auto flex min-h-14 w-full max-w-[1520px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-8">
-          <Link to="/" className="font-display text-lg text-ink">
+        <div className="mx-auto flex min-h-14 w-full max-w-[1520px] items-center gap-3 px-4 sm:px-6 xl:px-8">
+          <Link to="/" className="shrink-0 font-display text-lg text-ink">
             RITO Studio
           </Link>
-          <Link to="/" className="editorial-link min-h-11 text-base font-medium">
+          <nav aria-label="Navigazione amministrazione" className="ml-auto flex items-center gap-1">
+            <Link
+              to="/admin"
+              aria-current="page"
+              className="interactive-control inline-flex min-h-10 items-center border border-ink bg-ink px-3 text-sm font-medium text-white"
+            >
+              Inbox
+            </Link>
+            <Link
+              to="/admin/hero"
+              className="interactive-control inline-flex min-h-10 items-center px-3 text-sm font-medium text-muted hover:text-ink"
+            >
+              Hero
+            </Link>
+          </nav>
+          <Link
+            to="/"
+            className="editorial-link min-h-11 shrink-0 text-sm font-medium sm:text-base"
+          >
             <ArrowLeft aria-hidden size={16} strokeWidth={1.7} />
-            Torna al sito
+            <span className="hidden sm:inline">Torna al sito</span>
+            <span className="sm:hidden">Sito</span>
           </Link>
         </div>
       </header>

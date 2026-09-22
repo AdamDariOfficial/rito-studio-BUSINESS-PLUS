@@ -141,7 +141,7 @@ See:
 
 ## Current post-QA interaction refinements
 
-The controlled BUSINESS PLUS candidate additionally uses a viewport-bounded scrollable service picker, top-of-flow step reset, compact inline success status, reduced-motion-safe admin drill-in, mobile-stacked original answers/note actions, a two-column desktop demo-tools workspace and no redundant `Chiama per prenotare` footer entry.
+The current BUSINESS PLUS baseline additionally uses a viewport-bounded scrollable service picker, top-of-flow step reset, compact inline success status, reduced-motion-safe admin drill-in, mobile-stacked original answers/note actions and no redundant `Chiama per prenotare` footer entry. The public `/_demo/tools` surface is removed while demo persistence remains internal to the portfolio profile. The home uses a manual, no-autoplay full-slide RITO hero inspired functionally by the Forno Lume BUSINESS PLUS slider, and `/admin/hero` provides a bounded max-five-screen manager with approved RITO assets only.
 
 These refinements do not change the four-step consultation, max-two curated recommendations, max-six selected-service bound, live admin authorization contract or CUSTOM boundary.
 

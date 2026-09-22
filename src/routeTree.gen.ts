@@ -20,7 +20,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrattamentiIndexRouteImport } from './routes/trattamenti/index'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
-import { Route as DemoToolsRouteImport } from './routes/[_]demo.tools'
+import { Route as AdminHeroRouteImport } from './routes/admin_.hero'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
@@ -77,9 +77,9 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoToolsRoute = DemoToolsRouteImport.update({
-  id: '/_demo/tools',
-  path: '/_demo/tools',
+const AdminHeroRoute = AdminHeroRouteImport.update({
+  id: '/admin_/hero',
+  path: '/admin/hero',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -93,7 +93,7 @@ export interface FileRoutesByFullPath {
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
-  '/_demo/tools': typeof DemoToolsRoute
+  '/admin/hero': typeof AdminHeroRoute
   '/admin/login': typeof AdminLoginRoute
   '/trattamenti/': typeof TrattamentiIndexRoute
 }
@@ -107,7 +107,7 @@ export interface FileRoutesByTo {
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
-  '/_demo/tools': typeof DemoToolsRoute
+  '/admin/hero': typeof AdminHeroRoute
   '/admin/login': typeof AdminLoginRoute
   '/trattamenti': typeof TrattamentiIndexRoute
 }
@@ -122,7 +122,7 @@ export interface FileRoutesById {
   '/galleria': typeof GalleriaRoute
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
-  '/_demo/tools': typeof DemoToolsRoute
+  '/admin_/hero': typeof AdminHeroRoute
   '/admin_/login': typeof AdminLoginRoute
   '/trattamenti/': typeof TrattamentiIndexRoute
 }
@@ -138,7 +138,7 @@ export interface FileRouteTypes {
     | '/galleria'
     | '/privacy'
     | '/studio'
-    | '/_demo/tools'
+    | '/admin/hero'
     | '/admin/login'
     | '/trattamenti/'
   fileRoutesByTo: FileRoutesByTo
@@ -152,7 +152,7 @@ export interface FileRouteTypes {
     | '/galleria'
     | '/privacy'
     | '/studio'
-    | '/_demo/tools'
+    | '/admin/hero'
     | '/admin/login'
     | '/trattamenti'
   id:
@@ -166,7 +166,7 @@ export interface FileRouteTypes {
     | '/galleria'
     | '/privacy'
     | '/studio'
-    | '/_demo/tools'
+    | '/admin_/hero'
     | '/admin_/login'
     | '/trattamenti/'
   fileRoutesById: FileRoutesById
@@ -181,7 +181,7 @@ export interface RootRouteChildren {
   GalleriaRoute: typeof GalleriaRoute
   PrivacyRoute: typeof PrivacyRoute
   StudioRoute: typeof StudioRoute
-  DemoToolsRoute: typeof DemoToolsRoute
+  AdminHeroRoute: typeof AdminHeroRoute
   AdminLoginRoute: typeof AdminLoginRoute
   TrattamentiIndexRoute: typeof TrattamentiIndexRoute
 }
@@ -265,11 +265,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_demo/tools': {
-      id: '/_demo/tools'
-      path: '/_demo/tools'
-      fullPath: '/_demo/tools'
-      preLoaderRoute: typeof DemoToolsRouteImport
+    '/admin_/hero': {
+      id: '/admin_/hero'
+      path: '/admin/hero'
+      fullPath: '/admin/hero'
+      preLoaderRoute: typeof AdminHeroRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -285,7 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalleriaRoute: GalleriaRoute,
   PrivacyRoute: PrivacyRoute,
   StudioRoute: StudioRoute,
-  DemoToolsRoute: DemoToolsRoute,
+  AdminHeroRoute: AdminHeroRoute,
   AdminLoginRoute: AdminLoginRoute,
   TrattamentiIndexRoute: TrattamentiIndexRoute,
 }

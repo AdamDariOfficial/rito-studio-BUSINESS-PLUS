@@ -1,8 +1,8 @@
 # RITO Studio — Decision Log
 
 **Famiglia:** Beauty & Wellness
-**Versione:** 2.4
-**Stato:** decisioni approvate e aggiornate al 20 settembre 2026
+**Versione:** 2.6
+**Stato:** decisioni approvate e aggiornate al 21 settembre 2026
 
 ## BW-DEC-001 — Concept portfolio
 
@@ -1182,3 +1182,72 @@ Il pass porta nel PLUS i pattern condivisi correnti che erano rimasti indietro d
 **Review demo:** la home usa `ReviewsSection` con fixture sintetiche typed esclusivamente secondo `TRX-DEC-040`; nessuna falsa piattaforma, URL, persona reale, aggregate rating o structured data commerciale.
 
 **Gate:** Apply/Validate locali tramite Controlled Change Package; browser QA completo unico dopo che l'intero allineamento è applicato. Stage, commit, push, PR, merge, deploy, migration, DNS, secret e produzione restano separati.
+
+## BW-DEC-074 — Rimozione della route demo-tools e carousel hero fotografico manuale
+
+**Data:** 21 settembre 2026
+
+**Decisione:** RITO Studio BUSINESS PLUS non espone più una route navigabile `/_demo/tools`.
+Il profilo portfolio/demo conserva la memoria locale necessaria a `/consulenza` e alla Consultation
+Inbox, ma snapshot/reset/export/import non fanno più parte della superficie pubblica del prodotto.
+Questa decisione supersede `BW-DEC-052` e `BW-DEC-057` esclusivamente per l'esposizione e il
+layout della route demo-tools; le rispettive evidenze storiche restano valide. La clausola di
+preservazione dei demo tools in `BW-DEC-073` descriveva soltanto il perimetro di quel pass di
+parità e non blocca questa successiva modifica esplicitamente approvata.
+
+La home mantiene la composizione split, headline, descrizione, CTA, palette e tipografia RITO.
+Soltanto il pannello fotografico diventa un carousel manuale con asset RITO già approvati:
+niente autoplay, niente CMS/editor hero, niente nuova route o dipendenza. Il comportamento
+riusa il pattern funzionale validato in Forno Lume BUSINESS PLUS — swipe orizzontale, frecce,
+indicatori, slide inattive escluse dall'interazione e fallback reduced-motion — adattato però
+all'identità Beauty & Wellness e alla geometria RITO.
+
+**Vincoli:** nessun cambiamento a consultation schema/rules, demo persistence core, AdminAuth,
+D1, Durable Objects/WebSocket, CSRF, rate limit, migrations, Wrangler, staging o produzione.
+L'admin resta esclusivamente Consultation Inbox e non acquisisce capacità CMS.
+
+**Gate:** applicazione e validazione tramite Controlled Change Package v1.2; QA browser
+consolidato sul candidate completo prima del gate Git. Stage, commit, push, PR, merge, deploy,
+migration, DNS, secret e produzione restano gate separati.
+
+## BW-DEC-075 — Hero e-commerce full-slide + gestione hero dedicata
+
+**Data:** 21 settembre 2026
+
+**Evidenza:** la browser review del candidate definito da `BW-DEC-074` ha confermato la
+rimozione di `/_demo/tools`, ma ha respinto il carousel limitato al solo pannello fotografico:
+la composizione split risultante non corrispondeva al pattern hero richiesto. Il riferimento
+funzionale corretto è la hero di Forno Lume BUSINESS PLUS `main@3f1659d7c5ab51c4167eb31d51ee3d9b19239eb6`,
+senza trasferirne identità Hospitality, palette o art direction.
+
+**Decisione:** la parte hero di `BW-DEC-074` è superseded. La rimozione di
+`/_demo/tools` resta invece approvata e invariata.
+
+RITO Studio BUSINESS PLUS adotta una hero manuale di tipo e-commerce/full-slide: ogni
+schermata occupa l'intera hero e possiede immagine, eyebrow, headline, accento, body e CTA
+propri. Lo scorrimento orizzontale coinvolge l'intera schermata, non soltanto la fotografia.
+Sono obbligatori swipe, frecce, indicatori, slide inattive non interattive e
+`prefers-reduced-motion`; autoplay, timer e avanzamento automatico restano vietati.
+
+BUSINESS PLUS aggiunge la route riservata `/admin/hero`, dedicata esclusivamente alla hero.
+L'admin può gestire fino a cinque schermate: creazione, modifica, duplicazione, eliminazione,
+ordine, stato `draft/published/archived`, finestra di pubblicazione, copy, CTA e selezione
+immagine. Deve restare almeno una schermata pubblicata. Questa capacità è un modulo hero
+circoscritto e non autorizza CMS generico, gallery editor o altre superfici di content
+management.
+
+Le immagini selezionabili provengono soltanto dalla libreria RITO già approvata e versionata;
+questo pass non introduce upload arbitrario, R2 o nuovi binding. In profilo demo le
+configurazioni hero sono locali al browser; in profilo live sono persistite nello stesso D1
+già autorizzato tramite una nuova migration source, riusando native AdminAuth e CSRF per le
+mutation. La lettura pubblica della hero non richiede sessione admin. Nessuna estensione del
+protocollo realtime Consultation Inbox è richiesta: gli aggiornamenti hero diventano visibili
+al successivo caricamento pubblico.
+
+**Vincoli:** nessuna nuova dipendenza, nessuna modifica a schema/rules della consulenza,
+rate limit, Durable Object/WebSocket, Wrangler binding o infrastruttura Cloudflare. La migration
+viene versionata ma non eseguita da questo pass.
+
+**Gate:** candidate sostitutivo unico tramite Controlled Change Package v1.2, validazione
+automatica completa e una sola browser QA aggregata. Stage, commit, push, PR, merge, migration,
+staging deploy, DNS, secret e produzione restano gate separati.

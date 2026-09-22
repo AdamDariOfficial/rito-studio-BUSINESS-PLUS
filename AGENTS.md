@@ -110,7 +110,7 @@ client’s admin on another device. Therefore the product has two explicit profi
 
 - consultation requests stored locally in the browser;
 - no personal data leaves the browser;
-- standardized demo tools may reset/snapshot local demo state;
+- demo request state remains local to the browser; no public demo-tools route is exposed;
 - admin demonstrates the inbox locally only.
 
 ### `client-live`
@@ -241,7 +241,10 @@ The current authorized candidate also preserves:
 - inline success check + label with restrained reduced-motion-safe motion;
 - footer Info without the redundant booking-call link;
 - brief admin request drill-in motion, stacked mobile original answers and note action below preview;
-- two-column desktop demo tools.
+- public demo-tools route removed while demo persistence remains internal to the portfolio profile;
+- home hero uses the approved full-slide manual RITO slider: image, copy and CTA move together;
+- `/admin/hero` is limited to max-five hero screens and must not expand into a generic CMS;
+- hero images remain restricted to the approved RITO asset library; no upload/R2 scope is implied.
 
 These are refinements only. Do not use them as justification to add routes, dependencies, CRM/agenda behavior or unrelated redesign.
 
