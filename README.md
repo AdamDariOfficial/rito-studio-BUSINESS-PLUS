@@ -103,31 +103,28 @@ by the controlled branch:
 feat/rito-business-plus-complete
 ```
 
-The current candidate state is:
+The current canonical state is:
 
 ```text
 BUSINESS_PLUS_AUTHORIZED
-REMIX_VERIFIED
-LOCAL_CLONE_VERIFIED
-DEFINITIVE_SCOPE_APPROVED
-COMPLETE_IMPLEMENTATION_CANDIDATE_APPLIED
-STAGING_IMPLEMENTATION_COMPLETE
-STAGING_DEPLOYMENT_COMPLETE
-STAGING_E2E_COMPLETE
-REQUIRED_STAGING_SECURITY_GATES_COMPLETE
-SECURITY_CLOSEOUT_PASS
-SECURITY_CANDIDATE_1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b
-SECURITY_MANIFEST_8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e
-RUNTIME_BUILD_150_OF_150_EXACT
-FINAL_FREEZE_GIT_INTEGRATION_PENDING
+CANONICAL_MAIN_8a4ce4e43d5b60fec1ec7f4b29b91df973d5152c
+CANONICAL_TREE_d880e919e531e5ee0050f04007fca133493ff1ce
+HERO_ADMIN_REFINEMENT_MERGED_PR_6
+STAGING_WORKER_e19570f7-88b0-423a-a571-dd0c49b30f86
+MIGRATION_0003_APPLIED_VERIFIED
+STAGING_ACCEPTANCE_PASS
+TARGETED_SECURITY_CLOSEOUT_PASS
+RUNTIME_BUILD_FINGERPRINT_c6501c510209d661232a4ce07abfbe011a9ea377d6bbfd721309c63fdb88adb2
+OSV_566_PACKAGES_1_ACCEPTED_LOW
+PRODUCTION_NOT_TESTED
 PRODUCTION_NOT_CERTIFIED
 PRODUCTION_NOT_AUTHORIZED
 ```
 
-The application, staging validation and final security closeout are complete. The candidate is
-not a frozen baseline until exact Git integration, canonical-main attestation and the annotated
-freeze tag complete their explicit gates. Security and staging evidence do not certify
-production readiness or authorize production.
+The merged hero/admin refinement, isolated staging validation and targeted post-merge security
+closeout are complete. Historical Final Freeze and security-closeout identities remain preserved
+as audit evidence. The next gate is production-readiness planning; staging evidence does not
+certify or authorize production.
 
 See:
 
@@ -177,9 +174,9 @@ See:
 
 - `docs/BUSINESS_PLUS_LIVE_ARCHITECTURE.md` v1.5
 - `docs/BUSINESS_PLUS_LIVE_STORE.md` v2.3
-- `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.0
+- `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.1
 
-## Current gate — Final Freeze integration
+## Historical gate — Final Freeze integration (10 September 2026)
 
 The isolated Cloudflare staging implementation, native AdminAuth scrypt v2 reprovision/deploy
 and required functional, security, responsive and multi-device acceptance are complete. D1 is
@@ -212,3 +209,21 @@ predecessor remains unchanged. Live assets are byte-identical and the regenerate
 semantically identical after normalizing Nitro-only asset ordering/mtime metadata, so
 `SECURITY_RUNTIME_EVIDENCE_PRESERVED` applies. The refreshed OSV scan reports only the already
 accepted `RITO-SEC-007` LOW debt. Git stage remains subject to its explicit human gate.
+
+
+## Current gate — production-readiness planning (22 September 2026)
+
+Canonical `main@8a4ce4e43d5b60fec1ec7f4b29b91df973d5152c` has completed post-merge isolated staging
+acceptance on Worker `e19570f7-88b0-423a-a571-dd0c49b30f86`. Migration
+`0003_hero_management.sql` is applied and verified with three hero rows.
+
+The targeted security closeout for this runtime is `PASS` with generated runtime/build
+fingerprint `c6501c510209d661232a4ce07abfbe011a9ea377d6bbfd721309c63fdb88adb2`.
+The current OSV refresh reports only the previously accepted RITO-SEC-007 LOW toolchain debt.
+
+See `security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md` and
+`docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.1 for the sanitized evidence and limitations.
+
+Production has not been tested, certified or authorized. Production migration, Worker deploy,
+DNS/route changes, secrets/provisioning and production data mutations remain separate explicit
+gates.

@@ -207,22 +207,29 @@ CUSTOM begins when the client needs any of:
 
 ## Writer coordination
 
-The coherent BUSINESS PLUS application pass, isolated staging acceptance and final security
-closeout are complete. `SECURITY CLOSEOUT: PASS` applies only to the exact 150-file runtime/build
-candidate `1ecc97a410b40e10b90c28a577894b5bc3dfb0b96bc52d8e8b5b874d49f7856b`, described by
-manifest `8894af05cc3a66169fa2bc11a685c239332d2a28e67c1b91d4403fbe549fcb2e`.
+The historical BUSINESS PLUS Final Freeze and broad security closeout remain preserved. The
+current canonical application source is `main@8a4ce4e43d5b60fec1ec7f4b29b91df973d5152c`
+(tree `d880e919e531e5ee0050f04007fca133493ff1ce`) after merged PR #6.
 
-The current gate is the single end-to-end Final Freeze integration. Runtime/build bytes must not
-change. Documentation reconciliation is allowed only when it remains outside the runtime/build
-manifest. Stage, local commit, branch push, pull request, merge and annotated freeze tag each
-require their own explicit human authorization. Do not reopen implementation, staging E2E or
-architecture without a new approved task and direct evidence.
+The post-merge hero/admin refinement has completed isolated staging acceptance on Worker version
+`e19570f7-88b0-423a-a571-dd0c49b30f86`. D1 migration `0003_hero_management.sql` is applied
+and verified with three seeded hero rows. The targeted post-merge security closeout is `PASS`
+and records generated runtime/build fingerprint
+`c6501c510209d661232a4ce07abfbe011a9ea377d6bbfd721309c63fdb88adb2`.
 
-One application writer at a time. Lovable, Cursor and Codex must not edit overlapping
-scope concurrently.
+The historical `security-closeout-v1.0.5` candidate/manifest remain immutable audit evidence.
+The current targeted evidence is recorded in
+`security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md`. The accepted RITO-SEC-007 LOW
+toolchain-only debt remains; the 22 September OSV refresh found no new accepted advisory.
 
-Stage, commit, push, PR, merge, deployment and production backend enablement remain
-separate explicit gates.
+The current gate is production-readiness planning. Production is not tested, certified or
+authorized. Do not apply production migrations, deploy a production Worker, change production
+DNS/routes, rotate/provision production secrets or mutate production data without a new explicit
+gate and direct preflight evidence.
+
+One application writer at a time. Lovable, Cursor and Codex must not edit overlapping scope
+concurrently. Stage, commit, push, PR, merge, deployment and production backend enablement remain
+separate explicit gates for future changes.
 
 ## Tretnix attribution
 
@@ -252,7 +259,7 @@ These are refinements only. Do not use them as justification to add routes, depe
 ## Live architecture baseline — 11 August 2026
 
 For live-backend work, treat `docs/BUSINESS_PLUS_LIVE_ARCHITECTURE.md` v1.5,
-`docs/BUSINESS_PLUS_LIVE_STORE.md` v2.3 and `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.0
+`docs/BUSINESS_PLUS_LIVE_STORE.md` v2.3 and `docs/BUSINESS_PLUS_STAGING_RUNBOOK.md` v2.1
 as authoritative together with `BW-DEC-058` through `BW-DEC-070`. `BW-DEC-065` supersedes
 the Access-specific authentication portions of the earlier live decisions; `BW-DEC-070`
 supersedes their PBKDF2 password-KDF details with the implemented scrypt v2 scheme.

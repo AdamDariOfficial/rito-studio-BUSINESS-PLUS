@@ -1,6 +1,6 @@
 # RITO Studio BUSINESS PLUS — Status
 
-**Updated:** 10 September 2026
+**Updated:** 22 September 2026
 **Project:** RITO Studio BUSINESS PLUS
 **Family:** Tretnix Beauty & Wellness `v1.1`
 **Repository:** `AdamDariOfficial/rito-studio-BUSINESS-PLUS`
@@ -9,7 +9,46 @@
 **Parent BUSINESS baseline:** `b95a63c6127d2bc1dd396d74b2dd25f87b952226`
 **Canonical START baseline:** `34c13cd78255b7ac009533790329cada74ae9d8a`
 
-## Current authoritative Final Freeze state — 10 September 2026
+## Current authoritative post-merge staging/security state — 22 September 2026
+
+This section supersedes the older Final Freeze status below for the current canonical
+`main`/staging state. Historical identities remain preserved as audit evidence.
+
+```text
+repository:                    AdamDariOfficial/rito-studio-BUSINESS-PLUS
+canonical main:                8a4ce4e43d5b60fec1ec7f4b29b91df973d5152c
+canonical tree:                d880e919e531e5ee0050f04007fca133493ff1ce
+merged PR:                     #6
+staging Worker version:        e19570f7-88b0-423a-a571-dd0c49b30f86
+D1 migration 0003:            APPLIED + VERIFIED
+hero rows:                     3
+staging acceptance:            PASS
+targeted security closeout:    PASS
+generated runtime/build files: 124
+runtime/build fingerprint:     c6501c510209d661232a4ce07abfbe011a9ea377d6bbfd721309c63fdb88adb2
+OSV:                           566 packages / 1 accepted LOW
+production:                    NOT TESTED / NOT CERTIFIED / NOT AUTHORIZED
+```
+
+The 22 September staging acceptance included the live hero/admin refinement, native AdminAuth,
+protected hero writes, Consultation E2E, responsive/mobile hero QA and logout/session behavior.
+Security regression confirmed AdminAuth, CSRF on all four hero mutation paths, the desktop/mobile
+asset allowlist, D1 migration state, security headers, HTTPS redirect, malformed-input rejection
+and removal of `/_demo/tools`.
+
+The targeted closeout is recorded in
+`security-closeout-v1.0.6/FINAL_SECURITY_CLOSEOUT.md`. The earlier v1.0.5 broad security
+closeout and Final Freeze identities remain historical evidence and are not rewritten.
+
+One read-only secret-name query produced inconsistent output after an earlier preservation check
+had passed. No secret was changed. Subsequent real AdminAuth login and authenticated/CSRF hero
+writes passed, so the runtime secret-dependent paths remained operational. The discrepancy is
+retained as a tooling/readback observation.
+
+The next gate is production-readiness planning. No production migration, deploy, DNS, route,
+secret or provisioning action is authorized by this status.
+
+## Historical authoritative Final Freeze state — 10 September 2026
 
 This section supersedes earlier pending/pre-security status statements below; those sections are
 retained as historical implementation and staging evidence.
