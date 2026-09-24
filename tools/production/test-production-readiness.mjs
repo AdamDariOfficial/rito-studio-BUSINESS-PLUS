@@ -42,10 +42,7 @@ assert.equal(production.vars.CONSULTATION_RETENTION_DAYS, "90");
 assert.equal(production.d1_databases[0].database_name, PRODUCTION_D1_NAME);
 assert.equal(production.ratelimits[0].namespace_id, "910001");
 assert.equal(production.ratelimits[1].namespace_id, "910002");
-assert.deepEqual(production.secrets.required, [
-  "ADMIN_AUTH_PEPPER",
-  "ADMIN_AUTH_CSRF_SECRET",
-]);
+assert.deepEqual(production.secrets.required, ["ADMIN_AUTH_PEPPER", "ADMIN_AUTH_CSRF_SECRET"]);
 
 assert.throws(
   () =>
