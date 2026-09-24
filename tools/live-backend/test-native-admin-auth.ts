@@ -355,6 +355,12 @@ const generatorSource = fs.readFileSync(
   new URL("../admin/generate-admin-user-sql.ts", import.meta.url),
   "utf8",
 );
+assert.ok(generatorSource.includes('requiredEnvironment("RITO_ADMIN_EMAIL")'));
+assert.equal(
+  generatorSource.includes('|| "admin@gmail.com"'),
+  false,
+  "production admin provisioning must not silently fall back to a demo/staging identity",
+);
 assert.ok(generatorSource.includes('requiredOpaqueEnvironment("RITO_ADMIN_PASSWORD")'));
 assert.equal(
   generatorSource.includes('requiredEnvironment("RITO_ADMIN_PASSWORD")'),
@@ -364,6 +370,31 @@ assert.equal(
 assert.equal(/pbkdf2/i.test(generatorSource), false);
 
 const generatedWhitespacePassword = "  Provisioned Exact Password 2026  ";
+const generatorEnvironmentWithoutEmail = { ...process.env };
+delete generatorEnvironmentWithoutEmail.RITO_ADMIN_EMAIL;
+const missingEmailGeneratorResult = spawnSync(
+  process.execPath,
+  [
+    "--experimental-strip-types",
+    fileURLToPath(new URL("../admin/generate-admin-user-sql.ts", import.meta.url)),
+  ],
+  {
+    encoding: "utf8",
+    env: {
+      ...generatorEnvironmentWithoutEmail,
+      RITO_ADMIN_PASSWORD: generatedWhitespacePassword,
+      RITO_ADMIN_AUTH_PEPPER: pepper,
+    },
+  },
+);
+assert.notEqual(
+  missingEmailGeneratorResult.status,
+  0,
+  "admin SQL generation must fail when RITO_ADMIN_EMAIL is absent",
+);
+assert.equal(missingEmailGeneratorResult.stdout, "");
+assert.match(missingEmailGeneratorResult.stderr, /RITO_ADMIN_EMAIL is required\./);
+
 const generatorResult = spawnSync(
   process.execPath,
   [
