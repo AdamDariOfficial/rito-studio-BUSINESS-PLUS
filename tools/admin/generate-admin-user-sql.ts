@@ -20,7 +20,7 @@ function sqlString(value: string) {
   return `'${value.replaceAll("'", "''")}'`;
 }
 
-const email = (process.env.RITO_ADMIN_EMAIL?.trim() || "admin@gmail.com").toLowerCase();
+const email = requiredEnvironment("RITO_ADMIN_EMAIL").toLowerCase();
 const password = requiredOpaqueEnvironment("RITO_ADMIN_PASSWORD");
 const pepper = requiredEnvironment("RITO_ADMIN_AUTH_PEPPER");
 
